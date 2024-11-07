@@ -2,14 +2,16 @@ package com.utec.pdtasur.dao.interfaces;
 
 import com.utec.pdtasur.models.Usuario;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface UsuarioDAO {
-    void registrar(Usuario usuario);
-    void modificar(Usuario usuario, String documento);
+    void registrar(Usuario usuario) throws SQLException;
+    void registrarAdmin(Usuario usuario);
+    void registrarSocio(Usuario usuario);
+    void modificar(Usuario usuario);
     void eliminar(Usuario usuario);
-    void login(String email, String contraseña);
+    Usuario login(String email, String contraseña);
     void modificarDatosPropios(Usuario usuario);
-
     List<Usuario> listarUsuarios();
 }

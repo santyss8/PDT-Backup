@@ -1,14 +1,14 @@
 package com.utec.pdtasur.models;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Usuario {
     private String nombres;
     private String apellidos;
-    private String tipoDocumento;
+    private int tipoDocumento;
     private String numeroDocumento;
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private String domicilio;
     private List<String> telefonos;
     private String email;
@@ -17,31 +17,48 @@ public class Usuario {
     private CategoriaSocio categoriaSocio;
     private boolean dificultadAuditiva;
     private boolean manejoLenguajeDeSeñas;
+    private boolean participaSubcomision;
     private Subcomision subcomision;
 
+    // Constructor Vacio
     public Usuario(){
 
     }
 
+    // Constructor con numero de documento (identificador)
     public Usuario(String numeroDocumento) {
         this.numeroDocumento = numeroDocumento;
     }
 
-    public Usuario(String nombres, String apellidos, String tipoDocumento, String numeroDocumento, Date fechaNacimiento, String domicilio, List<String> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean manejoLenguajeDeSeñas, Subcomision subcomision) {
+    // Constructor con todos los datos (socio)
+    public Usuario(String nombres, String apellidos, int tipoDocumento, String numeroDocumento, LocalDate fechaNacimiento, String domicilio, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean manejoLenguajeDeSeñas, boolean participaSubcomision, Subcomision subcomision) {
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.tipoDocumento = tipoDocumento;
         this.numeroDocumento = numeroDocumento;
         this.fechaNacimiento = fechaNacimiento;
         this.domicilio = domicilio;
-        this.telefonos = telefonos;
         this.email = email;
         this.contraseña = contraseña;
         this.tipoUsuario = tipoUsuario;
         this.categoriaSocio = categoriaSocio;
         this.dificultadAuditiva = dificultadAuditiva;
         this.manejoLenguajeDeSeñas = manejoLenguajeDeSeñas;
+        this.participaSubcomision = participaSubcomision;
         this.subcomision = subcomision;
+    }
+
+    // constructor no socio y administrador
+    public Usuario(String nombres, String apellidos, int tipoDocumento, String numeroDocumento, LocalDate fechaNacimiento, String domicilio, String email, String contraseña, TipoUsuario tipoUsuario) {
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.tipoDocumento = tipoDocumento;
+        this.numeroDocumento = numeroDocumento;
+        this.fechaNacimiento = fechaNacimiento;
+        this.domicilio = domicilio;
+        this.email = email;
+        this.contraseña = contraseña;
+        this.tipoUsuario = tipoUsuario;
     }
 
     public String getNombres() {
@@ -60,11 +77,11 @@ public class Usuario {
         this.apellidos = apellidos;
     }
 
-    public String getTipoDocumento() {
+    public int getTipoDocumento() {
         return tipoDocumento;
     }
 
-    public void setTipoDocumento(String tipoDocumento) {
+    public void setTipoDocumento(int tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
 
@@ -76,11 +93,11 @@ public class Usuario {
         this.numeroDocumento = numeroDocumento;
     }
 
-    public Date getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -148,6 +165,14 @@ public class Usuario {
         this.manejoLenguajeDeSeñas = manejoLenguajeDeSeñas;
     }
 
+    public boolean isParticipaSubcomision() {
+        return participaSubcomision;
+    }
+
+    public void setParticipaSubcomision(boolean participaSubcomision) {
+        this.participaSubcomision = participaSubcomision;
+    }
+
     public Subcomision getSubcomision() {
         return subcomision;
     }
@@ -155,5 +180,4 @@ public class Usuario {
     public void setSubcomision(Subcomision subcomision) {
         this.subcomision = subcomision;
     }
-
 }
