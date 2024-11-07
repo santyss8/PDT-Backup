@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
@@ -68,7 +69,8 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         } catch (SQLException e) {
             System.out.println("Error al registrar usuario");
             e.printStackTrace();
-        } catch (Exception e){
+        }
+        catch (Exception e){
             System.out.println("Ha ocurrido un error");
             e.printStackTrace();
         }
@@ -141,6 +143,8 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
         String sql = properties.getProperty("sql.login");
 
+        return null;
+
     }
 
     @Override
@@ -154,6 +158,8 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         Properties properties = loadProperties();
 
         String sql = properties.getProperty("sql.selectUsuarios");
+
+        return null;
     }
 
     // metodo para recuperar propiedades y para generar clase conexion
@@ -169,6 +175,13 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
     private Connection getConnection() throws SQLException {
         return DatabaseConnection.getInstance().getConnection();
+    }
+
+    public static void main(String[] args) {
+        UsuarioDAOImpl usuarioDAO = new UsuarioDAOImpl();
+        LocalDate fechaNacimiento = LocalDate.of(2004, 9, 16);
+        Usuario usuarioAdmin = new Usuario("Santiago", "Molina", 1, "5-447-191-6", fechaNacimiento, "Crottogini 3513", "santimolinarueda@gmail.com", "santi123", TipoUsuario.AUXILIARADMINISTRATIVO);
+        usuarioDAO.registrar(usuarioAdmin);
     }
 
 
