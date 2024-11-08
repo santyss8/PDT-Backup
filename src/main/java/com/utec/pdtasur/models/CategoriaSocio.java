@@ -2,11 +2,9 @@ package com.utec.pdtasur.models;
 
 public class CategoriaSocio {
     private String nombre;
-    private String descripcion;
 
-    public CategoriaSocio(String nombre, String descripcion) {
+    public CategoriaSocio(String nombre) {
         this.nombre = nombre;
-        this.descripcion = descripcion;
     }
 
     public String getNombre() {
@@ -17,11 +15,4 @@ public class CategoriaSocio {
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
 }
