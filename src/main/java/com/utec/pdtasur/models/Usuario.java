@@ -1,104 +1,194 @@
 package com.utec.pdtasur.models;
 
+
 import java.time.LocalDate;
 import java.util.List;
 
 public class Usuario {
-    private String nombres;
-    private String apellidos;
-    private int tipoDocumento;
-    private String numeroDocumento;
+    private int id;
+    private String nombre;
+    private String apellido;
+    private TipoDocumento tipoDocumento;
+    private String documento;
     private LocalDate fechaNacimiento;
     private String domicilio;
-    private List<String> telefonos;
+    private List<Integer> telefonos;
     private String email;
     private String contraseña;
     private TipoUsuario tipoUsuario;
     private CategoriaSocio categoriaSocio;
     private boolean dificultadAuditiva;
-    private boolean manejoLenguajeDeSeñas;
+    private boolean lenguajeSeñas;
     private boolean participaSubcomision;
     private Subcomision subcomision;
+    private int numeroSocio;
+    private boolean activo;
 
-    // Constructor Vacio
     public Usuario(){
 
     }
 
-    // Constructor con numero de documento (identificador)
-    public Usuario(String numeroDocumento) {
-        this.numeroDocumento = numeroDocumento;
+    // Constructor con documento para busqueda
+    public Usuario(String documento){
+        this.documento = documento;
     }
 
-    // Constructor con todos los datos (socio)
-    public Usuario(String nombres, String apellidos, int tipoDocumento, String numeroDocumento, LocalDate fechaNacimiento, String domicilio, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean manejoLenguajeDeSeñas, boolean participaSubcomision, Subcomision subcomision) {
-        this.nombres = nombres;
-        this.apellidos = apellidos;
+    // Constructor con email y contraseña para login
+    public Usuario(String email, String contraseña){
+        this.email = email;
+        this.contraseña = contraseña;
+    }
+
+    // Constructor para No Socios | Administradores (Insertar)
+    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<Integer> telefonos, String email, String contraseña, TipoUsuario tipoUsuario) {
+        this.nombre = nombre;
+        this.apellido = apellido;
         this.tipoDocumento = tipoDocumento;
-        this.numeroDocumento = numeroDocumento;
-        this.fechaNacimiento = fechaNacimiento;
+        this.documento = documento;
         this.domicilio = domicilio;
+        this.fechaNacimiento = fechaNacimiento;
+        this.telefonos = telefonos;
+        this.email = email;
+        this.contraseña = contraseña;
+        this.tipoUsuario = tipoUsuario;
+    }
+
+    //Constructor para Socio (Insertar) (particpa en subcomision)
+    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, List<Integer> telefonos, LocalDate fechaNacimiento, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, Subcomision subcomision) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.tipoDocumento = tipoDocumento;
+        this.documento = documento;
+        this.domicilio = domicilio;
+        this.fechaNacimiento = fechaNacimiento;
+        this.telefonos = telefonos;
         this.email = email;
         this.contraseña = contraseña;
         this.tipoUsuario = tipoUsuario;
         this.categoriaSocio = categoriaSocio;
         this.dificultadAuditiva = dificultadAuditiva;
-        this.manejoLenguajeDeSeñas = manejoLenguajeDeSeñas;
+        this.lenguajeSeñas = lenguajeSeñas;
         this.participaSubcomision = participaSubcomision;
         this.subcomision = subcomision;
     }
 
-    // constructor no socio y administrador
-    public Usuario(String nombres, String apellidos, int tipoDocumento, String numeroDocumento, LocalDate fechaNacimiento, String domicilio, String email, String contraseña, TipoUsuario tipoUsuario) {
-        this.nombres = nombres;
-        this.apellidos = apellidos;
+    // no participa en subcomision
+    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<Integer> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, int numeroSocio) {
+        this.nombre = nombre;
+        this.apellido = apellido;
         this.tipoDocumento = tipoDocumento;
-        this.numeroDocumento = numeroDocumento;
-        this.fechaNacimiento = fechaNacimiento;
+        this.documento = documento;
         this.domicilio = domicilio;
+        this.fechaNacimiento = fechaNacimiento;
+        this.telefonos = telefonos;
         this.email = email;
         this.contraseña = contraseña;
         this.tipoUsuario = tipoUsuario;
+        this.categoriaSocio = categoriaSocio;
+        this.dificultadAuditiva = dificultadAuditiva;
+        this.lenguajeSeñas = lenguajeSeñas;
+        this.participaSubcomision = participaSubcomision;
+        this.numeroSocio = numeroSocio;
     }
 
-    public String getNombres() {
-        return nombres;
+    // Constructor para recibir No Socio | Admin de Base de Datos
+    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento,List<Integer> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, boolean activo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.tipoDocumento = tipoDocumento;
+        this.documento = documento;
+        this.domicilio = domicilio;
+        this.fechaNacimiento = fechaNacimiento;
+        this.telefonos = telefonos;
+        this.email = email;
+        this.contraseña = contraseña;
+        this.tipoUsuario = tipoUsuario;
+        this.activo = activo;
     }
 
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
+    // Constructor para Recibir Socios de Base de Datos (participa en subcomision)
+    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<Integer> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, Subcomision subcomision, int numeroSocio, boolean activo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.tipoDocumento = tipoDocumento;
+        this.documento = documento;
+        this.domicilio = domicilio;
+        this.fechaNacimiento = fechaNacimiento;
+        this.telefonos = telefonos;
+        this.email = email;
+        this.contraseña = contraseña;
+        this.tipoUsuario = tipoUsuario;
+        this.categoriaSocio = categoriaSocio;
+        this.dificultadAuditiva = dificultadAuditiva;
+        this.lenguajeSeñas = lenguajeSeñas;
+        this.participaSubcomision = participaSubcomision;
+        this.subcomision = subcomision;
+        this.numeroSocio = numeroSocio;
+        this.activo = activo;
     }
 
-    public String getApellidos() {
-        return apellidos;
+    //no participa en subcomision
+
+    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<Integer> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, int numeroSocio, boolean activo) {
+        this.id = id;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.tipoDocumento = tipoDocumento;
+        this.documento = documento;
+        this.domicilio = domicilio;
+        this.fechaNacimiento = fechaNacimiento;
+        this.telefonos = telefonos;
+        this.email = email;
+        this.contraseña = contraseña;
+        this.tipoUsuario = tipoUsuario;
+        this.categoriaSocio = categoriaSocio;
+        this.dificultadAuditiva = dificultadAuditiva;
+        this.lenguajeSeñas = lenguajeSeñas;
+        this.participaSubcomision = participaSubcomision;
+        this.numeroSocio = numeroSocio;
+        this.activo = activo;
     }
 
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
+    public int getId() {
+        return id;
     }
 
-    public int getTipoDocumento() {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellido() {
+        return apellido;
+    }
+
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public TipoDocumento getTipoDocumento() {
         return tipoDocumento;
     }
 
-    public void setTipoDocumento(int tipoDocumento) {
+    public void setTipoDocumento(TipoDocumento tipoDocumento) {
         this.tipoDocumento = tipoDocumento;
     }
 
-    public String getNumeroDocumento() {
-        return numeroDocumento;
+    public String getDocumento() {
+        return documento;
     }
 
-    public void setNumeroDocumento(String numeroDocumento) {
-        this.numeroDocumento = numeroDocumento;
-    }
-
-    public LocalDate getFechaNacimiento() {
-        return fechaNacimiento;
-    }
-
-    public void setFechaNacimiento(LocalDate fechaNacimiento) {
-        this.fechaNacimiento = fechaNacimiento;
+    public void setDocumento(String documento) {
+        this.documento = documento;
     }
 
     public String getDomicilio() {
@@ -109,11 +199,19 @@ public class Usuario {
         this.domicilio = domicilio;
     }
 
-    public List<String> getTelefonos() {
+    public LocalDate getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public List<Integer> getTelefonos() {
         return telefonos;
     }
 
-    public void setTelefonos(List<String> telefonos) {
+    public void setTelefonos(List<Integer> telefonos) {
         this.telefonos = telefonos;
     }
 
@@ -157,12 +255,12 @@ public class Usuario {
         this.dificultadAuditiva = dificultadAuditiva;
     }
 
-    public boolean isManejoLenguajeDeSeñas() {
-        return manejoLenguajeDeSeñas;
+    public boolean isLenguajeSeñas() {
+        return lenguajeSeñas;
     }
 
-    public void setManejoLenguajeDeSeñas(boolean manejoLenguajeDeSeñas) {
-        this.manejoLenguajeDeSeñas = manejoLenguajeDeSeñas;
+    public void setLenguajeSeñas(boolean lenguajeSeñas) {
+        this.lenguajeSeñas = lenguajeSeñas;
     }
 
     public boolean isParticipaSubcomision() {
@@ -180,4 +278,45 @@ public class Usuario {
     public void setSubcomision(Subcomision subcomision) {
         this.subcomision = subcomision;
     }
+
+    public int getNumeroSocio() {
+        return numeroSocio;
+    }
+
+    public void setNumeroSocio(int numeroSocio) {
+        this.numeroSocio = numeroSocio;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario { \n" +
+                "  id = " + id + ", \n" +
+                "  nombre = '" + nombre + "', \n" +
+                "  apellido = '" + apellido + "', \n" +
+                "  tipoDocumento = " + tipoDocumento + ", \n" +
+                "  documento = '" + documento + "', \n" +
+                "  fechaNacimiento = " + fechaNacimiento + ", \n" +
+                "  domicilio = '" + domicilio + "', \n" +
+                "  telefonos = " + telefonos + ", \n" +
+                "  email = '" + email + "', \n" +
+                "  contraseña = '" + contraseña + "', \n" +
+                "  tipoUsuario = " + tipoUsuario + ", \n" +
+                "  categoriaSocio = " + categoriaSocio + ", \n" +
+                "  dificultadAuditiva = " + dificultadAuditiva + ", \n" +
+                "  lenguajeSeñas = " + lenguajeSeñas + ", \n" +
+                "  participaSubcomision = " + participaSubcomision + ", \n" +
+                "  subcomision = " + subcomision + ", \n" +
+                "  numeroSocio = " + numeroSocio + ", \n" +
+                "  activo = " + activo + "\n" +
+                "}";
+    }
+
 }

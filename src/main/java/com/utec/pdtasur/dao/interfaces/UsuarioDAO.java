@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface UsuarioDAO {
-    void registrar(Usuario usuario) throws SQLException;
+    void registrarNoSocio(Usuario usuario) throws SQLException;
     void registrarAdmin(Usuario usuario);
     void registrarSocio(Usuario usuario);
     void modificar(Usuario usuario);

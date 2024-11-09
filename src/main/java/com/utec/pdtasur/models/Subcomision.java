@@ -1,19 +1,35 @@
 package com.utec.pdtasur.models;
 
 public class Subcomision {
+    private int id;
     private String nombre;
     private String descripcion;
+
+
+    public Subcomision() {
+    }
+
+    public Subcomision(int id, String nombre, String descripcion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
 
     public Subcomision(String nombre, String descripcion) {
         this.nombre = nombre;
         this.descripcion = descripcion;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public Subcomision(int id) {
+        this.id = id;
     }
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -24,10 +40,19 @@ public class Subcomision {
         this.nombre = nombre;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
     @Override
     public String toString() {
         return "Subcomision{" +
-                "nombre='" + nombre + '\'' +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
                 ", descripcion='" + descripcion + '\'' +
                 '}';
     }

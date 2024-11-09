@@ -1,24 +1,18 @@
 package com.utec.pdtasur.dao.impl;
 
+import com.utec.pdtasur.dao.interfaces.CategoriaSocioDAO;
+import com.utec.pdtasur.dao.interfaces.SubcomisionDAO;
 import com.utec.pdtasur.dao.interfaces.UsuarioDAO;
-import com.utec.pdtasur.models.CategoriaSocio;
-import com.utec.pdtasur.models.Subcomision;
-import com.utec.pdtasur.models.TipoUsuario;
-import com.utec.pdtasur.models.Usuario;
+import com.utec.pdtasur.models.*;
 import com.utec.pdtasur.utils.DatabaseConnection;
 
 import java.io.FileInputStream;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.sql.Date;
 import java.util.List;
 import java.util.Properties;
 
-// TODO Arreglar detalles de subcomisiones para que se registren de la mejor forma
 
 public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDAO {
     private Connection connection;
@@ -27,29 +21,36 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         this.connection = getConnection();
     }
     // Registrar No Socio
-    public void registrar(Usuario usuario) {
+    public void registrarNoSocio(Usuario usuario) {
         Properties properties = loadProperties();
 
         String sql = properties.getProperty("sql.insertUsuario");
 
-        // Conexion a la base de datos
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, usuario.getNombres());
-            ps.setString(2, usuario.getApellidos());
-            ps.setInt(3, usuario.getTipoDocumento());
-            ps.setString(4, usuario.getNumeroDocumento());
-            ps.setDate(5, Date.valueOf(usuario.getFechaNacimiento()));
-            ps.setString(6, usuario.getDomicilio());
-            ps.setString(7, usuario.getEmail());
-            ps.setString(8, usuario.getContraseña());
-            ps.setString(9, usuario.getTipoUsuario().toString());
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, usuario.getNombre());
+            ps.setString(2, usuario.getApellido());
+            ps.setString(3, usuario.getTipoDocumento().toString());
+            ps.setString(4, usuario.getDocumento());
+            ps.setString(5, usuario.getDomicilio());
+            ps.setString(6, usuario.getEmail());
+            ps.setString(7, usuario.getContraseña());
+            ps.setString(8, usuario.getTipoUsuario().toString());
+            ps.setDate(9, Date.valueOf(usuario.getFechaNacimiento()));
             ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Error al registrar usuario");
-            e.printStackTrace();
-        } catch (Exception e){
-            System.out.println("Ha ocurrido un error");
-            e.printStackTrace();
+            System.out.println("Usuario Registrado con Exito");
+        }catch (Exception e){
+            System.out.println("Error al registrar Usuario");
+        }
+
+        sql = properties.getProperty("sql.insertTelefonos");
+        for (int numero : usuario.getTelefonos()){
+            try (PreparedStatement ps = connection.prepareStatement(sql)){
+                ps.setString(1, usuario.getDocumento());
+                ps.setInt(2, numero);
+                ps.executeUpdate();
+            }catch (Exception e){
+                System.out.println("Error al registrar Usuario");
+            }
         }
     }
 
@@ -59,27 +60,34 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
         String sql = properties.getProperty("sql.insertUsuarioAdmin");
 
-        // Conexion a la base de datos
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, usuario.getNombres());
-            ps.setString(2, usuario.getApellidos());
-            ps.setInt(3, usuario.getTipoDocumento());
-            ps.setString(4, usuario.getNumeroDocumento());
-            ps.setDate(5, Date.valueOf(usuario.getFechaNacimiento()));
-            ps.setString(6, usuario.getDomicilio());
-            ps.setString(7, usuario.getEmail());
-            ps.setString(8, usuario.getContraseña());
-            ps.setString(9, usuario.getTipoUsuario().toString());
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, usuario.getNombre());
+            ps.setString(2, usuario.getApellido());
+            ps.setString(3, usuario.getTipoDocumento().toString());
+            ps.setString(4, usuario.getDocumento());
+            ps.setString(5, usuario.getDomicilio());
+            ps.setString(6, usuario.getEmail());
+            ps.setString(7, usuario.getContraseña());
+            ps.setString(8, usuario.getTipoUsuario().toString());
+            ps.setDate(9, Date.valueOf(usuario.getFechaNacimiento()));
             ps.setBoolean(10, true);
             ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Error al registrar usuario");
-            e.printStackTrace();
+            System.out.println("Usuario Registrado con Exito");
+        }catch (Exception e){
+            System.out.println("Error al registrar Usuario");
         }
-        catch (Exception e){
-            System.out.println("Ha ocurrido un error");
-            e.printStackTrace();
+
+        sql = properties.getProperty("sql.insertTelefonos");
+        for (int numero : usuario.getTelefonos()){
+            try (PreparedStatement ps = connection.prepareStatement(sql)){
+                ps.setString(1, usuario.getDocumento());
+                ps.setInt(2, numero);
+                ps.executeUpdate();
+            }catch (Exception e){
+                System.out.println("Error al registrar Usuario");
+            }
         }
+
     }
 
     @Override
@@ -88,193 +96,248 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
         String sql = properties.getProperty("sql.insertUsuarioSocio");
 
-        // Conexion a la base de datos
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, usuario.getNombres());
-            ps.setString(2, usuario.getApellidos());
-            ps.setInt(3, usuario.getTipoDocumento());
-            ps.setString(4, usuario.getNumeroDocumento());
-            ps.setString(5, usuario.getEmail());
-            ps.setString(6, usuario.getContraseña());
-            ps.setString(7, usuario.getCategoriaSocio().getNombre());
-            ps.setBoolean(8, usuario.isDificultadAuditiva());
-            ps.setBoolean(9, usuario.isManejoLenguajeDeSeñas());
-            ps.setBoolean(10, usuario.isParticipaSubcomision());
-            ps.setString(11, usuario.getSubcomision().getNombre());
-            ps.setDate(12, Date.valueOf(usuario.getFechaNacimiento()));
-            ps.setString(13, usuario.getDomicilio());
-            ps.setString(14, usuario.getTipoUsuario().toString());
+            ps.setString(1, usuario.getNombre());
+            ps.setString(2,usuario.getApellido());
+            ps.setString(3, usuario.getTipoDocumento().toString());
+            ps.setString(4, usuario.getDocumento());
+            ps.setDate(5, Date.valueOf(usuario.getFechaNacimiento()));
+            ps.setString(6, usuario.getDomicilio());
+            ps.setString(7, usuario.getEmail());
+            ps.setString(8, usuario.getContraseña());
+            ps.setString(9, usuario.getTipoUsuario().toString());
+            ps.setInt(10, usuario.getCategoriaSocio().getId());
+            ps.setBoolean(11, usuario.isDificultadAuditiva());
+            ps.setBoolean(12, usuario.isLenguajeSeñas());
+            ps.setBoolean(13, usuario.isParticipaSubcomision());
+            if (!usuario.isParticipaSubcomision()){
+                ps.setNull(14, Types.INTEGER);
+            }else {
+                ps.setInt(14, usuario.getSubcomision().getId());
+            }
             ps.executeUpdate();
-        }catch (SQLException e) {
-            System.out.println("Error al registrar usuario");
+            System.out.println("Usuario Registrado con Exito");
+        }catch (Exception e){
+            System.out.println("Error al registrar Usuario");
             e.printStackTrace();
-        } catch (Exception e){
-            System.out.println("Ha ocurrido un error");
-            e.printStackTrace();
+        }
+
+        sql = properties.getProperty("sql.insertTelefonos");
+        for (int numero : usuario.getTelefonos()){
+            try (PreparedStatement ps = connection.prepareStatement(sql)){
+                ps.setString(1, usuario.getDocumento());
+                ps.setInt(2, numero);
+                ps.executeUpdate();
+            }catch (Exception e){
+                System.out.println("Error al registrar Usuario");
+                e.printStackTrace();
+            }
         }
 
 
     }
 
-    @Override
-    public void modificar(Usuario usuario) {
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.updateUsuario");
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, usuario.getCategoriaSocio().getNombre());
-            ps.setBoolean(2, usuario.isDificultadAuditiva());
-            ps.setBoolean(3, usuario.isManejoLenguajeDeSeñas());
-            ps.setString(4, usuario.getSubcomision().getDescripcion());
-            ps.setString(5, usuario.getTipoUsuario().toString());
-            ps.setString(6, usuario.getSubcomision().getNombre());
-            ps.setString(7, usuario.getNumeroDocumento());
-            ps.executeUpdate();
-        }catch (SQLException e) {
-            System.out.println("Error al modificar usuario");
-            e.printStackTrace();
-        }
-
-    }
 
     @Override
     public void eliminar(Usuario usuario) {
         Properties properties = loadProperties();
-
         String sql = properties.getProperty("sql.deleteUsuario");
-
-        // Conexion a la base de datos
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setBoolean(1, false);
-            ps.setString(2, usuario.getNumeroDocumento());
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setBoolean(1, usuario.isActivo());
+            ps.setString(2, usuario.getDocumento());
             ps.executeUpdate();
-        }catch (SQLException e) {
-            System.out.println("Error al eliminar usuario");
+            System.out.println("Usuario Eliminado con Exito");
+        }catch (Exception e){
+            System.out.println("Error al Eliminar Usuario");
             e.printStackTrace();
         }
+
 
     }
 
     @Override
     public Usuario login(String email, String contraseña) {
         Properties properties = loadProperties();
-
         String sql = properties.getProperty("sql.login");
-
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, email);
             ps.setString(2, contraseña);
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                if (rs.getString("tipo_usuario").equals("NOSOCIO") || rs.getString("tipo_usuario").equals("AUXILIARADMINISTRATIVO")) {
-                    return new Usuario(
-                            rs.getString("nombre"),
-                            rs.getString("apellido"),
-                            rs.getInt("tipo_documento"),
-                            rs.getString("documento"),
-                            rs.getDate("fecha_nacimiento").toLocalDate(),
-                            rs.getString("domicilio"),
-                            rs.getString("email"),
-                            rs.getString("contraseña"),
-                            TipoUsuario.valueOf(rs.getString("tipo_usuario"))
-                    );
+            if (rs.next()){
+                Usuario usuario = new Usuario();
+                List<Integer> telefonos = new ArrayList<>();
+                String sqlTelefonos = properties.getProperty("sql.selectTelefonos");
+                try (PreparedStatement psTelefonos = connection.prepareStatement(sqlTelefonos)){
+                    psTelefonos.setString(1, rs.getString("documento"));
+                    ResultSet rsTelefonos = psTelefonos.executeQuery();
+                    while (rsTelefonos.next()){
+                        telefonos.add(rsTelefonos.getInt("numero"));
+                    }
+                }catch (Exception e){
+                    System.out.println("Error al Listar Telefonos");
+                    e.printStackTrace();
                 }
+                usuario.setId(rs.getInt("id"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setApellido(rs.getString("apellido"));
+                usuario.setTipoDocumento(TipoDocumento.valueOf(rs.getString("tipo_documento")));
+                usuario.setDocumento(rs.getString("documento"));
+                usuario.setDomicilio(rs.getString("domicilio"));
+                usuario.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
+                usuario.setTelefonos(telefonos);
+                usuario.setEmail(rs.getString("email"));
+                usuario.setContraseña(rs.getString("contraseña"));
+                usuario.setTipoUsuario(TipoUsuario.valueOf(rs.getString("tipo_usuario")));
                 if (rs.getString("tipo_usuario").equals("SOCIO")){
-                    return new Usuario(
-                            rs.getString("nombre"),
-                            rs.getString("apellido"),
-                            rs.getInt("tipo_documento"),
-                            rs.getString("documento"),
-                            rs.getDate("fecha_nacimiento").toLocalDate(),
-                            rs.getString("domicilio"),
-                            rs.getString("email"),
-                            rs.getString("contraseña"),
-                            TipoUsuario.valueOf(rs.getString("tipo_usuario")),
-                            new CategoriaSocio(rs.getString("categoria_socio")),
-                            rs.getBoolean("dificultad_auditiva"),
-                            rs.getBoolean("lenguaje_señas"),
-                            rs.getBoolean("participa_subcomision"),
-                            new Subcomision(rs.getString("subcomision"), rs.getString("detalle_subcomision"))
-                    );
+                    CategoriaSocioDAO categoriaSocioDAO = new CategoriaSocioDAOImpl();
+                    CategoriaSocio categoriaSocio = categoriaSocioDAO.getCategoria(rs.getInt("id_categoria_socio"));
+                    usuario.setCategoriaSocio(categoriaSocio);
+                    usuario.setDificultadAuditiva(rs.getBoolean("dificultad_auditiva"));
+                    usuario.setLenguajeSeñas(rs.getBoolean("lenguaje_señas"));
+                    usuario.setParticipaSubcomision(rs.getBoolean("participa_subcomision"));
+                    if (rs.getBoolean("participa_subcomision")){
+                        SubcomisionDAO subcomisionDAO = new SubcomisionDAOImpl();
+                        usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("id_subcomision")));
+                    }
                 }
+                usuario.setActivo(rs.getBoolean("activo"));
+                return usuario;
             }
-        }catch (SQLException e) {
+        }catch (Exception e){
+            System.out.println("Error al Login");
             e.printStackTrace();
         }
-
         return null;
+    }
+
+    @Override
+    public void modificar(Usuario usuario) {
+        Properties properties = loadProperties();
+
+        if (usuario.getTipoUsuario().equals(TipoUsuario.SOCIO)){
+            String sql = properties.getProperty("sql.updateUsuarioSocio");
+            try (PreparedStatement ps = connection.prepareStatement(sql)){
+                ps.setString(1, usuario.getTipoUsuario().toString());
+                ps.setInt(2, usuario.getCategoriaSocio().getId());
+                ps.setBoolean(3, usuario.isDificultadAuditiva());
+                ps.setBoolean(4, usuario.isLenguajeSeñas());
+                ps.setBoolean(5, usuario.isParticipaSubcomision());
+                if (usuario.isParticipaSubcomision()){
+                    ps.setInt(6, usuario.getSubcomision().getId());
+                }else{
+                    ps.setNull(6, Types.INTEGER);
+                }
+                ps.setString(7, usuario.getDocumento());
+                ps.executeUpdate();
+                System.out.println("Usuario Modificado con Exito");
+            } catch (Exception e){
+                System.out.println("Error al modificar Usuario");
+                e.printStackTrace();
+            }
+        }
+        else {
+            String sql = properties.getProperty("sql.updateUsuario");
+            try (PreparedStatement ps = connection.prepareStatement(sql)){
+                ps.setString(1, usuario.getTipoUsuario().toString());
+                ps.setNull(2, Types.INTEGER);
+                ps.setNull(3, Types.BOOLEAN);
+                ps.setNull(4, Types.BOOLEAN);
+                ps.setNull(5, Types.BOOLEAN);
+                ps.setNull(6, Types.INTEGER);
+                ps.setString(7, usuario.getDocumento());
+                ps.executeUpdate();
+                System.out.println("Usuario Modificado con Exito");
+            } catch (Exception e){
+                System.out.println("Error al modificar Usuario");
+                e.printStackTrace();
+            }
+        }
+
 
     }
 
     @Override
     public void modificarDatosPropios(Usuario usuario) {
         Properties properties = loadProperties();
+
         String sql = properties.getProperty("sql.updateUsuarioSolo");
 
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, usuario.getNombres());
-            ps.setString(2, usuario.getApellidos());
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, usuario.getNombre());
+            ps.setString(2, usuario.getApellido());
             ps.setString(3, usuario.getContraseña());
-            ps.setBoolean(4, usuario.isDificultadAuditiva());
-            ps.setBoolean(5, usuario.isManejoLenguajeDeSeñas());
+            if (usuario.getTipoUsuario().equals(TipoUsuario.SOCIO)){
+                ps.setBoolean(4, usuario.isDificultadAuditiva());
+                ps.setBoolean(5, usuario.isLenguajeSeñas());
+            }else {
+                ps.setNull(4, Types.BOOLEAN);
+                ps.setNull(5, Types.BOOLEAN);
+            }
             ps.setDate(6, Date.valueOf(usuario.getFechaNacimiento()));
             ps.setString(7, usuario.getDomicilio());
-            ps.setString(8, usuario.getNumeroDocumento());
+            ps.setString(8, usuario.getDocumento());
             ps.executeUpdate();
-        }catch (SQLException e) {
-            System.out.println("Error al modificar usuario");
+            System.out.println("Usuario Modificado con Exito");
+        }catch (Exception e){
+            System.out.println("Error al modificar Usuario");
             e.printStackTrace();
         }
+
     }
 
     @Override
     public List<Usuario> listarUsuarios() {
         Properties properties = loadProperties();
-
-        String sql = properties.getProperty("sql.selectUsuarios");
         List<Usuario> usuarios = new ArrayList<>();
+        String sql = properties.getProperty("sql.selectUsuarios");
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                Usuario usuario = new Usuario();
+                List<Integer> telefonos = new ArrayList<>();
+                String sqlTelefonos = properties.getProperty("sql.selectTelefonos");
+                try (PreparedStatement psTelefonos = connection.prepareStatement(sqlTelefonos)){
+                    psTelefonos.setString(1, rs.getString("documento"));
+                    ResultSet rsTelefonos = psTelefonos.executeQuery();
+                    while (rsTelefonos.next()){
+                        telefonos.add(rsTelefonos.getInt("numero"));
+                    }
+                }catch (Exception e){
+                    System.out.println("Error al Listar Telefonos");
+                    e.printStackTrace();
+                }
+                usuario.setId(rs.getInt("id"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setApellido(rs.getString("apellido"));
+                usuario.setTipoDocumento(TipoDocumento.valueOf(rs.getString("tipo_documento")));
+                usuario.setDocumento(rs.getString("documento"));
+                usuario.setDomicilio(rs.getString("domicilio"));
+                usuario.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
+                usuario.setTelefonos(telefonos);
+                usuario.setEmail(rs.getString("email"));
+                usuario.setContraseña(rs.getString("contraseña"));
+                usuario.setTipoUsuario(TipoUsuario.valueOf(rs.getString("tipo_usuario")));
+                if (rs.getString("tipo_usuario").equals("SOCIO")){
+                    CategoriaSocioDAO categoriaSocioDAO = new CategoriaSocioDAOImpl();
+                    CategoriaSocio categoriaSocio = categoriaSocioDAO.getCategoria(rs.getInt("id_categoria_socio"));
+                    usuario.setCategoriaSocio(categoriaSocio);
+                    usuario.setDificultadAuditiva(rs.getBoolean("dificultad_auditiva"));
+                    usuario.setLenguajeSeñas(rs.getBoolean("lenguaje_señas"));
+                    usuario.setParticipaSubcomision(rs.getBoolean("participa_subcomision"));
+                    if (rs.getBoolean("participa_subcomision")){
+                        SubcomisionDAO subcomisionDAO = new SubcomisionDAOImpl();
+                        usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("id_subcomision")));
+                    }
+                }
+                usuario.setActivo(rs.getBoolean("activo"));
+                usuarios.add(usuario);
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                String tipoUsuario = resultSet.getString("tipo_usuario");
-                if (tipoUsuario.equals("NOSOCIO") || tipoUsuario.equals("AUXILIARADMINISTRATIVO")) {
-                    Usuario usuario = new Usuario();
-                    usuario.setNombres(resultSet.getString("nombre"));
-                    usuario.setApellidos(resultSet.getString("apellido"));
-                    usuario.setTipoDocumento(resultSet.getInt("tipo_documento"));
-                    usuario.setNumeroDocumento(resultSet.getString("documento"));
-                    usuario.setFechaNacimiento(resultSet.getDate("fecha_nacimiento").toLocalDate());
-                    usuario.setDomicilio(resultSet.getString("domicilio"));
-                    usuario.setEmail(resultSet.getString("email"));
-                    usuario.setContraseña(resultSet.getString("contraseña"));
-                    usuario.setTipoUsuario(TipoUsuario.valueOf(resultSet.getString("tipo_usuario")));
-                    usuarios.add(usuario);
-                }
-                if (tipoUsuario.equals("SOCIO")){
-                    Usuario usuario = new Usuario(
-                            resultSet.getString("nombre"),
-                            resultSet.getString("apellido"),
-                            resultSet.getInt("tipo_documento"),
-                            resultSet.getString("documento"),
-                            resultSet.getDate("fecha_nacimiento").toLocalDate(),
-                            resultSet.getString("domicilio"),
-                            resultSet.getString("email"),
-                            resultSet.getString("contraseña"),
-                            TipoUsuario.valueOf(resultSet.getString("tipo_usuario")),
-                            new CategoriaSocio(resultSet.getString("categoria_socio")),
-                            resultSet.getBoolean("dificultad_auditiva"),
-                            resultSet.getBoolean("lenguaje_señas"),
-                            resultSet.getBoolean("subcomision"),
-                            new Subcomision(resultSet.getString("detalle_subcomision"), resultSet.getString("detalle_subcomision"))
-                    );
-                    usuarios.add(usuario);
-                }
             }
-        }catch (SQLException e) {
-            System.out.println("Error al recuperar usuarios");
+
+        }catch (Exception e){
+            System.out.println("Error al Listar Usuarios");
             e.printStackTrace();
         }
-
         return usuarios;
     }
 
@@ -292,6 +355,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     private Connection getConnection() throws SQLException {
         return DatabaseConnection.getInstance().getConnection();
     }
+
 
     
 }
