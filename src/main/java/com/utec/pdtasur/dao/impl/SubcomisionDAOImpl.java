@@ -63,7 +63,7 @@ public class SubcomisionDAOImpl implements SubcomisionDAO {
     }
 
     @Override
-    public List<Subcomision> listarsubcomisiones() {
+    public List<Subcomision> listarSubcomisiones() {
         Properties properties = loadProperties();
 
         List<Subcomision> subcomisiones = new ArrayList<>();

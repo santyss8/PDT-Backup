@@ -341,6 +341,42 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         return usuarios;
     }
 
+    @Override
+    public boolean seleccionarEmail(String email) {
+        Properties properties = loadProperties();
+        String sql = properties.getProperty("sql.selectEmail");
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                System.out.println("Email encontrado");
+                return true;
+            }
+        }catch (Exception e){
+            System.out.println("Error al Seleccionar Email");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean seleccionarDocumento(String documento) {
+        Properties properties = loadProperties();
+        String sql = properties.getProperty("sql.selectDocumento");
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, documento);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                System.out.println("Documento encontrado");
+                return true;
+            }
+        }catch (Exception e){
+            System.out.println("Error al Seleccionar Documento");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     // metodo para recuperar propiedades y para generar clase conexion
     private Properties loadProperties() {
         Properties properties = new Properties();

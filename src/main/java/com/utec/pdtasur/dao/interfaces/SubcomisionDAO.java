@@ -7,6 +7,6 @@ import java.util.List;
 public interface SubcomisionDAO {
     void crearSubcomision(Subcomision subcomision);
     Subcomision getSubcomision(int id);
-    List<Subcomision> listarsubcomisiones();
+    List<Subcomision> listarSubcomisiones();
     void eliminarSubcomision(int id);
 }
