@@ -88,6 +88,10 @@ public class ValidarService {
         if (telefono == null || telefono.trim().isEmpty()) {
             return false;
         }
+        if (usuarioDAO.seleccionarTelefono(Integer.parseInt(telefono))){
+            System.out.println("El telefono ya esta registrado");
+            return false;
+        }
         return telefono.matches("\\d{7,15}");
     }
 
@@ -106,7 +110,7 @@ public class ValidarService {
         if (contrasena == null || contrasena.trim().isEmpty()) {
             return false;
         }
-        return contrasena.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+        return contrasena.matches("^(?=.*[A-Za-z])(?=.*\\d).{8,}$");
     }
 
 

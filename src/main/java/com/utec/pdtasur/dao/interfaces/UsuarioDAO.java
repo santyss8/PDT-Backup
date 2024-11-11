@@ -14,7 +14,7 @@ public interface UsuarioDAO {
     Usuario login(String email, String contraseña);
     void modificarDatosPropios(Usuario usuario);
     List<Usuario> listarUsuarios();
-
     boolean seleccionarEmail(String email);
     boolean seleccionarDocumento(String documento);
+    boolean seleccionarTelefono(int numero);
 }

@@ -319,4 +319,27 @@ public class Usuario {
                 "}";
     }
 
+    public String confirmacionSocio(){
+        String dificultadAuditivaString = dificultadAuditiva ? "Si" : "No";
+        String lenguajeSeñasString = lenguajeSeñas ? "Si" : "No";
+        String participaSubcomisionString = participaSubcomision ? "Si" : "No";
+        return "Nombre: " + nombre + "\n" +
+                "Apellido: " + apellido +
+                "Tipo de documento: " + tipoDocumento.toString().toLowerCase() + "\n" +
+                "Documento: " + documento + "\n" +
+                "Fecha de nacimiento: " + fechaNacimiento + "\n" +
+                "Domicilio: " + domicilio + "\n" +
+                "Telefonos: " + telefonos + "\n" +
+                "Email: " + email + "\n" +
+                "Contraseña: " + contraseña + "\n" +
+                "Tipo de usuario: " + tipoUsuario.toString().toLowerCase() + "\n" +
+                "Categoria de socio: " + categoriaSocio + "\n" +
+                "Dificultad auditiva: " + dificultadAuditivaString + "\n" +
+                "Lenguaje señas: " + lenguajeSeñasString + "\n" +
+                "Participa en subcomision: " + participaSubcomisionString + "\n" +
+                "Subcomision: " + subcomision;
+    }
+
+
+
 }

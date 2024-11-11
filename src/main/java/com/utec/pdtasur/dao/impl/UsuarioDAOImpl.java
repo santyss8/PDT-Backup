@@ -38,6 +38,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             ps.setDate(9, Date.valueOf(usuario.getFechaNacimiento()));
             ps.executeUpdate();
             System.out.println("Usuario Registrado con Exito");
+            System.out.println("Podra ingresar al sistema una vez sea activado por un administrador");
         }catch (Exception e){
             System.out.println("Error al registrar Usuario");
         }
@@ -117,6 +118,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             }
             ps.executeUpdate();
             System.out.println("Usuario Registrado con Exito");
+            System.out.println("Podra ingresar al sistema una vez sea activado por un administrador");
         }catch (Exception e){
             System.out.println("Error al registrar Usuario");
             e.printStackTrace();
@@ -349,11 +351,9 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
-                System.out.println("Email encontrado");
                 return true;
             }
         }catch (Exception e){
-            System.out.println("Error al Seleccionar Email");
             e.printStackTrace();
         }
         return false;
@@ -367,11 +367,24 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             ps.setString(1, documento);
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
-                System.out.println("Documento encontrado");
                 return true;
             }
         }catch (Exception e){
-            System.out.println("Error al Seleccionar Documento");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean seleccionarTelefono(int numero) {
+        Properties properties = loadProperties();
+        String sql = properties.getProperty("sql.selectTelefono");
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setInt(1, numero);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                return true;
+            }
+        }catch (Exception e){
             e.printStackTrace();
         }
         return false;

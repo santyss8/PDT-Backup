@@ -75,7 +75,6 @@ public class UsuarioService {
                 sc.nextLine();
             }
 
-
             System.out.println();
         }while (select) ;
 
@@ -308,7 +307,34 @@ public class UsuarioService {
                 }
             }while (true);
         }
-        usuarioDAO.registrarSocio(usuario);
+        do {
+            System.out.println("Desea registrar al Usuario con los datos introducidos");
+            System.out.println(usuario.confirmacionSocio());
+            System.out.print("""
+                1. Si
+                2. No
+                """);
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > 2) {
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+                if (opcion == 1){
+                    usuarioDAO.registrarSocio(usuario);
+                    break;
+                }
+                if (opcion == 2){
+                    break;
+                }
+
+            }catch (InputMismatchException e){
+                System.out.println("la opcion tiene que ser un numero");
+                sc.nextLine();
+            }
+        }while (true);
+
 
 
 
