@@ -16,5 +16,5 @@ public interface UsuarioDAO {
     List<Usuario> listarUsuarios();
     boolean seleccionarEmail(String email);
     boolean seleccionarDocumento(String documento);
-    boolean seleccionarTelefono(int numero);
+    boolean seleccionarTelefono(String numero);
 }

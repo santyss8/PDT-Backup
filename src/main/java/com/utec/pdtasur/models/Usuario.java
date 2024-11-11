@@ -12,7 +12,7 @@ public class Usuario {
     private String documento;
     private LocalDate fechaNacimiento;
     private String domicilio;
-    private List<Integer> telefonos;
+    private List<String> telefonos;
     private String email;
     private String contraseña;
     private TipoUsuario tipoUsuario;
@@ -40,7 +40,7 @@ public class Usuario {
     }
 
     // Constructor para No Socios | Administradores (Insertar)
-    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<Integer> telefonos, String email, String contraseña, TipoUsuario tipoUsuario) {
+    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<String> telefonos, String email, String contraseña, TipoUsuario tipoUsuario) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.tipoDocumento = tipoDocumento;
@@ -54,7 +54,7 @@ public class Usuario {
     }
 
     //Constructor para Socio (Insertar) (particpa en subcomision)
-    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, List<Integer> telefonos, LocalDate fechaNacimiento, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, Subcomision subcomision) {
+    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, List<String> telefonos, LocalDate fechaNacimiento, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, Subcomision subcomision) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.tipoDocumento = tipoDocumento;
@@ -73,7 +73,7 @@ public class Usuario {
     }
 
     // no participa en subcomision
-    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<Integer> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, int numeroSocio) {
+    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<String> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, int numeroSocio) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.tipoDocumento = tipoDocumento;
@@ -92,7 +92,7 @@ public class Usuario {
     }
 
     // Constructor para recibir No Socio | Admin de Base de Datos
-    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento,List<Integer> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, boolean activo) {
+    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<String> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, boolean activo) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -108,7 +108,7 @@ public class Usuario {
     }
 
     // Constructor para Recibir Socios de Base de Datos (participa en subcomision)
-    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<Integer> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, Subcomision subcomision, int numeroSocio, boolean activo) {
+    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<String> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, Subcomision subcomision, int numeroSocio, boolean activo) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -131,7 +131,7 @@ public class Usuario {
 
     //no participa en subcomision
 
-    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<Integer> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, int numeroSocio, boolean activo) {
+    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<String> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, int numeroSocio, boolean activo) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -207,11 +207,11 @@ public class Usuario {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public List<Integer> getTelefonos() {
+    public List<String> getTelefonos() {
         return telefonos;
     }
 
-    public void setTelefonos(List<Integer> telefonos) {
+    public void setTelefonos(List<String> telefonos) {
         this.telefonos = telefonos;
     }
 

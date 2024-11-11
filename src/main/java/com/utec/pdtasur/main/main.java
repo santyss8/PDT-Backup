@@ -61,8 +61,10 @@ public class main {
                         System.out.println("Opcion invalida");
                         break;
                 }
+                System.out.println();
+            } if (usuarioActual != null){
+                // si el usuario no es null, se entra al programa
             }
-            System.out.println();
         }
 
 

@@ -88,7 +88,7 @@ public class ValidarService {
         if (telefono == null || telefono.trim().isEmpty()) {
             return false;
         }
-        if (usuarioDAO.seleccionarTelefono(Integer.parseInt(telefono))){
+        if (usuarioDAO.seleccionarTelefono(telefono)){
             System.out.println("El telefono ya esta registrado");
             return false;
         }

@@ -182,13 +182,13 @@ public class UsuarioService {
 
         }while (true);
         do {
-            List<Integer> telefonos = new ArrayList<>();
+            List<String> telefonos = new ArrayList<>();
             boolean telefonosContinuar = true;
             System.out.println("Ingrese sus telefonos");
             while (telefonosContinuar) {
                 String telefono = sc.nextLine();
                 if (validarTelefono(telefono)) {
-                    telefonos.add(Integer.parseInt(telefono));
+                    telefonos.add(telefono);
                     System.out.println("Telefono agregado");
                 }else {
                     System.out.println("El telefono ingresado no es válido");

@@ -2,13 +2,12 @@ package com.utec.pdtasur.dao.impl;
 
 import com.utec.pdtasur.dao.interfaces.CategoriaSocioDAO;
 import com.utec.pdtasur.dao.interfaces.SubcomisionDAO;
-import com.utec.pdtasur.dao.interfaces.UsuarioDAO;
 import com.utec.pdtasur.models.*;
+import com.utec.pdtasur.services.EmailSenderService;
 import com.utec.pdtasur.utils.DatabaseConnection;
 
 import java.io.FileInputStream;
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -44,10 +43,10 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         }
 
         sql = properties.getProperty("sql.insertTelefonos");
-        for (int numero : usuario.getTelefonos()){
+        for (String numero : usuario.getTelefonos()){
             try (PreparedStatement ps = connection.prepareStatement(sql)){
                 ps.setString(1, usuario.getDocumento());
-                ps.setInt(2, numero);
+                ps.setString(2, numero);
                 ps.executeUpdate();
             }catch (Exception e){
                 System.out.println("Error al registrar Usuario");
@@ -79,10 +78,10 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         }
 
         sql = properties.getProperty("sql.insertTelefonos");
-        for (int numero : usuario.getTelefonos()){
+        for (String numero : usuario.getTelefonos()){
             try (PreparedStatement ps = connection.prepareStatement(sql)){
                 ps.setString(1, usuario.getDocumento());
-                ps.setInt(2, numero);
+                ps.setString(2, numero);
                 ps.executeUpdate();
             }catch (Exception e){
                 System.out.println("Error al registrar Usuario");
@@ -116,7 +115,10 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             }else {
                 ps.setInt(14, usuario.getSubcomision().getId());
             }
-            ps.executeUpdate();
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                usuario.setNumeroSocio(rs.getInt("numero_socio"));
+            }
             System.out.println("Usuario Registrado con Exito");
             System.out.println("Podra ingresar al sistema una vez sea activado por un administrador");
         }catch (Exception e){
@@ -125,16 +127,18 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         }
 
         sql = properties.getProperty("sql.insertTelefonos");
-        for (int numero : usuario.getTelefonos()){
+        for (String numero : usuario.getTelefonos()){
             try (PreparedStatement ps = connection.prepareStatement(sql)){
                 ps.setString(1, usuario.getDocumento());
-                ps.setInt(2, numero);
+                ps.setString(2, numero);
                 ps.executeUpdate();
             }catch (Exception e){
                 System.out.println("Error al registrar Usuario");
                 e.printStackTrace();
             }
         }
+        EmailSenderService emailSenderService = new EmailSenderService();
+        emailSenderService.sendEmailRegistro(usuario.getEmail(), usuario.getNombre(), usuario.getNumeroSocio());
 
 
     }
@@ -167,13 +171,13 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
                 Usuario usuario = new Usuario();
-                List<Integer> telefonos = new ArrayList<>();
+                List<String> telefonos = new ArrayList<>();
                 String sqlTelefonos = properties.getProperty("sql.selectTelefonos");
                 try (PreparedStatement psTelefonos = connection.prepareStatement(sqlTelefonos)){
                     psTelefonos.setString(1, rs.getString("documento"));
                     ResultSet rsTelefonos = psTelefonos.executeQuery();
                     while (rsTelefonos.next()){
-                        telefonos.add(rsTelefonos.getInt("numero"));
+                        telefonos.add(rsTelefonos.getString("numero"));
                     }
                 }catch (Exception e){
                     System.out.println("Error al Listar Telefonos");
@@ -296,13 +300,13 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 Usuario usuario = new Usuario();
-                List<Integer> telefonos = new ArrayList<>();
+                List<String> telefonos = new ArrayList<>();
                 String sqlTelefonos = properties.getProperty("sql.selectTelefonos");
                 try (PreparedStatement psTelefonos = connection.prepareStatement(sqlTelefonos)){
                     psTelefonos.setString(1, rs.getString("documento"));
                     ResultSet rsTelefonos = psTelefonos.executeQuery();
                     while (rsTelefonos.next()){
-                        telefonos.add(rsTelefonos.getInt("numero"));
+                        telefonos.add(rsTelefonos.getString("numero"));
                     }
                 }catch (Exception e){
                     System.out.println("Error al Listar Telefonos");
@@ -375,11 +379,11 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         return false;
     }
 
-    public boolean seleccionarTelefono(int numero) {
+    public boolean seleccionarTelefono(String numero) {
         Properties properties = loadProperties();
         String sql = properties.getProperty("sql.selectTelefono");
         try (PreparedStatement ps = connection.prepareStatement(sql)){
-            ps.setInt(1, numero);
+            ps.setString(1, numero);
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
                 return true;
@@ -389,6 +393,8 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         }
         return false;
     }
+
+
 
     // metodo para recuperar propiedades y para generar clase conexion
     private Properties loadProperties() {
