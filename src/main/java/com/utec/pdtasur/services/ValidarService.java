@@ -72,10 +72,6 @@ public class ValidarService {
                 return null;
             }
 
-            if (Period.between(fecha, LocalDate.now()).getYears() < 18) {
-                System.out.println("Debe ser mayor de 18 años.");
-                return null;
-            }
 
             return fecha;
         } catch (DateTimeParseException e) {

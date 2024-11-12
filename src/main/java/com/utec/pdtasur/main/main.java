@@ -26,6 +26,7 @@ public class main {
         boolean running = true;
         int opcion;
         while (running) {
+            // Usuario no ha iniciado sesion
             if (usuarioActual == null) {
                 opcion = 0;
                 System.out.print("""
@@ -62,8 +63,8 @@ public class main {
                         break;
                 }
                 System.out.println();
+                // Sesion Iniciada
             } if (usuarioActual != null){
-                // si el usuario no es null, se entra al programa
                 if (usuarioActual.getTipoUsuario().equals(TipoUsuario.AUXILIARADMINISTRATIVO)){
                     System.out.print("""
                             ----- Bienvenido al sistema -----

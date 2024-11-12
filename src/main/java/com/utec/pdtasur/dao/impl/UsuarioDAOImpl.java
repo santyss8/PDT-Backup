@@ -53,6 +53,8 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 System.out.println("Error al registrar Usuario");
             }
         }
+        EmailSenderService emailSenderService = new EmailSenderService();
+        emailSenderService.sendEmailRegistroNoSocio(usuario.getEmail(), usuario.getNombre());
     }
 
     @Override
@@ -88,6 +90,8 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 System.out.println("Error al registrar Usuario");
             }
         }
+        EmailSenderService emailSenderService = new EmailSenderService();
+        emailSenderService.sendEmailRegistroNoSocio(usuario.getEmail(), usuario.getNombre());
 
     }
 
