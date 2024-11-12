@@ -152,7 +152,7 @@ public class UsuarioService {
                     continue;
                 }
             }
-            if (!usuario.getTipoDocumento().equals(TipoDocumento.CEDULA));{
+            if (!usuario.getTipoDocumento().equals(TipoDocumento.CEDULA)){
                 if (!validarDocumentoGenerico(documento)){
                     System.out.println("El documento ingresado no es válido");
                     continue;
@@ -417,7 +417,7 @@ public class UsuarioService {
                     continue;
                 }
             }
-            if (!usuario.getTipoDocumento().equals(TipoDocumento.CEDULA));{
+            if (!usuario.getTipoDocumento().equals(TipoDocumento.CEDULA)){
                 if (!validarDocumentoGenerico(documento)){
                     System.out.println("El documento ingresado no es válido");
                     continue;
@@ -609,7 +609,7 @@ public class UsuarioService {
                     continue;
                 }
             }
-            if (!usuario.getTipoDocumento().equals(TipoDocumento.CEDULA));{
+            if (!usuario.getTipoDocumento().equals(TipoDocumento.CEDULA)){
                 if (!validarDocumentoGenerico(documento)){
                     System.out.println("El documento ingresado no es válido");
                     continue;
