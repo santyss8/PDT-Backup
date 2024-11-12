@@ -52,7 +52,7 @@ public class main {
                         usuarioService.registrar();
                         break;
                     case 2:
-                        usuarioService.login();
+                        usuarioActual = usuarioService.login();
                         break;
                     case 3:
                         running = false;
@@ -64,6 +64,32 @@ public class main {
                 System.out.println();
             } if (usuarioActual != null){
                 // si el usuario no es null, se entra al programa
+                if (usuarioActual.getTipoUsuario().equals(TipoUsuario.AUXILIARADMINISTRATIVO)){
+                    System.out.print("""
+                            ----- Bienvenido al sistema -----
+                            1. Gestion de Usuario
+                            2. Gestion de Espacio
+                            3. Gestion de Tipo de Actividad
+                            4. Gestion de Pagos
+                            5. Salir
+                            """);
+                    break;
+                }
+                if (usuarioActual.getTipoUsuario().equals(TipoUsuario.SOCIO)){
+                    System.out.print("""
+                            ----- Bienvenido al sistema -----
+                            1. Gestion de Usuario
+                            2. Gestion de Espacio
+                            3. Salir
+                            """);
+                    System.out.print("Elija una opcion: ");
+
+                    break;
+                }
+                if (usuarioActual.getTipoUsuario().equals(TipoUsuario.NOSOCIO)){
+                    System.out.println("bienvenido al sistema");
+                    break;
+                }
             }
         }
 

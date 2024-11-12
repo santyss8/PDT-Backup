@@ -2,6 +2,7 @@ package com.utec.pdtasur.dao.impl;
 
 import com.utec.pdtasur.dao.interfaces.CategoriaSocioDAO;
 import com.utec.pdtasur.dao.interfaces.SubcomisionDAO;
+import com.utec.pdtasur.dao.interfaces.UsuarioDAO;
 import com.utec.pdtasur.models.*;
 import com.utec.pdtasur.services.EmailSenderService;
 import com.utec.pdtasur.utils.DatabaseConnection;
@@ -167,7 +168,6 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         String sql = properties.getProperty("sql.login");
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, email);
-            ps.setString(2, contraseña);
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
                 Usuario usuario = new Usuario();
@@ -258,8 +258,6 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 e.printStackTrace();
             }
         }
-
-
     }
 
     @Override

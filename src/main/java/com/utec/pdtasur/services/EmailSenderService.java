@@ -147,7 +147,7 @@ public class EmailSenderService {
 </html>
 """;
 
-            message.setContent(htmlContent, "text/html");
+            message.setContent(htmlContent, "text/html; charset=UTF-8");
 
             Transport.send(message);
             System.out.println("Correo enviado exitosamente.");

@@ -324,20 +324,31 @@ public class Usuario {
         String lenguajeSeñasString = lenguajeSeñas ? "Si" : "No";
         String participaSubcomisionString = participaSubcomision ? "Si" : "No";
         return "Nombre: " + nombre + "\n" +
-                "Apellido: " + apellido +
+                "Apellido: " + apellido + "\n" +
                 "Tipo de documento: " + tipoDocumento.toString().toLowerCase() + "\n" +
                 "Documento: " + documento + "\n" +
                 "Fecha de nacimiento: " + fechaNacimiento + "\n" +
                 "Domicilio: " + domicilio + "\n" +
                 "Telefonos: " + telefonos + "\n" +
                 "Email: " + email + "\n" +
-                "Contraseña: " + contraseña + "\n" +
                 "Tipo de usuario: " + tipoUsuario.toString().toLowerCase() + "\n" +
                 "Categoria de socio: " + categoriaSocio + "\n" +
                 "Dificultad auditiva: " + dificultadAuditivaString + "\n" +
                 "Lenguaje señas: " + lenguajeSeñasString + "\n" +
                 "Participa en subcomision: " + participaSubcomisionString + "\n" +
                 "Subcomision: " + subcomision;
+    }
+
+    public String confirmacionUsuario(){
+        return "Nombre: " + nombre + "\n" +
+                "Apellido: " + apellido + "\n" +
+                "Tipo de documento: " + tipoDocumento.toString().toLowerCase() + "\n" +
+                "Documento: " + documento + "\n" +
+                "Fecha de nacimiento: " + fechaNacimiento + "\n" +
+                "Domicilio: " + domicilio + "\n" +
+                "Telefonos: " + telefonos + "\n" +
+                "Email: " + email + "\n" +
+                "Tipo de usuario: " + tipoUsuario.toString().toLowerCase() + "\n";
     }
 
 

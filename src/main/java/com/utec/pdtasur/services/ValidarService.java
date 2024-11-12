@@ -92,7 +92,7 @@ public class ValidarService {
             System.out.println("El telefono ya esta registrado");
             return false;
         }
-        return telefono.matches("\\d{7,15}");
+        return telefono.matches("^\\d{7,15}$");
     }
 
     public static boolean validarEmail(String email) {
@@ -104,6 +104,18 @@ public class ValidarService {
             return false;
         }
         return email.matches("^[A-Za-z0-9]([A-Za-z0-9._%+-]{0,63}[A-Za-z0-9])?@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+    }
+
+    public static boolean validarEmailLogin(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+        if (!usuarioDAO.seleccionarEmail(email)){
+            System.out.println("El email no esta registrado");
+            return false;
+        }
+        return email.matches("^[A-Za-z0-9]([A-Za-z0-9._%+-]{0,63}[A-Za-z0-9])?@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+
     }
 
     public static boolean validarContraseña(String contrasena) {
