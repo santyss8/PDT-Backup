@@ -349,6 +349,7 @@ public class Usuario {
                 "Telefonos: " + telefonos + "\n" +
                 "Email: " + email + "\n" +
                 "Tipo de usuario: " + tipoUsuario.toString().toLowerCase() + "\n";
+
     }
 
     public String mostrarUsuarioGenerico(){

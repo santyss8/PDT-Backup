@@ -167,6 +167,23 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     }
 
     @Override
+    public void activar(Usuario usuario) {
+        Properties properties = loadProperties();
+        String sql = properties.getProperty("sql.deleteUsuario");
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setBoolean(1, usuario.isActivo());
+            ps.setString(2, usuario.getDocumento());
+            ps.executeUpdate();
+            System.out.println("Usuario Activado con Exito");
+        }catch (Exception e){
+            System.out.println("Error al Eliminar Usuario");
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Override
     public Usuario login(String email, String contraseña) {
         Properties properties = loadProperties();
         String sql = properties.getProperty("sql.login");

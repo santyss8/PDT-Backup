@@ -11,10 +11,12 @@ public interface UsuarioDAO {
     void registrarSocio(Usuario usuario);
     void modificar(Usuario usuario);
     void eliminar(Usuario usuario);
+    void activar(Usuario usuario);
     Usuario login(String email, String contraseña);
     void modificarDatosPropios(Usuario usuario);
     List<Usuario> listarUsuarios();
     boolean seleccionarEmail(String email);
     boolean seleccionarDocumento(String documento);
     boolean seleccionarTelefono(String numero);
+
 }

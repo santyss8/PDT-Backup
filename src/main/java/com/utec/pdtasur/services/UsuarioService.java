@@ -793,10 +793,10 @@ public class UsuarioService {
                     modificarDatos();
                     break;
                 case 3:
-                    activarUsuario(); // TODO
+                    activarUsuario();
                     break;
                 case 4:
-                    bajaUsuario(); // TODO
+                    bajaUsuario();
                     break;
                 case 5:
                     bandera = false;
@@ -1084,13 +1084,12 @@ public class UsuarioService {
             System.out.print("""
                 ----- Modificar Datos de Usuario -----
                 1. Listar Usuarios
-                2. Activar Usuario
-                3. Salir
+                2. Salir
                 """);
             try {
                 opcion = sc.nextInt();
                 sc.nextLine();
-                if (opcion < 1 || opcion > 3){
+                if (opcion < 1 || opcion > 2){
                     System.out.println("Opcion invalida");
                     continue;
                 }
@@ -1104,9 +1103,6 @@ public class UsuarioService {
                     listarUsuariosModificar();
                     continue;
                 case 2:
-                    activarUsuario();
-                    continue;
-                case 3:
                     System.out.println("saliendo");
                     bandera = false;
                     break;
@@ -1451,25 +1447,106 @@ public class UsuarioService {
         }
     }
 
-    private Usuario buscarUsuarioDocumento(String documento){
-        List<Usuario> usuarios = usuarioDAO.listarUsuarios();
-        for (Usuario usuario : usuarios) {
-            if (usuario.getDocumento().equals(documento)){
-                return usuario;
-            }
-        }
-        return null;
-    }
-
-
-
-
 
     private void activarUsuario(){
+        boolean bandera = true;
+        int opcion;
+        while (bandera){
+            System.out.print("""
+                ----- Activar Usuario en el sistema -----
+                1. Listar Usuarios
+                2. Salir
+                """);
+            try {
+                opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > 2){
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+            }catch (InputMismatchException e){
+                System.out.println("Tienes que ingresar un numero");
+                sc.nextLine();
+                continue;
+            }
+            switch (opcion){
+                case 1:
+                    listarUsuariosActivar();
+                    continue;
+                case 2:
+                    System.out.println("saliendo");
+                    bandera = false;
+                    break;
+                default:
+                    System.out.println("Seleccione una opcion valida");
+                    break;
+            }
 
+
+        }
+
+    }
+
+    public void listarUsuariosActivar(){
+        List<Usuario> usuarios = usuarioDAO.listarUsuarios();
+        usuarios = filtrarPorEstado(usuarios, false);
+        System.out.println("Usuarios pendientes para activar:");
+        mostrarUsuariosListados(usuarios);
+        do {
+            Usuario usuario = null;
+            System.out.println("Seleccione un Usuario ingresando su documento");
+            String documento = sc.nextLine();
+            for (Usuario usu : usuarios){
+                if (usu.getDocumento().equals(documento)){
+                    usuario = usu;
+                }
+            }
+            if (usuario == null){
+                System.out.println("El documento que ingreso es invalido");
+                continue;
+            }
+            System.out.println("El usuario seleccionado es: " + usuario.getNombre() + " " + usuario.getApellido() + " - " + usuario.getTipoUsuario().toString().toLowerCase());
+            System.out.println("¿Quiere activar este Usuario? S/N");
+            String opcion = sc.nextLine();
+            if (opcion.toLowerCase().equals("s")){
+                usuario.setActivo(true);
+                usuarioDAO.activar(usuario);
+            }
+            break;
+
+
+        }while (true);
     }
 
     private void bajaUsuario(){
+        List<Usuario> usuarios = usuarioDAO.listarUsuarios();
+        usuarios = filtrarPorEstado(usuarios, true);
+        System.out.println("Usuarios Activos:");
+        mostrarUsuariosListados(usuarios);
+        do {
+            Usuario usuario = null;
+            System.out.println("Seleccione un Usuario ingresando su documento");
+            String documento = sc.nextLine();
+            for (Usuario usu : usuarios){
+                if (usu.getDocumento().equals(documento)){
+                    usuario = usu;
+                }
+            }
+            if (usuario == null){
+                System.out.println("El documento que ingreso es invalido");
+                continue;
+            }
+            System.out.println("El usuario seleccionado es: " + usuario.getNombre() + " " + usuario.getApellido() + " - " + usuario.getTipoUsuario().toString().toLowerCase());
+            System.out.println("¿Quiere dar de baja a este Usuario? S/N");
+            String opcion = sc.nextLine();
+            if (opcion.toLowerCase().equals("s")){
+                usuario.setActivo(false);
+                usuarioDAO.eliminar(usuario);
+            }
+            break;
+
+
+        }while (true);
 
     }
 
