@@ -351,6 +351,10 @@ public class Usuario {
                 "Tipo de usuario: " + tipoUsuario.toString().toLowerCase() + "\n";
     }
 
+    public String mostrarUsuarioGenerico(){
+        return "Usuario: " + nombre + " " + apellido + " Documento: " + documento + " Tipo de usuario: " + tipoUsuario.toString();
+    }
+
 
 
 }

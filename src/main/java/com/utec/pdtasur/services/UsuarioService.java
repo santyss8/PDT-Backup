@@ -757,19 +757,7 @@ public class UsuarioService {
 
     }
 
-    public void listarCategorias() {
-        List<CategoriaSocio> categorias = categoriaSocioDAO.listarCategorias();
-        for (CategoriaSocio categoriaSocio : categorias) {
-            System.out.println(categoriaSocio);
-        }
-    }
 
-    public void listarSubcomisiones() {
-        List<Subcomision> subcomisiones = subcomisionDAO.listarSubcomisiones();
-        for (Subcomision subcomision : subcomisiones) {
-            System.out.println(subcomision);
-        }
-    }
 
 
     public void gestionUsuarioMenu(Usuario usuarioSesion) {
@@ -805,10 +793,10 @@ public class UsuarioService {
                     modificarDatos();
                     break;
                 case 3:
-                    activarUsuario();
+                    activarUsuario(); // TODO
                     break;
                 case 4:
-                    bajaUsuario();
+                    bajaUsuario(); // TODO
                     break;
                 case 5:
                     bandera = false;
@@ -1024,12 +1012,6 @@ public class UsuarioService {
 
     }
 
-    public static void main(String[] args) throws SQLException {
-        UsuarioService usuarioService = new UsuarioService();
-        usuarioService.gestionUsuarioMenu(null);
-    }
-
-
     private void mostrarUsuariosListados(List<Usuario> usuarios) {
         for (Usuario usuario : usuarios) {
             if (usuario.getTipoUsuario().equals(TipoUsuario.SOCIO)) {
@@ -1097,19 +1079,67 @@ public class UsuarioService {
 
     private void modificarDatos() {
         boolean bandera = true;
-        int opcion = 0;
-        List<Usuario> usuarios = usuarioDAO.listarUsuarios();
-        while (bandera) {
-            opcion = 0;
+        int opcion;
+        while (bandera){
             System.out.print("""
-                    ----- Modificar Datos de Usuario -----
-                    1. Listar Usuarios para modificar
-                    2. Salir
+                ----- Modificar Datos de Usuario -----
+                1. Listar Usuarios
+                2. Activar Usuario
+                3. Salir
+                """);
+            try {
+                opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > 2){
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+            }catch (InputMismatchException e){
+                System.out.println("Tienes que ingresar un numero");
+                sc.nextLine();
+                continue;
+            }
+            switch (opcion){
+                case 1:
+                    listarUsuariosModificar();
+                    continue;
+                case 2:
+                    activarUsuario();
+                    continue;
+                case 3:
+                    System.out.println("saliendo");
+                    bandera = false;
+                    break;
+                default:
+                    System.out.println("Seleccione una opcion valida");
+                    break;
+            }
+
+
+        }
+
+    }
+
+    private void listarUsuariosModificar() {
+        int opcion = 0;
+        boolean bandera = true;
+        while (bandera){
+            System.out.println("----- Listado de Usuarios ------");
+            List<Usuario> usuarios = usuarioDAO.listarUsuarios();
+            System.out.print("""
+                    Como quiere filtrar los usuarios?
+                    1. Nombre
+                    2. Apellido
+                    3. Documento
+                    4. Tipo de Usuario
+                    5. Estado
+                    6. Por Defecto (Estado: Activo)
+                    7. Salir
                     """);
             try {
                 opcion = sc.nextInt();
                 sc.nextLine();
-                if (opcion < 1 || opcion > 2) {
+                if (opcion < 1 || opcion > 7) {
                     System.out.println("Opcion invalida");
                     continue;
                 }
@@ -1118,25 +1148,319 @@ public class UsuarioService {
                 sc.nextLine();
                 continue;
             }
+
             switch (opcion) {
                 case 1:
-                    filtrarModificarDatos();
+                    System.out.println("Ingrese el nombre");
+                    String nombre = sc.nextLine();
+                    if (nombre.matches("^[a-zA-Z]+$")) {
+                        usuarios = filtrarPorNombre(usuarios, nombre);
+                    } else {
+                        System.out.println("El nombre ingresado no es válido");
+                        continue;
+                    }
+                    System.out.println("----- Lista de Usuarios filtrados por nombre: " + nombre + " -----");
+                    mostrarUsuariosListados(usuarios);
+                    System.out.println("Quiere filtrar otra vez? (S/N)");
+                    String opcionFiltro = sc.nextLine();
+                    if (opcionFiltro.equals("S")) {
+                        continue;
+                    }
+                    if (opcionFiltro.equals("N")) {
+                        menuModificarDatos(usuarios);
+                    }
                     continue;
                 case 2:
+                    System.out.println("Ingrese el apellido");
+                    String apellido = sc.nextLine();
+                    if (apellido.matches("^[a-zA-Z]+$")) {
+                        usuarios = filtrarPorApellido(usuarios, apellido);
+                    } else {
+                        System.out.println("El apellido ingresado no es válido");
+                        continue;
+                    }
+                    System.out.println("----- Lista de Usuarios filtrados por apellido: " + apellido + " -----");
+                    mostrarUsuariosListados(usuarios);
+                    System.out.println("Quiere filtrar otra vez? (S/N)");
+                    opcionFiltro = sc.nextLine();
+                    if (opcionFiltro.equals("S")) {
+                        continue;
+                    }
+                    if (opcionFiltro.equals("N")) {
+                        menuModificarDatos(usuarios);
+                    }
+                    continue;
+                case 3:
+                    System.out.println("Ingrese su documento");
+                    String documento = sc.nextLine();
+                    System.out.println("----- Lista de Usuarios filtrados por documento: " + documento + " -----");
+                    mostrarUsuariosListados(filtrarPorDocumento(usuarios, documento));
+                    System.out.println("Quiere filtrar otra vez? (S/N)");
+                    opcionFiltro = sc.nextLine();
+                    if (opcionFiltro.equals("S")) {
+                        continue;
+                    }
+                    if (opcionFiltro.equals("N")) {
+                        menuModificarDatos(usuarios);
+                    }
+
+                    continue;
+                case 4:
+                    System.out.println("Seleccione un tipo de usuario");
+                    TipoUsuario tipoUsuarioTemp = null;
+                    int i = 1;
+                    for (TipoUsuario tipoUsuario : TipoUsuario.values()) {
+                        ;
+                        System.out.println(i + ". " + tipoUsuario);
+                        i = i + 1;
+                    }
+                    try {
+                        opcion = sc.nextInt();
+                        sc.nextLine();
+                        if (opcion < 1 || opcion > 3) {
+                            System.out.println("Opcion invalida");
+                            continue;
+                        }
+                        if (opcion == 1) {
+                            tipoUsuarioTemp = TipoUsuario.SOCIO;
+                        }
+                        if (opcion == 2) {
+                            tipoUsuarioTemp = TipoUsuario.NOSOCIO;
+                        }
+                        if (opcion == 3) {
+                            tipoUsuarioTemp = TipoUsuario.AUXILIARADMINISTRATIVO;
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Tienes que ingresar un numero");
+                        sc.nextLine();
+                        continue;
+                    }
+                    switch (opcion) {
+                        case 1:
+                            System.out.println("Filtrado por Socio");
+                            usuarios = filtrarPorTipoUsuario(usuarios, TipoUsuario.SOCIO);
+                            break;
+                        case 2:
+                            System.out.println("Filtrado por No Socio");
+                            usuarios = filtrarPorTipoUsuario(usuarios, TipoUsuario.NOSOCIO);
+                            break;
+                        case 3:
+                            System.out.println("Filtrado por AuxiliarAdministrador");
+                            usuarios = filtrarPorTipoUsuario(usuarios, TipoUsuario.AUXILIARADMINISTRATIVO);
+                            break;
+                        default:
+                            System.out.println("Opcion invalida");
+                            continue;
+                    }
+                    System.out.println("----- Lista de Usuarios filtrados por tipo de usuario: " + tipoUsuarioTemp.toString().toLowerCase() + " -----");
+                    mostrarUsuariosListados(usuarios);
+                    System.out.println("Quiere filtrar otra vez? (S/N)");
+                    opcionFiltro = sc.nextLine();
+                    if (opcionFiltro.equals("S")) {
+                        continue;
+                    }
+                    if (opcionFiltro.equals("N")) {
+                        menuModificarDatos(usuarios);
+                    }
+                    continue;
+                case 5:
+                    System.out.println("Seleccione un estado");
+                    System.out.println("1. Activo");
+                    System.out.println("2. Inactivo");
+                    try {
+                        opcion = sc.nextInt();
+                        sc.nextLine();
+                        if (opcion < 1 || opcion > 2) {
+                            System.out.println("Opcion invalida");
+                            continue;
+                        }
+                        if (opcion == 1) {
+                            System.out.println("Filtrado por estado activo");
+                            usuarios = filtrarPorEstado(usuarios, true);
+                        }
+                        if (opcion == 2) {
+                            System.out.println("Filtrado por estado inactivo");
+                            usuarios = filtrarPorEstado(usuarios, false);
+                        }
+                    } catch (InputMismatchException e) {
+                        System.out.println("Tienes que ingresar un numero");
+                        sc.nextLine();
+                        continue;
+                    }
+                    System.out.println("----- Lista de Usuarios filtrados por estado: " + opcion + " -----");
+                    mostrarUsuariosListados(usuarios);
+                    System.out.println("Quiere filtrar otra vez? (S/N)");
+                    opcionFiltro = sc.nextLine();
+                    if (opcionFiltro.equals("S")) {
+                        continue;
+                    }
+                    if (opcionFiltro.equals("N")) {
+                        menuModificarDatos(usuarios);
+                    }
+                    continue;
+                case 6:
+                    usuarios = filtrarPorEstado(usuarios, true);
+                    System.out.println("----- Lista de Usuarios filtrados por estado activo -----");
+                    mostrarUsuariosListados(usuarios);
+                    System.out.println("Quiere filtrar otra vez? (S/N)");
+                    opcionFiltro = sc.nextLine();
+                    if (opcionFiltro.equals("S")) {
+                        continue;
+                    }
+                    if (opcionFiltro.equals("N")) {
+                        menuModificarDatos(usuarios);
+                    }
+                    continue;
+                case 7:
+                    System.out.println("saliendo...");
                     bandera = false;
                     break;
                 default:
                     System.out.println("Opcion invalida");
-                    break;
+            }
+        }
+
+    }
+
+    private void menuModificarDatos(List<Usuario> usuarios){
+        Usuario usuario = null;
+        System.out.println("Ingrese un documento para seleccionar Usuario");
+        String documento = sc.nextLine();
+        for (Usuario usu : usuarios){
+            if (usu.getDocumento().equals(documento)){
+                usuario = usu;
+            }
+        }
+        if (usuario == null){
+            System.out.println("El documento que ingresaste no corresponde a ningun usuario");
+        }
+        if (usuario != null){
+            System.out.println("Ha seleccionado al Usuario: ");
+            System.out.println(usuario.mostrarUsuarioGenerico());
+            if (usuario.getTipoUsuario() == TipoUsuario.SOCIO){
+                System.out.println("Seguro que quiere cambiar este usuario a No Socio?");
+                System.out.println("1. Si 2. No");
+                try {
+                    int opcion = sc.nextInt();
+                    sc.nextLine();
+                    if (opcion == 1){
+                        usuario.setTipoUsuario(TipoUsuario.NOSOCIO);
+                        usuarioDAO.modificar(usuario);
+                    }
+                }catch (InputMismatchException e){
+                    System.out.println("La opcion debe ser un numero");
+                }
+            }
+            else if (usuario.getTipoUsuario() == TipoUsuario.NOSOCIO){
+                System.out.println("Segurio que quiere cambiar este usuario a Socio?");
+                System.out.println("1. Si 2. No");
+                try {
+                    int opcion = sc.nextInt();
+                    sc.nextLine();
+                    if (opcion == 1){
+                        usuario.setTipoUsuario(TipoUsuario.SOCIO);
+                        do {
+                            System.out.println("Seleccione su categoria de socio");
+                            List<CategoriaSocio> categorias = categoriaSocioDAO.listarCategorias();
+                            for (CategoriaSocio categoriaSocio : categorias) {
+                                System.out.println(categoriaSocio);
+                            }
+                            try {
+                                opcion = sc.nextInt();
+                                sc.nextLine();
+                                if (opcion < 1 || opcion > categorias.size()) {
+                                    System.out.println("Opcion invalida");
+                                    continue;
+                                }
+                                usuario.setCategoriaSocio(categorias.get(opcion - 1));
+                                break;
+                            } catch (InputMismatchException e) {
+                                System.out.println("la opcion tiene que ser un numero");
+                                sc.nextLine();
+                            }
+                        } while (true);
+                        do {
+                            System.out.println("Tiene dificultad auditiva S/N");
+                            String dificultadAuditiva = sc.nextLine();
+                            if (dificultadAuditiva.equals("S")) {
+                                usuario.setDificultadAuditiva(true);
+                            } else if (dificultadAuditiva.equals("N")) {
+                                usuario.setDificultadAuditiva(false);
+                            } else {
+                                System.out.println("Opcion invalida");
+                                continue;
+                            }
+                            break;
+                        } while (true);
+                        do {
+                            System.out.println("Tiene lenguaje señas S/N");
+                            String lenguajeSeñas = sc.nextLine();
+                            if (lenguajeSeñas.equals("S")) {
+                                usuario.setLenguajeSeñas(true);
+                            } else if (lenguajeSeñas.equals("N")) {
+                                usuario.setLenguajeSeñas(false);
+                            } else {
+                                System.out.println("Opcion invalida");
+                                continue;
+                            }
+                            break;
+                        } while (true);
+                        do {
+                            System.out.println("Participa en subcomision S/N");
+                            String participaSubcomision = sc.nextLine();
+                            if (participaSubcomision.equals("S")) {
+                                usuario.setParticipaSubcomision(true);
+                            } else if (participaSubcomision.equals("N")) {
+                                usuario.setParticipaSubcomision(false);
+                            } else {
+                                System.out.println("Opcion invalida");
+                                continue;
+                            }
+                            break;
+                        } while (true);
+                        if (usuario.isParticipaSubcomision()) {
+                            do {
+                                System.out.println("Ingrese su subcomision");
+                                List<Subcomision> subcomisiones = subcomisionDAO.listarSubcomisiones();
+                                for (Subcomision subcomision : subcomisiones) {
+                                    System.out.println(subcomision);
+                                }
+                                try {
+                                    opcion = sc.nextInt();
+                                    sc.nextLine();
+                                    if (opcion < 1 || opcion > subcomisiones.size()) {
+                                        System.out.println("Opcion invalida");
+                                        continue;
+                                    }
+                                    usuario.setSubcomision(subcomisiones.get(opcion - 1));
+                                    break;
+                                } catch (InputMismatchException e) {
+                                    System.out.println("la opcion tiene que ser un numero");
+                                    sc.nextLine();
+                                }
+                            }while (true);
+                            }
+
+                        usuarioDAO.modificar(usuario);
+                    }
+                }catch (InputMismatchException e){
+                    System.out.println("La opcion debe ser un numero");
+                }
             }
 
         }
     }
 
-    private void filtrarModificarDatos() {
-
-
+    private Usuario buscarUsuarioDocumento(String documento){
+        List<Usuario> usuarios = usuarioDAO.listarUsuarios();
+        for (Usuario usuario : usuarios) {
+            if (usuario.getDocumento().equals(documento)){
+                return usuario;
+            }
+        }
+        return null;
     }
+
 
 
 
@@ -1149,14 +1473,6 @@ public class UsuarioService {
 
     }
 
-    private Usuario devolverPorDocumento(List<Usuario> usuarios, String documento){
-        for (Usuario usuario : usuarios){
-            if (usuario.getDocumento().equals(documento)){
-                return usuario;
-            }
-        }
-        return null;
-    }
 
 
 }
