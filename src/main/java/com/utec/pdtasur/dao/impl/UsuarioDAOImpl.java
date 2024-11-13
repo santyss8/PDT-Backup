@@ -238,8 +238,13 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                     ps.setNull(6, Types.INTEGER);
                 }
                 ps.setString(7, usuario.getDocumento());
-                ps.executeUpdate();
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()){
+                    usuario.setNumeroSocio(rs.getInt("numero_socio"));
+                }
                 System.out.println("Usuario Modificado con Exito");
+                EmailSenderService emailSenderService = new EmailSenderService();
+                emailSenderService.sendEmailActivacion(usuario.getEmail(), usuario.getNombre(), usuario.getNumeroSocio());
             } catch (Exception e){
                 System.out.println("Error al modificar Usuario");
                 e.printStackTrace();
@@ -257,6 +262,8 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 ps.setString(7, usuario.getDocumento());
                 ps.executeUpdate();
                 System.out.println("Usuario Modificado con Exito");
+                EmailSenderService emailSenderService = new EmailSenderService();
+                emailSenderService.sendEmailModificarNosocio(usuario.getEmail(), usuario.getNombre());
             } catch (Exception e){
                 System.out.println("Error al modificar Usuario");
                 e.printStackTrace();

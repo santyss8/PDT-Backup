@@ -1090,7 +1090,7 @@ public class UsuarioService {
             try {
                 opcion = sc.nextInt();
                 sc.nextLine();
-                if (opcion < 1 || opcion > 2){
+                if (opcion < 1 || opcion > 3){
                     System.out.println("Opcion invalida");
                     continue;
                 }
