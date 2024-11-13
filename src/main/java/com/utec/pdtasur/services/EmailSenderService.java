@@ -601,4 +601,186 @@ public class EmailSenderService {
             throw new RuntimeException(e);
         }
     }
+
+    public void sendEmailBaja(String recipient, String nombre) {
+        Properties props = new Properties();
+        try (FileInputStream input = new FileInputStream("src/main/resources/app.properties")) {
+            props.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String username = props.getProperty("username");
+        String password = props.getProperty("password");
+
+        // Crear sesión con autenticación
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+
+        try {
+            // Crear el mensaje
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
+            message.setSubject("Desactivación de Acceso al Sistema - ASUR");
+
+            // Contenido HTML
+            String htmlContent = """
+                <!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Desactivación de Acceso</title>
+                    <style>
+                        body, table, td, a {
+                            font-family: sans-serif;
+                        }
+                        .container {
+                            max-width: 600px;
+                            background-color: #ffffff;
+                            border-radius: 4px;
+                        }
+                        .header {
+                            background-color: #d9534f;
+                            color: #ffffff;
+                            padding: 20px;
+                            text-align: center;
+                            font-size: 24px;
+                        }
+                        .content {
+                            padding: 20px;
+                            color: #333333;
+                        }
+                        .footer {
+                            font-size: 12px;
+                            color: #666666;
+                            text-align: center;
+                        }
+                    </style>
+                </head>
+                <body style="background-color: #f4f4f4; margin: 0; padding: 0;">
+                    <table align="center" class="container">
+                        <tr>
+                            <td class="header">ASUR</td>
+                        </tr>
+                        <tr>
+                            <td class="content">
+                                <h2>Estimado/a \s""" + nombre + """
+                                ,</h2>
+                                <p>Le informamos que su acceso al sistema ha sido desactivado. Si tiene alguna pregunta o necesita más información, por favor póngase en contacto con nuestro equipo de soporte.</p>
+                                <p>Atentamente,<br>El equipo de ASUR</p>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>
+                """;
+
+            message.setContent(htmlContent, "text/html; charset=UTF-8");
+
+            Transport.send(message);
+            System.out.println("Correo de baja enviado exitosamente.");
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendEmailAlta(String recipient, String nombre) {
+        Properties props = new Properties();
+        try (FileInputStream input = new FileInputStream("src/main/resources/app.properties")) {
+            props.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String username = props.getProperty("username");
+        String password = props.getProperty("password");
+
+        // Crear sesión con autenticación
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+
+        try {
+            // Crear el mensaje
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipient));
+            message.setSubject("Activación de Acceso al Sistema - ASUR");
+
+            // Contenido HTML
+            String htmlContent = """
+                <!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Activación de Acceso</title>
+                    <style>
+                        body, table, td, a {
+                            font-family: sans-serif;
+                        }
+                        .container {
+                            max-width: 600px;
+                            background-color: #ffffff;
+                            border-radius: 4px;
+                        }
+                        .header {
+                            background-color: #28a745;
+                            color: #ffffff;
+                            padding: 20px;
+                            text-align: center;
+                            font-size: 24px;
+                        }
+                        .content {
+                            padding: 20px;
+                            color: #333333;
+                        }
+                        .footer {
+                            font-size: 12px;
+                            color: #666666;
+                            text-align: center;
+                        }
+                    </style>
+                </head>
+                <body style="background-color: #f4f4f4; margin: 0; padding: 0;">
+                    <table align="center" class="container">
+                        <tr>
+                            <td class="header">ASUR</td>
+                        </tr>
+                        <tr>
+                            <td class="content">
+                                <h2>Estimado/a \s""" + nombre + """
+                                ,</h2>
+                                <p>Nos complace informarle que su cuenta ha sido activada con éxito. Ahora puede ingresar al sistema utilizando sus credenciales registradas.</p>
+                                <p>Si necesita ayuda o tiene alguna pregunta, no dude en ponerse en contacto con nuestro equipo de soporte.</p>
+                                <p>Atentamente,<br>El equipo de ASUR</p>
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>
+                """;
+
+            message.setContent(htmlContent, "text/html; charset=UTF-8");
+
+            Transport.send(message);
+            System.out.println("Correo de alta enviado exitosamente.");
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
 }

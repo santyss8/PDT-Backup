@@ -157,6 +157,8 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             ps.setBoolean(1, usuario.isActivo());
             ps.setString(2, usuario.getDocumento());
             ps.executeUpdate();
+            EmailSenderService emailSenderService = new EmailSenderService();
+            emailSenderService.sendEmailBaja(usuario.getEmail(), usuario.getNombre());
             System.out.println("Usuario Eliminado con Exito");
         }catch (Exception e){
             System.out.println("Error al Eliminar Usuario");
@@ -174,6 +176,8 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             ps.setBoolean(1, usuario.isActivo());
             ps.setString(2, usuario.getDocumento());
             ps.executeUpdate();
+            EmailSenderService emailSenderService = new EmailSenderService();
+            emailSenderService.sendEmailAlta(usuario.getEmail(), usuario.getNombre());
             System.out.println("Usuario Activado con Exito");
         }catch (Exception e){
             System.out.println("Error al Eliminar Usuario");
