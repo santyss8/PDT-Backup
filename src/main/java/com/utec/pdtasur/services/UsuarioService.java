@@ -1578,7 +1578,7 @@ public class UsuarioService {
                     modificarDatosPropios(usuarioActual);
                     continue;
                 case 2:
-//                    modificarTelefonos(usuarioActual);
+                    modificarTelefonos(usuarioActual);
                     continue;
                 case 3:
                     System.out.println("saliendo");
@@ -1760,6 +1760,72 @@ public class UsuarioService {
                 }
             }catch (InputMismatchException e){
                 System.out.println("La opcion debe ser un numero");
+            }
+            break;
+        }while (true);
+
+    }
+
+    private void modificarTelefonos(Usuario usuarioActual){
+        int opcion;
+        do {
+            System.out.print("""
+                    ----- Modificar Telefonos -----
+                    1. Agregar Telefono
+                    2. Eliminar Telefono
+                    3. Salir
+                    """);
+            try {
+                opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > 3){
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+                switch (opcion){
+                    case 1:
+                        System.out.println("Ingrese el telofono que desea agregar");
+                        String numero = sc.nextLine();
+                        if (!validarTelefono(numero)){
+                            System.out.println("El numero ingresado no es válido");
+                            continue;
+                        }
+                        usuarioDAO.insertarTelefono(usuarioActual.getDocumento(), numero);
+                        usuarioActual.agregarTelefono(numero);
+                        break;
+                    case 2:
+                        System.out.println("Seleccione el numero que desea eliminar");
+                        for (String numeroTelefono : usuarioActual.getTelefonos()){
+                            System.out.println(numeroTelefono);
+                        }
+                        try {
+                            numero = sc.nextLine();
+                            if (!validarTelefonoEliminar(numero, usuarioActual.getDocumento())){
+                                System.out.println("El numero ingresado no es válido");
+                                continue;
+                            }
+                            if (!usuarioActual.getTelefonos().contains(numero)){
+                                System.out.println("El numero no existe");
+                                continue;
+                            }
+                            usuarioDAO.eliminarTelefono(usuarioActual.getDocumento(), numero);
+                            usuarioActual.getTelefonos().remove(numero);
+                        }catch (InputMismatchException e){
+                            System.out.println("El numero ingresado no es válido");
+                            continue;
+                        }
+                        break;
+                    case 3:
+                        System.out.println("saliendo");
+                        break;
+                    default:
+                        System.out.println("Opcion invalida");
+                        continue;
+                }
+            }catch (InputMismatchException e){
+                System.out.println("Tienes que ingresar un numero");
+                sc.nextLine();
+                continue;
             }
             break;
         }while (true);

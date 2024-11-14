@@ -424,6 +424,21 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         return false;
     }
 
+    public boolean seleccionarTelefonoEliminar(String documento) {
+        Properties properties = loadProperties();
+        String sql = properties.getProperty("sql.selectTelefonos");
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, documento);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     @Override
     public void insertarTelefono(String documento, String numero) {
         Properties properties = loadProperties();
@@ -435,6 +450,20 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             System.out.println("Telefono agregado");
         }catch (Exception e){
             System.out.println("Error al agregar telefono");
+        }
+    }
+
+    @Override
+    public void eliminarTelefono(String documento, String numero) {
+        Properties properties = loadProperties();
+        String sql = properties.getProperty("sql.deleteTelefonos");
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, documento);
+            ps.setString(2, numero);
+            ps.executeUpdate();
+            System.out.println("Telefono eliminado");
+        }catch (Exception e){
+            System.out.println("Error al eliminar telefono");
         }
     }
 

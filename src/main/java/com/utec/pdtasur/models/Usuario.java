@@ -215,6 +215,10 @@ public class Usuario {
         this.telefonos = telefonos;
     }
 
+    public void agregarTelefono(String numero){
+        this.telefonos.add(numero);
+    }
+
     public String getEmail() {
         return email;
     }

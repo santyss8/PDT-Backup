@@ -91,6 +91,17 @@ public class ValidarService {
         return telefono.matches("^\\d{7,15}$");
     }
 
+    public static boolean validarTelefonoEliminar(String telefono, String documento) {
+        if (telefono == null || telefono.trim().isEmpty()) {
+            return false;
+        }
+        if (!usuarioDAO.seleccionarTelefonoEliminar(documento)){
+            System.out.println("El telefonio no esta registrado");
+            return false;
+        }
+        return telefono.matches("^\\d{7,15}$");
+    }
+
     public static boolean validarEmail(String email) {
         if (email == null || email.trim().isEmpty()) {
             return false;
