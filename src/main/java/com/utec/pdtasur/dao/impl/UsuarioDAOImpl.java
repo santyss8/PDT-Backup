@@ -424,6 +424,21 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         return false;
     }
 
+    @Override
+    public void insertarTelefono(String documento, String numero) {
+        Properties properties = loadProperties();
+        String sql = properties.getProperty("sql.insertTelefonos");
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, documento);
+            ps.setString(2, numero);
+            ps.executeUpdate();
+            System.out.println("Telefono agregado");
+        }catch (Exception e){
+            System.out.println("Error al agregar telefono");
+        }
+    }
+
+
 
 
     // metodo para recuperar propiedades y para generar clase conexion

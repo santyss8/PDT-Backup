@@ -760,7 +760,7 @@ public class UsuarioService {
 
 
 
-    public void gestionUsuarioMenu(Usuario usuarioSesion) {
+    public void gestionUsuarioMenu() {
         boolean bandera = true;
         int opcion;
         while (bandera) {
@@ -1550,6 +1550,221 @@ public class UsuarioService {
 
     }
 
+
+    public void gestionUsuarioNoSocioMenu(Usuario usuarioActual) {
+        boolean bandera = true;
+        int opcion;
+        while (bandera){
+            System.out.print("""
+                    ----- Gestion de Usuario -----
+                    1. Modificar Datos de Usuario
+                    2. Modificar Telefonos
+                    3. Salir
+                    """);
+            try {
+                opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > 3){
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+            }catch (InputMismatchException e){
+                System.out.println("Tienes que ingresar un numero");
+                sc.nextLine();
+                continue;
+            }
+            switch (opcion){
+                case 1:
+                    modificarDatosPropios(usuarioActual);
+                    continue;
+                case 2:
+//                    modificarTelefonos(usuarioActual);
+                    continue;
+                case 3:
+                    System.out.println("saliendo");
+                    bandera = false;
+                    break;
+                default:
+                    System.out.println("Seleccione una opcion valida");
+                    break;
+
+            }
+        }
+    }
+
+    private void modificarDatosPropios(Usuario usuarioActual){
+        do {
+            System.out.println("Desea cambiar su nombre?");
+            System.out.println("1. Si 2. No");
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion == 1){
+                    System.out.println("Ingrese su nuevo nombre");
+                    String nombre = sc.nextLine();
+                    if (!validarNombreApellido(nombre)){
+                        System.out.println("El nombre ingresado no es válido");
+                        continue;
+                    }
+                    usuarioActual.setNombre(nombre);
+                }
+            }catch (InputMismatchException e){
+                System.out.println("La opcion debe ser un numero");
+            }
+            break;
+        }while (true);
+        do {
+            System.out.println("Desea cambiar su apellido?");
+            System.out.println("1. Si 2. No");
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion == 1){
+                    System.out.println("Ingrese su nuevo apellido");
+                    String apellido = sc.nextLine();
+                    if (!validarNombreApellido(apellido)){
+                        System.out.println("El apellido ingresado no es válido");
+                        continue;
+                    }
+                    usuarioActual.setApellido(apellido);
+                }
+            }catch (InputMismatchException e){
+                System.out.println("La opcion debe ser un numero");
+            }
+            break;
+        }while (true);
+        do {
+            System.out.println("Desea cambiar su contraseña?");
+            System.out.println("1. Si 2. No");
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion == 1){
+                    System.out.println("Ingrese su nueva contraseña");
+                    String contraseña = sc.nextLine();
+                    if (!validarContraseña(contraseña)){
+                        System.out.println("La contraseña ingresada no es válida");
+                        continue;
+                    }
+                    contraseña = hashPassword(contraseña);
+                    usuarioActual.setContraseña(contraseña);
+                }
+            }catch (InputMismatchException e){
+                System.out.println("La opcion debe ser un numero");
+            }
+            break;
+        }while (true);
+        do {
+            System.out.println("Desea cambiar su fecha de nacimiento?");
+            System.out.println("1. Si 2. No");
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion == 1){
+                    System.out.println("Ingrese su nueva fecha de nacimiento");
+                    String fechaNacimiento = sc.nextLine();
+                    if (validarFechaNacimiento(fechaNacimiento) == null){
+                        System.out.println("La fecha de nacimiento no es válida");
+                        continue;
+                    }
+                    usuarioActual.setFechaNacimiento(validarFechaNacimiento(fechaNacimiento));
+                }
+            }catch (InputMismatchException e){
+                System.out.println("La opcion debe ser un numero");
+            }
+            break;
+        }while (true);
+        if (usuarioActual.getTipoUsuario().equals(TipoUsuario.SOCIO)){
+            do {
+                System.out.println("Desea cambiar su dificultad auditiva?");
+                System.out.println("1. Si 2. No");
+                try {
+                    int opcion = sc.nextInt();
+                    sc.nextLine();
+                    if (opcion == 1){
+                        System.out.println("Ingrese su nueva dificultad auditiva");
+                        String dificultadAuditiva = sc.nextLine();
+                        if (dificultadAuditiva.equalsIgnoreCase("S")){
+                            usuarioActual.setDificultadAuditiva(true);
+                        }else if (dificultadAuditiva.equalsIgnoreCase("N")){
+                            usuarioActual.setDificultadAuditiva(false);
+                        }else {
+                            System.out.println("Opcion invalida");
+                            continue;
+                        }
+                    }
+                }catch (InputMismatchException e){
+                    System.out.println("La opcion debe ser un numero");
+                }
+                break;
+            }while (true);
+            do {
+                System.out.println("Desea cambiar su lenguaje señas?");
+                System.out.println("1. Si 2. No");
+                try {
+                    int opcion = sc.nextInt();
+                    sc.nextLine();
+                    if (opcion == 1){
+                        System.out.println("Ingrese su nueva lenguaje señas");
+                        String lenguajeSeñas = sc.nextLine();
+                        if (lenguajeSeñas.equalsIgnoreCase("S")){
+                            usuarioActual.setLenguajeSeñas(true);
+                        }else if (lenguajeSeñas.equalsIgnoreCase("N")){
+                            usuarioActual.setLenguajeSeñas(false);
+                        }else {
+                            System.out.println("Opcion invalida");
+                            continue;
+                        }
+                    }
+                }catch (InputMismatchException e){
+                    System.out.println("La opcion debe ser un numero");
+                }
+                break;
+            }while (true);
+        }
+        do {
+            System.out.println("Desea cambiar su domicilio?");
+            System.out.println("1. Si 2. No");
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion == 1){
+                    System.out.println("Ingrese su nuevo domicilio");
+                    String domicilio = sc.nextLine();
+                    if (!validarDomicilio(domicilio)){
+                        System.out.println("El domicilio ingresado no es válido");
+                        continue;
+                    }
+                    usuarioActual.setDomicilio(domicilio);
+                }
+            }catch (InputMismatchException e){
+                System.out.println("La opcion debe ser un numero");
+            }
+            break;
+        }while (true);
+        do {
+            System.out.println("Confirma que desea cambiar sus datos");
+            System.out.println("Los datos nuevos son: ");
+            if (usuarioActual.getTipoUsuario().equals(TipoUsuario.SOCIO)){
+                System.out.println(usuarioActual.confirmacionSocio());
+            }
+            if (usuarioActual.getTipoUsuario().equals(TipoUsuario.NOSOCIO)){
+                System.out.println(usuarioActual.confirmacionUsuario());
+            }
+            System.out.println("1. Si 2. No");
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion == 1){
+                    usuarioDAO.modificarDatosPropios(usuarioActual);
+                }
+            }catch (InputMismatchException e){
+                System.out.println("La opcion debe ser un numero");
+            }
+            break;
+        }while (true);
+
+    }
 
 
 }
