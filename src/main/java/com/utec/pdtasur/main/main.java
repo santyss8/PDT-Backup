@@ -63,9 +63,10 @@ public class main {
                 }
                 System.out.println();
                 // Sesion Iniciada
-            } if (usuarioActual != null){
+            }
+            if (usuarioActual != null) {
                 // Menu de AuxiliarAdministrador
-                if (usuarioActual.getTipoUsuario().equals(TipoUsuario.AUXILIARADMINISTRATIVO)){
+                if (usuarioActual.getTipoUsuario().equals(TipoUsuario.AUXILIARADMINISTRATIVO)) {
                     System.out.print("""
                             ----- Bienvenido al sistema -----
                             1. Gestion de Usuario
@@ -85,9 +86,9 @@ public class main {
                         System.out.println("la opcion tiene que ser un numero");
                         sc.nextLine();
                     }
-                    switch (opcion){
+                    switch (opcion) {
                         case 1:
-                            usuarioService.gestionUsuarioMenu(usuarioActual);
+                            usuarioService.gestionUsuarioMenu();
                             continue;
                         case 2:
                             System.out.println("Menu de espacio"); // TODO
@@ -100,7 +101,6 @@ public class main {
                             continue;
                         case 5:
                             System.out.println("Saliendo...");
-                            running = false;
                             break;
                         default:
                             System.out.println("Opcion invalida");
@@ -110,7 +110,7 @@ public class main {
                     break;
                 }
                 // Menu de Socio
-                if (usuarioActual.getTipoUsuario().equals(TipoUsuario.SOCIO)){
+                if (usuarioActual.getTipoUsuario().equals(TipoUsuario.SOCIO) || usuarioActual.getTipoUsuario().equals(TipoUsuario.NOSOCIO)) {
                     System.out.print("""
                             ----- Bienvenido al sistema -----
                             1. Gestion de Usuario
@@ -118,29 +118,43 @@ public class main {
                             3. Salir
                             """);
                     System.out.print("Elija una opcion: ");
+                    try {
+                        opcion = sc.nextInt();
+                        sc.nextLine();
+                        if (opcion < 1 || opcion > 3) {
+                            System.out.println("Opcion invalida");
+                            continue;
+                        }
+                        switch (opcion) {
+                            case 1:
+                                usuarioService.gestionUsuarioNoSocioMenu(usuarioActual);
+                                continue;
+                            case 2:
+                                System.out.println("Menu de espacio"); // TODO
+                                continue;
+                            case 3:
+                                System.out.println("Saliendo...");
+                                break;
+                            default:
+                                System.out.println("Opcion invalida");
+                                continue;
+                        }
+                    }catch (InputMismatchException e){
+                        System.out.println("Tienes que ingresar un numero");
+                        sc.nextLine();
+                        continue;
+                    }
 
                     break;
                 }
-                // Menu de NoSocio
-                if (usuarioActual.getTipoUsuario().equals(TipoUsuario.NOSOCIO)){
-                    System.out.print("""
-                            ----- Bienvenido al sistema -----
-                            1. Gestion de Usuario
-                            2. Gestion de Espacio
-                            3. Salir
-                            """);
-                    System.out.print("Elija una opcion: ");
 
-                    break;
-                }
             }
+
+
         }
 
 
     }
-
-
-
 }
 
 
