@@ -553,8 +553,6 @@ public class EmailSenderService {
                     """
                     </h1>
                     <p class="body-text" style="margin: 20px 0;">Le informamos que ha sido dado de baja del sistema de socios con Exito</p>
-                    <p class="body-text">Su Número de Socio es: <strong style="color: #3b3e99;">
-
                     </strong></p>
                     <p class="body-text" style="margin: 20px 0;">Agradecemos el tiempo que ha compartido con nosotros y esperamos que su experiencia haya sido satisfactoria. Si en el futuro decide volver a unirse a nuestra comunidad, estaremos encantados de recibirle nuevamente.</p>
                     <p class="body-text" style="margin: 20px 0;">Si tiene alguna pregunta o desea más información sobre la baja, no dude en ponerse en contacto con nuestro equipo de soporte.</p>
