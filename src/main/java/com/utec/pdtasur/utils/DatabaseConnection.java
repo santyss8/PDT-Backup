@@ -1,6 +1,7 @@
 package com.utec.pdtasur.utils;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -14,16 +15,11 @@ public class DatabaseConnection {
     private String password;
 
     private DatabaseConnection() throws SQLException {
-        Properties properties = new Properties();
-        try (FileInputStream inputStream = new FileInputStream("src/main/resources/app.properties")) {
-            properties.load(inputStream);
-            url = properties.getProperty("jdbc.url");
-            user = properties.getProperty("jdbc.username");
-            password = properties.getProperty("jdbc.password");
-        } catch (Exception e) {
-            System.out.println("Error loading properties file");
-            e.printStackTrace();
-        }
+        Properties properties = loadProperties();
+        url = properties.getProperty("jdbc.connection.url");
+        user = properties.getProperty("jdbc.connection.username");
+        password = properties.getProperty("jdbc.connection.password");
+
         try {
             connection = DriverManager.getConnection(url, user, password);
         } catch (Exception e) {
@@ -40,6 +36,21 @@ public class DatabaseConnection {
 
     public Connection getConnection() {
         return connection;
+    }
+
+    private Properties loadProperties() {
+        Properties properties = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("app.properties")) {
+            if (input == null) {
+                System.out.println("No se pudo encontrar el archivo properties");
+                return properties;
+            }
+            properties.load(input);
+        } catch (Exception e) {
+            System.out.println("Error al cargar configuraciones");
+            e.printStackTrace(); // Para depuración, puedes quitarlo si no lo necesitas
+        }
+        return properties;
     }
 
 

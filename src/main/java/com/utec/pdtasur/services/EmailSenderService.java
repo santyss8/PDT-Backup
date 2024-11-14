@@ -5,17 +5,12 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class EmailSenderService {
     public void sendEmailRegistro(String recipient, String nombre, int numero) {
-        Properties props = new Properties();
-        try (FileInputStream input = new FileInputStream("src/main/resources/app.properties")) {
-            props.load(input);
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+        Properties props = loadProperties();
 
         String username = props.getProperty("username");
         String password = props.getProperty("password");
@@ -158,12 +153,7 @@ public class EmailSenderService {
     }
 
     public void sendEmailActivacion(String recipient, String nombre, int numero) {
-        Properties props = new Properties();
-        try (FileInputStream input = new FileInputStream("src/main/resources/app.properties")) {
-            props.load(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Properties props = loadProperties();
 
         String username = props.getProperty("username");
         String password = props.getProperty("password");
@@ -308,13 +298,7 @@ public class EmailSenderService {
 
 
     public void sendEmailRegistroNoSocio(String recipient, String nombre) {
-        Properties props = new Properties();
-        try (FileInputStream input = new FileInputStream("src/main/resources/app.properties")) {
-            props.load(input);
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+        Properties props = loadProperties();
 
         String username = props.getProperty("username");
         String password = props.getProperty("password");
@@ -454,13 +438,7 @@ public class EmailSenderService {
     }
 
     public void sendEmailModificarNosocio(String recipient, String nombre){
-        Properties props = new Properties();
-        try (FileInputStream input = new FileInputStream("src/main/resources/app.properties")) {
-            props.load(input);
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+        Properties props = loadProperties();
 
         String username = props.getProperty("username");
         String password = props.getProperty("password");
@@ -603,13 +581,7 @@ public class EmailSenderService {
     }
 
     public void sendEmailBaja(String recipient, String nombre) {
-        Properties props = new Properties();
-        try (FileInputStream input = new FileInputStream("src/main/resources/app.properties")) {
-            props.load(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        Properties props = loadProperties();
         String username = props.getProperty("username");
         String password = props.getProperty("password");
 
@@ -692,13 +664,7 @@ public class EmailSenderService {
     }
 
     public void sendEmailAlta(String recipient, String nombre) {
-        Properties props = new Properties();
-        try (FileInputStream input = new FileInputStream("src/main/resources/app.properties")) {
-            props.load(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        Properties props = loadProperties();
         String username = props.getProperty("username");
         String password = props.getProperty("password");
 
@@ -779,6 +745,21 @@ public class EmailSenderService {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Properties loadProperties() {
+        Properties properties = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("app.properties")) {
+            if (input == null) {
+                System.out.println("No se pudo encontrar el archivo properties");
+                return properties;
+            }
+            properties.load(input);
+        } catch (Exception e) {
+            System.out.println("Error al cargar configuraciones");
+            e.printStackTrace(); // Para depuración, puedes quitarlo si no lo necesitas
+        }
+        return properties;
     }
 
 

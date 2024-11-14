@@ -5,6 +5,7 @@ import com.utec.pdtasur.models.Subcomision;
 import com.utec.pdtasur.utils.DatabaseConnection;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -109,10 +110,15 @@ public class SubcomisionDAOImpl implements SubcomisionDAO {
 
     private Properties loadProperties() {
         Properties properties = new Properties();
-        try (FileInputStream fs = new FileInputStream("src/main/resources/app.properties")) {
-            properties.load(fs);
-        } catch (Exception e){
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("app.properties")) {
+            if (input == null) {
+                System.out.println("No se pudo encontrar el archivo properties");
+                return properties;
+            }
+            properties.load(input);
+        } catch (Exception e) {
             System.out.println("Error al cargar configuraciones");
+            e.printStackTrace(); // Para depuración, puedes quitarlo si no lo necesitas
         }
         return properties;
     }
