@@ -13,6 +13,7 @@ public interface UsuarioDAO {
     void eliminar(Usuario usuario);
     void activar(Usuario usuario);
     Usuario login(String email, String contraseña);
+    Usuario obtenerUsuario(String documento);
     void modificarDatosPropios(Usuario usuario);
     List<Usuario> listarUsuarios();
     boolean seleccionarEmail(String email);
@@ -20,7 +21,6 @@ public interface UsuarioDAO {
     boolean seleccionarTelefono(String numero);
     void insertarTelefono(String documento, String numero);
     void eliminarTelefono(String documento, String numero);
-
     boolean seleccionarTelefonoEliminar(String documento);
 
 }

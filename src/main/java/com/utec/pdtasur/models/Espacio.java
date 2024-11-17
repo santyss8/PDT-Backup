@@ -1,28 +1,54 @@
 package com.utec.pdtasur.models;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Espacio {
+    private int id;
     private String nombre;
-    private String ubicacion;
-    private int capacidad;
-    private double precioSocio;
-    private double precioNoSocio;
-    private Date fechaPrecio;
+    private int capacidadMaxima;
+    private double precioReservaSocio;
+    private double precioReservaNoSocio;
+    private LocalDate fechaVigenciaPrecio;
     private String observaciones;
+    private boolean activo;
+    private LocalDate fechaCreacion;
 
     public Espacio(){
 
     }
 
-    public Espacio(String nombre, String ubicacion, int capacidad, double precioSocio, double precioNoSocio, Date fechaPrecio, String observaciones) {
+    public Espacio (int id){
+        this.id = id;
+    }
+
+    public Espacio(String nombre, int capacidadMaxima, double precioReservaSocio, double precioReservaNoSocio, LocalDate fechaVigenciaPrecio, String observaciones, LocalDate fechaCreacion) {
         this.nombre = nombre;
-        this.ubicacion = ubicacion;
-        this.capacidad = capacidad;
-        this.precioSocio = precioSocio;
-        this.precioNoSocio = precioNoSocio;
-        this.fechaPrecio = fechaPrecio;
+        this.capacidadMaxima = capacidadMaxima;
+        this.precioReservaSocio = precioReservaSocio;
+        this.precioReservaNoSocio = precioReservaNoSocio;
+        this.fechaVigenciaPrecio = fechaVigenciaPrecio;
         this.observaciones = observaciones;
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Espacio(int id, String nombre, int capacidadMaxima, double precioReservaSocio, double precioReservaNoSocio, LocalDate fechaVigenciaPrecio, String observaciones, boolean activo, LocalDate fechaCreacion) {
+        this.id = id;
+        this.nombre = nombre;
+        this.capacidadMaxima = capacidadMaxima;
+        this.precioReservaSocio = precioReservaSocio;
+        this.precioReservaNoSocio = precioReservaNoSocio;
+        this.fechaVigenciaPrecio = fechaVigenciaPrecio;
+        this.observaciones = observaciones;
+        this.activo = activo;
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNombre() {
@@ -33,44 +59,36 @@ public class Espacio {
         this.nombre = nombre;
     }
 
-    public String getUbicacion() {
-        return ubicacion;
+    public int getCapacidadMaxima() {
+        return capacidadMaxima;
     }
 
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
+    public void setCapacidadMaxima(int capacidadMaxima) {
+        this.capacidadMaxima = capacidadMaxima;
     }
 
-    public int getCapacidad() {
-        return capacidad;
+    public double getPrecioReservaSocio() {
+        return precioReservaSocio;
     }
 
-    public void setCapacidad(int capacidad) {
-        this.capacidad = capacidad;
+    public void setPrecioReservaSocio(double precioReservaSocio) {
+        this.precioReservaSocio = precioReservaSocio;
     }
 
-    public double getPrecioSocio() {
-        return precioSocio;
+    public double getPrecioReservaNoSocio() {
+        return precioReservaNoSocio;
     }
 
-    public void setPrecioSocio(double precioSocio) {
-        this.precioSocio = precioSocio;
+    public void setPrecioReservaNoSocio(double precioReservaNoSocio) {
+        this.precioReservaNoSocio = precioReservaNoSocio;
     }
 
-    public double getPrecioNoSocio() {
-        return precioNoSocio;
+    public LocalDate getFechaVigenciaPrecio() {
+        return fechaVigenciaPrecio;
     }
 
-    public void setPrecioNoSocio(double precioNoSocio) {
-        this.precioNoSocio = precioNoSocio;
-    }
-
-    public Date getFechaPrecio() {
-        return fechaPrecio;
-    }
-
-    public void setFechaPrecio(Date fechaPrecio) {
-        this.fechaPrecio = fechaPrecio;
+    public void setFechaVigenciaPrecio(LocalDate fechaVigenciaPrecio) {
+        this.fechaVigenciaPrecio = fechaVigenciaPrecio;
     }
 
     public String getObservaciones() {
@@ -79,5 +97,36 @@ public class Espacio {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
+
+    public LocalDate getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDate fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    @Override
+    public String toString() {
+        return "Espacio{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", capacidadMaxima=" + capacidadMaxima +
+                ", precioReservaSocio=" + precioReservaSocio +
+                ", precioReservaNoSocio=" + precioReservaNoSocio +
+                ", fechaVigenciaPrecio=" + fechaVigenciaPrecio +
+                ", observaciones='" + observaciones + '\'' +
+                ", activo=" + activo +
+                ", fechaCreacion=" + fechaCreacion +
+                '}';
     }
 }

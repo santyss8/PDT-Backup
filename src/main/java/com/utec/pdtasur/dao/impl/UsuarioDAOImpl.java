@@ -468,6 +468,63 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         }
     }
 
+    public Usuario obtenerUsuario(String documento){
+        Properties properties = loadProperties();
+        String sql = properties.getProperty("sql.selectUsuarioId");
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, documento);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                Usuario usuario = new Usuario();
+                usuario.setId(rs.getInt("id"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setApellido(rs.getString("apellido"));
+                usuario.setTipoDocumento(TipoDocumento.valueOf(rs.getString("tipo_documento")));
+                usuario.setDocumento(rs.getString("documento"));
+                usuario.setDomicilio(rs.getString("domicilio"));
+                usuario.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
+                usuario.setTelefonos(new ArrayList<>());
+                String sqlTelefonos = properties.getProperty("sql.selectTelefonos");
+                try (PreparedStatement psTelefonos = connection.prepareStatement(sqlTelefonos)){
+                    psTelefonos.setString(1, rs.getString("documento"));
+                    ResultSet rsTelefonos = psTelefonos.executeQuery();
+                    while (rsTelefonos.next()){
+                        usuario.getTelefonos().add(rsTelefonos.getString("numero"));
+                    }
+                }catch (Exception e){
+                    System.out.println("Error al Listar Telefonos");
+                    e.printStackTrace();
+                }
+                usuario.setEmail(rs.getString("email"));
+                usuario.setContraseña(rs.getString("contraseña"));
+                usuario.setTipoUsuario(TipoUsuario.valueOf(rs.getString("tipo_usuario")));
+                if (rs.getString("tipo_usuario").equals("SOCIO")){
+                    CategoriaSocioDAO categoriaSocioDAO = new CategoriaSocioDAOImpl();
+                    CategoriaSocio categoriaSocio = categoriaSocioDAO.getCategoria(rs.getInt("id_categoria_socio"));
+                    usuario.setCategoriaSocio(categoriaSocio);
+                    usuario.setDificultadAuditiva(rs.getBoolean("dificultad_auditiva"));
+                    usuario.setLenguajeSeñas(rs.getBoolean("lenguaje_señas"));
+                    usuario.setParticipaSubcomision(rs.getBoolean("participa_subcomision"));
+                    usuario.setNumeroSocio(rs.getInt("numero_socio"));
+                    if (rs.getBoolean("participa_subcomision")){
+                        SubcomisionDAO subcomisionDAO = new SubcomisionDAOImpl();
+                        usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("id_subcomision")));
+                    }
+                }
+                usuario.setActivo(rs.getBoolean("activo"));
+                return usuario;
+            }
+        }catch (Exception e){
+            System.out.println("Error al obtener Usuario");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
+
 
 
 

@@ -202,7 +202,7 @@ public class UsuarioService {
                 }
                 System.out.println("Quiere agregar otro telefono? (S/N)");
                 String opcion = sc.nextLine();
-                if (opcion.equals("S")) {
+                if (opcion.equalsIgnoreCase("S")) {
                     continue;
                 } else {
                     telefonosContinuar = false;
