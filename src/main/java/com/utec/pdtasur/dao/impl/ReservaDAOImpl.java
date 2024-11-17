@@ -13,6 +13,7 @@ import com.utec.pdtasur.models.Reserva;
 import com.utec.pdtasur.models.Usuario;
 import com.utec.pdtasur.utils.DatabaseConnection;
 
+import javax.xml.transform.Result;
 
 
 public class ReservaDAOImpl {
@@ -36,13 +37,14 @@ public class ReservaDAOImpl {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, reserva.getUsuario().getDocumento());
             ps.setInt(2, reserva.getEspacio().getId());
-            ps.setDate(3, Date.valueOf(reserva.getFechaActividad()));
+            ps.setTimestamp(3, Timestamp.valueOf(reserva.getFechaActividad()));
             ps.setInt(4, reserva.getDuracion());
             ps.setInt(5, reserva.getCantidadPersonas());
             ps.setDouble(6, reserva.getImporteAbonar());
             ps.setDate(7, Date.valueOf(reserva.getFechaVencimientoSena()));
             ps.setDouble(8, reserva.getImportePagoSena());
             ps.executeUpdate();
+            System.out.println("Reserva creada exitosamente");
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -63,7 +65,7 @@ public class ReservaDAOImpl {
         Properties properties = loadProperties();
         String sql = properties.getProperty("sql.activarReserva");
         try (PreparedStatement ps = connection.prepareStatement(sql)){
-            ps.setDate(1, Date.valueOf(reserva.getFechaConfirmacion()));
+            ps.setDate(1, Date.valueOf(LocalDate.now()));
             ps.setInt(2, reserva.getId());
             ps.executeUpdate();
         }catch (SQLException e){
@@ -75,7 +77,7 @@ public class ReservaDAOImpl {
         Properties properties = loadProperties();
         String sql = properties.getProperty("sql.pagoSena");
         try (PreparedStatement ps = connection.prepareStatement(sql)){
-            ps.setDate(1, Date.valueOf(reserva.getFechaPagoSena()));
+            ps.setDate(1, Date.valueOf(LocalDate.now()));
             ps.setDouble(2, reserva.getImporteSenaPagado());
             ps.setInt(3, reserva.getId());
             ps.executeUpdate();
@@ -83,6 +85,43 @@ public class ReservaDAOImpl {
             e.printStackTrace();
         }
     }
+
+    public List<Reserva> listarReservasConfirmadas() throws SQLException {
+        Properties properties = loadProperties();
+        List<Reserva> reservas = new ArrayList<>();
+        String sql = properties.getProperty("sql.selectReservasConfirmadas");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                Reserva reserva = new Reserva();
+                reserva.setId(rs.getInt("id"));
+                reserva.setUsuario(usuarioDAO.obtenerUsuario(rs.getString("documento_usuario")));
+                reserva.setEspacio(espacioDAO.seleccionarEspacio(rs.getInt("espacio_id")));
+                reserva.setFechaActividad(rs.getTimestamp("fecha_actividad").toLocalDateTime());
+                reserva.setDuracion(rs.getInt("duracion"));
+                reserva.setCantidadPersonas(rs.getInt("cantidad_personas"));
+                reserva.setImporteAbonar(rs.getDouble("importe_abonar"));
+                reserva.setFechaVencimientoSena(rs.getDate("fecha_vto_sena").toLocalDate());
+                reserva.setImportePagoSena(rs.getDouble("importe_sena"));
+                if (rs.getDate("fecha_pago_sena") != null){
+                    reserva.setFechaPagoSena(rs.getDate("fecha_pago_sena").toLocalDate());
+                }
+                reserva.setImporteSenaPagado(rs.getDouble("importe_sena_pagado"));
+                reserva.setSaldoPendiente(rs.getDouble("saldo_pendiente"));
+                reserva.setEstado(rs.getString("estado"));
+                if (rs.getDate("fecha_confirmacion") != null){
+                    reserva.setFechaConfirmacion(rs.getDate("fecha_confirmacion").toLocalDate());
+                }
+                reserva.setFechaCreacion(rs.getDate("fecha_creacion").toLocalDate());
+                reservas.add(reserva);
+            }
+        }catch (SQLException e){
+            System.out.println("Error al listar reservas");
+        }
+        return reservas;
+    }
+
+
 
     public List<Reserva> reportePorFecha(LocalDate fechaDesde, LocalDate fechaHasta) {
         List<Reserva> reservas = new ArrayList<>();
@@ -110,12 +149,12 @@ public class ReservaDAOImpl {
                 reserva.setId(rs.getInt("id"));
                 reserva.setUsuario(usuarioDAO.obtenerUsuario(rs.getString("documento_usuario")));
                 reserva.setEspacio(espacioDAO.seleccionarEspacio(rs.getInt("espacio_id")));
-                reserva.setFechaActividad(rs.getDate("fecha_actividad").toLocalDate());
+                reserva.setFechaActividad(rs.getTimestamp("fecha_actividad").toLocalDateTime());
                 reserva.setDuracion(rs.getInt("duracion"));
                 reserva.setCantidadPersonas(rs.getInt("cantidad_personas"));
                 reserva.setImporteAbonar(rs.getDouble("importe_abonar"));
                 reserva.setFechaVencimientoSena(rs.getDate("fecha_vto_sena").toLocalDate());
-                reserva.setImportePagoSena(rs.getDouble("importe_sena_pagado"));
+                reserva.setImportePagoSena(rs.getDouble("importe_sena"));
                 if (rs.getDate("fecha_pago_sena") != null){
                     reserva.setFechaPagoSena(rs.getDate("fecha_pago_sena").toLocalDate());
                 }
@@ -137,6 +176,75 @@ public class ReservaDAOImpl {
         return reservas;
     }
 
+    public List<Reserva> listarReservasPendientes(){
+        Properties properties = loadProperties();
+        List<Reserva> reservas = new ArrayList<>();
+        String sql = properties.getProperty("sql.selectReservas");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                Reserva reserva = new Reserva();
+                reserva.setId(rs.getInt("id"));
+                reserva.setUsuario(usuarioDAO.obtenerUsuario(rs.getString("documento_usuario")));
+                reserva.setEspacio(espacioDAO.seleccionarEspacio(rs.getInt("espacio_id")));
+                reserva.setFechaActividad(rs.getTimestamp("fecha_actividad").toLocalDateTime());
+                reserva.setDuracion(rs.getInt("duracion"));
+                reserva.setCantidadPersonas(rs.getInt("cantidad_personas"));
+                reserva.setImporteAbonar(rs.getDouble("importe_abonar"));
+                reserva.setFechaVencimientoSena(rs.getDate("fecha_vto_sena").toLocalDate());
+                reserva.setImportePagoSena(rs.getDouble("importe_sena"));
+                if (rs.getDate("fecha_pago_sena") != null){
+                    reserva.setFechaPagoSena(rs.getDate("fecha_pago_sena").toLocalDate());
+                }
+                reserva.setImporteSenaPagado(rs.getDouble("importe_sena_pagado"));
+                reserva.setSaldoPendiente(rs.getDouble("saldo_pendiente"));
+                reserva.setEstado(rs.getString("estado"));
+                if (rs.getDate("fecha_confirmacion") != null){
+                    reserva.setFechaConfirmacion(rs.getDate("fecha_confirmacion").toLocalDate());
+                }
+                reserva.setFechaCreacion(rs.getDate("fecha_creacion").toLocalDate());
+                reservas.add(reserva);
+            }
+        }catch (SQLException e){
+            System.out.println("Error al listar reservas");
+        }
+        return reservas;
+    }
+
+    public List<Reserva> listarReservas() throws SQLException {
+        Properties properties = loadProperties();
+        List<Reserva> reservas = new ArrayList<>();
+        String sql = properties.getProperty("sql.selectAllReservas");
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()){
+                Reserva reserva = new Reserva();
+                reserva.setId(rs.getInt("id"));
+                reserva.setUsuario(usuarioDAO.obtenerUsuario(rs.getString("documento_usuario")));
+                reserva.setEspacio(espacioDAO.seleccionarEspacio(rs.getInt("espacio_id")));
+                reserva.setFechaActividad(rs.getTimestamp("fecha_actividad").toLocalDateTime());
+                reserva.setDuracion(rs.getInt("duracion"));
+                reserva.setCantidadPersonas(rs.getInt("cantidad_personas"));
+                reserva.setImporteAbonar(rs.getDouble("importe_abonar"));
+                reserva.setFechaVencimientoSena(rs.getDate("fecha_vto_sena").toLocalDate());
+                reserva.setImportePagoSena(rs.getDouble("importe_sena"));
+                if (rs.getDate("fecha_pago_sena") != null){
+                    reserva.setFechaPagoSena(rs.getDate("fecha_pago_sena").toLocalDate());
+                }
+                reserva.setImporteSenaPagado(rs.getDouble("importe_sena_pagado"));
+                reserva.setSaldoPendiente(rs.getDouble("saldo_pendiente"));
+                reserva.setEstado(rs.getString("estado"));
+                if (rs.getDate("fecha_confirmacion") != null){
+                    reserva.setFechaConfirmacion(rs.getDate("fecha_confirmacion").toLocalDate());
+                }
+                reserva.setFechaCreacion(rs.getDate("fecha_creacion").toLocalDate());
+                reservas.add(reserva);
+            }
+        }catch (SQLException e){
+            System.out.println("Error al listar reservas");
+        }
+        return reservas;
+    }
 
 
 

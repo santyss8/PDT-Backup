@@ -1,12 +1,13 @@
 package com.utec.pdtasur.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Reserva {
     private int id;
     private Usuario usuario;
     private Espacio espacio;
-    private LocalDate fechaActividad;
+    private LocalDateTime fechaActividad;
     private int duracion;
     private int cantidadPersonas;
     private double importeAbonar;
@@ -26,7 +27,7 @@ public class Reserva {
     public Reserva() {
     }
 
-    public Reserva(Usuario usuario, Espacio espacio, LocalDate fechaActividad, int duracion, int cantidadPersonas, double importeAbonar, LocalDate fechaVencimientoSena, double importePagoSena) {
+    public Reserva(Usuario usuario, Espacio espacio, LocalDateTime fechaActividad, int duracion, int cantidadPersonas, double importeAbonar, LocalDate fechaVencimientoSena, double importePagoSena) {
         this.usuario = usuario;
         this.espacio = espacio;
         this.fechaActividad = fechaActividad;
@@ -37,7 +38,7 @@ public class Reserva {
         this.importePagoSena = importePagoSena;
     }
 
-    public Reserva(int id, Usuario usuario, Espacio espacio, LocalDate fechaActividad, int duracion, int cantidadPersonas, double importeAbonar, LocalDate fechaVencimientoSena, double importePagoSena, LocalDate fechaPagoSena, double importeSenaPagado, double saldoPendiente, String estado, LocalDate fechaConfirmacion, LocalDate fechaCreacion) {
+    public Reserva(int id, Usuario usuario, Espacio espacio, LocalDateTime fechaActividad, int duracion, int cantidadPersonas, double importeAbonar, LocalDate fechaVencimientoSena, double importePagoSena, LocalDate fechaPagoSena, double importeSenaPagado, double saldoPendiente, String estado, LocalDate fechaConfirmacion, LocalDate fechaCreacion) {
         this.id = id;
         this.usuario = usuario;
         this.espacio = espacio;
@@ -79,11 +80,11 @@ public class Reserva {
         this.espacio = espacio;
     }
 
-    public LocalDate getFechaActividad() {
+    public LocalDateTime getFechaActividad() {
         return fechaActividad;
     }
 
-    public void setFechaActividad(LocalDate fechaActividad) {
+    public void setFechaActividad(LocalDateTime fechaActividad) {
         this.fechaActividad = fechaActividad;
     }
 

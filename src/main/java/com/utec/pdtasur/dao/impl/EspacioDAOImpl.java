@@ -89,6 +89,38 @@ public class EspacioDAOImpl {
 
     }
 
+    public List<Espacio> espaciosDisponibles(int capacidadMaxima, LocalDate fecha){
+        Properties properties = loadProperties();
+        List<Espacio> espaciosDisponibles = new ArrayList<>();
+        String sql = properties.getProperty("sql.seleccionarEspaciosDisponibles");
+
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, capacidadMaxima);
+            ps.setDate(2, Date.valueOf(fecha));
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                Espacio espacio = new Espacio();
+                espacio.setId(rs.getInt("id"));
+                espacio.setNombre(rs.getString("nombre"));
+                espacio.setCapacidadMaxima(rs.getInt("capacidad_maxima"));
+                espacio.setPrecioReservaSocio(rs.getDouble("precio_reserva_socio"));
+                espacio.setPrecioReservaNoSocio(rs.getDouble("precio_reserva_no_socio"));
+                espacio.setFechaVigenciaPrecio(rs.getDate("fecha_vigencia_precios").toLocalDate());
+                espacio.setObservaciones(rs.getString("observaciones"));
+                espacio.setActivo(rs.getBoolean("estado"));
+                espacio.setFechaCreacion(rs.getDate("fecha_creacion").toLocalDate());
+                espaciosDisponibles.add(espacio);
+            }
+        }catch (SQLException e){
+            System.out.println("Error al listar espacios disponibles");
+            e.printStackTrace();
+        }
+
+        return espaciosDisponibles;
+
+    }
+
+
     public Espacio seleccionarEspacio(int id){
         Properties properties = loadProperties();
         String sql = properties.getProperty("sql.selectEspacioId");

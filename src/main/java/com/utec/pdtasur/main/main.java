@@ -101,7 +101,7 @@ public class main {
                             usuarioService.gestionUsuarioMenu();
                             continue;
                         case 2:
-                             espacioService.gestionEspacioAdminMenu();
+                             espacioService.gestionEspacioAdminMenu(usuarioActual);
                             continue;
                         case 3:
                             System.out.println("Menu de tipo de actividad"); // TODO
@@ -140,7 +140,7 @@ public class main {
                                 usuarioService.gestionUsuarioNoSocioMenu(usuarioActual);
                                 continue;
                             case 2:
-                                espacioService.gestionEspacioMenu();
+                                espacioService.gestionEspacioMenu(usuarioActual);
                                 continue;
                             case 3:
                                 System.out.println("Saliendo...");
