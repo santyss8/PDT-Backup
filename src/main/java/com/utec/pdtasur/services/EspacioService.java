@@ -50,7 +50,7 @@ public class EspacioService {
             try {
                 int opcion = sc.nextInt();
                 sc.nextLine();
-                if (opcion < 1 || opcion > 8) {
+                if (opcion < 1 || opcion > 9) {
                     System.out.println("Opcion invalida");
                     continue;
                 }
@@ -696,6 +696,10 @@ public class EspacioService {
         espacios = filtrarPorEstado(espacios, false);
         System.out.println("Espacios Inactivos:");
         mostrarEspaciosListados(espacios);
+        if (espacios.isEmpty()){
+            System.out.println("No hay espacios inactivos");
+            return;
+        }
         do {
             System.out.println("Seleccione un Espacio para activar ingresando su id");
             try {
@@ -988,10 +992,6 @@ public class EspacioService {
             try {
                 int opcion = sc.nextInt();
                 sc.nextLine();
-                if (opcion < 1 || opcion > espaciosDisponibles.size()){
-                    System.out.println("Opcion invalida");
-                    continue;
-                }
                 for (Espacio espacioDisponible : espaciosDisponibles){
                     if (espacioDisponible.getId() == opcion){
                         espacio = espacioDisponible;
