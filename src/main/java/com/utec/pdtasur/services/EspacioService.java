@@ -43,8 +43,9 @@ public class EspacioService {
                     4. Activar Espacio
                     5. Eliminar Espacio
                     6. Reservar Espacio
-                    7. Reporte de Reservas
-                    8. Salir
+                    7. Reporte de Reservas por fecha
+                    8. Reporte de Reservas por espacio
+                    9. Salir
                     """);
             try {
                 int opcion = sc.nextInt();
@@ -70,12 +71,15 @@ public class EspacioService {
                         eliminarEspacio();
                         continue;
                     case 6:
-                        reservarEspacioMenu(usuarioActual); // TODO
+                        reservarEspacioMenu(usuarioActual);
                         continue;
                     case 7:
-                        reporteReservasMenu(); // TODO
+                        reporteReservas();
                         continue;
                     case 8:
+                        reporteReservasPorEspacio();
+                        continue;
+                    case 9:
                         System.out.println("saliendo...");
                         break;
                     default:
@@ -90,6 +94,114 @@ public class EspacioService {
             break;
         }while (true);
 
+    }
+
+    private void reporteReservasPorEspacio() throws SQLException {
+        LocalDate fechaDesdeLocalDate = null;
+        LocalDate fechaHastaLocalDate = null;
+        Espacio espacioReserva = null;
+        System.out.println("----- Reporte de Reservas -----");
+        do {
+            System.out.println("Seleccione la id del espacio que desea filtrar");
+            List<Espacio> espacios = espacioDAO.listarEspacios();
+            for (Espacio espacio : espacios){
+                System.out.println(espacio);
+            }
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > espacios.size()){
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+                for (Espacio espacio : espacios){
+                    if (espacio.getId() == opcion){
+                        espacioReserva = espacio;
+                        break;
+                    }
+                }
+                if (espacioReserva == null){
+                    System.out.println("El espacio no existe");
+                    continue;
+                }
+            }catch (InputMismatchException e){
+                System.out.println("La opcion tiene que ser un numero");
+                sc.nextLine();
+            }
+            break;
+        }while (true);
+        do {
+            System.out.println("Seleccione fecha desde: ejemplo: 2024-11-17");
+            String fechaDesde = sc.nextLine();
+            try {
+                fechaDesdeLocalDate = LocalDate.parse(fechaDesde);
+            }catch (DateTimeParseException e){
+                System.out.println("La fecha ingresada no es válida");
+                continue;
+            }
+            System.out.println("Seleccione fecha hasta: ejemplo: 2024-11-17");
+            String fechaHasta = sc.nextLine();
+            try {
+                fechaHastaLocalDate = LocalDate.parse(fechaHasta);
+            }catch (DateTimeParseException e){
+                System.out.println("La fecha ingresada no es válida");
+                continue;
+            }
+            List<Reserva> reservas = reservaDAO.reportePorFecha(fechaDesdeLocalDate, fechaHastaLocalDate);
+            System.out.print("""
+                    1. Confirmadas
+                    2. Canceladas
+                    3. Ambas
+                    4. Salir
+                    """);
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > 4){
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+                switch (opcion){
+                    case 1:
+                        for (Reserva res : reservas){
+                            if (res.getEstado().equals("Confirmada")){
+                                if (res.getEspacio().getId() == espacioReserva.getId()){
+                                    System.out.println(res);
+                                }
+                            }
+                        }
+                        break;
+                    case 2:
+                        for (Reserva res : reservas){
+                            if (res.getEstado().equals("Cancelada")){
+                                if (res.getEspacio().getId() == espacioReserva.getId()){
+                                    System.out.println(res);
+                                }
+                            }
+                        }
+                        break;
+                    case 3:
+                        for (Reserva res : reservas){
+                            if (res.getEstado().equals("Confirmada") || res.getEstado().equals("Cancelada")){
+                                if (res.getEspacio().getId() == espacioReserva.getId()){
+                                    System.out.println(res);
+                                }
+                            }
+                        }
+                        break;
+                    case 4:
+                        System.out.println("saliendo...");
+                        break;
+                    default:
+                        System.out.println("Opcion invalida");
+                        break;
+                }
+            }catch (InputMismatchException e){
+                System.out.println("La opcion tiene que ser un numero");
+                sc.nextLine();
+            }
+            break;
+        }while (true);
     }
 
     private void crearEspacio() throws SQLException {
@@ -666,7 +778,7 @@ public class EspacioService {
                         reservarEspacio(usuarioActual);
                         continue;
                     case 2:
-                        cancelarReserva();
+                        cancelarReserva(usuarioActual);
                         continue;
                     case 3:
                         confirmarReserva();
@@ -739,11 +851,21 @@ public class EspacioService {
     }
 
 
-    private void cancelarReserva() throws SQLException {
+    private void cancelarReserva(Usuario usuarioActual) throws SQLException {
         List<Reserva> reservas = reservaDAO.listarReservas();
         Reserva reserva = null;
-        for (Reserva res : reservas){
-            System.out.println(res);
+        if (!usuarioActual.getTipoUsuario().equals(TipoUsuario.AUXILIARADMINISTRATIVO)){
+            for (Reserva res : reservas){
+                if (res.getUsuario().getDocumento().equals(usuarioActual.getDocumento())){
+                    System.out.println(res);
+                }
+            }
+        }else {
+            for (Reserva res : reservas){
+                if (!res.getEstado().equals("Cancelada")){
+                    System.out.println(res);
+                }
+            }
         }
         System.out.println("Ingrese la id de la reserva a cancelar");
         try {
@@ -931,7 +1053,76 @@ public class EspacioService {
 
 
 
-    private void reporteReservasMenu(){
+    private void reporteReservas(){
+        LocalDate fechaDesdeLocalDate = null;
+        LocalDate fechaHastaLocalDate = null;
+        System.out.println("----- Reporte de Reservas -----");
+        do {
+            System.out.println("Seleccione fecha desde: ejemplo: 2024-11-17");
+            String fechaDesde = sc.nextLine();
+            try {
+                fechaDesdeLocalDate = LocalDate.parse(fechaDesde);
+            }catch (DateTimeParseException e){
+                System.out.println("La fecha ingresada no es válida");
+                continue;
+            }
+            System.out.println("Seleccione fecha hasta: ejemplo: 2024-11-17");
+            String fechaHasta = sc.nextLine();
+            try {
+                fechaHastaLocalDate = LocalDate.parse(fechaHasta);
+            }catch (DateTimeParseException e){
+                System.out.println("La fecha ingresada no es válida");
+                continue;
+            }
+            List<Reserva> reservas = reservaDAO.reportePorFecha(fechaDesdeLocalDate, fechaHastaLocalDate);
+            System.out.print("""
+                    1. Confirmadas
+                    2. Canceladas
+                    3. Ambas
+                    4. Salir
+                    """);
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > 4){
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+                switch (opcion){
+                    case 1:
+                        for (Reserva res : reservas){
+                            if (res.getEstado().equals("Confirmada")){
+                                System.out.println(res);
+                            }
+                        }
+                        break;
+                    case 2:
+                        for (Reserva res : reservas){
+                            if (res.getEstado().equals("Cancelada")){
+                                System.out.println(res);
+                            }
+                        }
+                        break;
+                    case 3:
+                        for (Reserva res : reservas){
+                            if (res.getEstado().equals("Confirmada") || res.getEstado().equals("Cancelada")){
+                                System.out.println(res);
+                            }
+                        }
+                        break;
+                    case 4:
+                        System.out.println("saliendo...");
+                        break;
+                    default:
+                        System.out.println("Opcion invalida");
+                        break;
+                }
+            }catch (InputMismatchException e){
+                System.out.println("La opcion tiene que ser un numero");
+                sc.nextLine();
+            }
+            break;
+        }while (true);
 
     }
 
@@ -954,7 +1145,7 @@ public class EspacioService {
                         reservarEspacio(usuarioActual);
                         continue;
                     case 2:
-                        cancelarReserva();
+                        cancelarReserva(usuarioActual);
                         continue;
                     case 3:
                         System.out.println("saliendo...");
