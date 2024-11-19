@@ -2,6 +2,7 @@ package com.utec.pdtasur.main;
 
 import com.utec.pdtasur.models.*;
 import com.utec.pdtasur.services.EspacioService;
+import com.utec.pdtasur.services.TipoActividadService;
 import com.utec.pdtasur.services.UsuarioService;
 
 import java.sql.SQLException;
@@ -11,6 +12,16 @@ import java.util.Scanner;
 public class main {
     private static Scanner sc = new Scanner(System.in);
     private static Usuario usuarioActual;
+
+    private static TipoActividadService tipoActividadService;
+
+    static {
+        try {
+            tipoActividadService = new TipoActividadService();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private static EspacioService espacioService;
 
@@ -104,7 +115,7 @@ public class main {
                              espacioService.gestionEspacioAdminMenu(usuarioActual);
                             continue;
                         case 3:
-                            System.out.println("Menu de tipo de actividad"); // TODO
+                            tipoActividadService.gestionTipoActividadMenu();
                             continue;
                         case 4:
                             System.out.println("Menu de Pagos"); // TODO
