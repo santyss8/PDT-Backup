@@ -1,6 +1,8 @@
 package com.utec.pdtasur.services;
 
 import com.utec.pdtasur.dao.impl.TipoActividadDAOImpl;
+import com.utec.pdtasur.dao.impl.UsuarioDAOImpl;
+import com.utec.pdtasur.dao.interfaces.UsuarioDAO;
 import com.utec.pdtasur.models.TipoActividad;
 
 import java.util.ArrayList;
@@ -14,11 +16,13 @@ public class TipoActividadService {
     Scanner sc;
     TipoActividadDAOImpl tipoActividadDAO;
     ValidarService validarService;
+    UsuarioDAO usuarioDAO;
 
     public TipoActividadService() throws Exception {
         this.sc = new Scanner(System.in);
         this.tipoActividadDAO = new TipoActividadDAOImpl();
         this.validarService = new ValidarService();
+        this.usuarioDAO = new UsuarioDAOImpl();
     }
 
     public void gestionTipoActividadMenu(){
@@ -207,6 +211,10 @@ public class TipoActividadService {
         do {
             System.out.println("Ingrese el documento del usuario que baja el Tipo de Actividad");
             String documentoUsuarioBaja = sc.nextLine();
+            if (usuarioDAO.obtenerUsuario(documentoUsuarioBaja) == null){
+                System.out.println("El documento ingresado no es valido");
+                continue;
+            }
             tipoActividadBaja.setDocumentoUsuarioBaja(documentoUsuarioBaja);
             break;
         }while (true);
