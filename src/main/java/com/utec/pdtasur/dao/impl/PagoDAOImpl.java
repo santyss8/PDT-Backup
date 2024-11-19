@@ -32,7 +32,11 @@ public class PagoDAOImpl {
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, pago.getUsuario().getDocumento());
             ps.setBoolean(2, pago.isEsCuota());
-            ps.setInt(3, pago.getEspacio().getId());
+            if (pago.getEspacio() != null){
+                ps.setInt(3, pago.getEspacio().getId());
+            }else {
+                ps.setInt(3, 0);
+            }
             ps.setDouble(4, pago.getMonto());
             ps.setString(5, pago.getFormaCobro());
             ps.executeUpdate();
@@ -80,7 +84,9 @@ public class PagoDAOImpl {
                 pago.setId(rs.getInt("id_pago"));
                 pago.setUsuario(usuarioDAO.obtenerUsuario(rs.getString("documento_usuario")));
                 pago.setEsCuota(rs.getBoolean("es_cuota"));
-                pago.setEspacio(espacioDAO.seleccionarEspacio(rs.getInt("id_espacio")));
+                if (rs.getInt("id_espacio") != 0){
+                    pago.setEspacio(espacioDAO.seleccionarEspacio(rs.getInt("id_espacio")));
+                }
                 pago.setMonto(rs.getDouble("monto"));
                 pago.setFechaCobro(rs.getDate("fecha_cobro").toLocalDate());
                 pago.setFormaCobro(rs.getString("forma_cobro"));

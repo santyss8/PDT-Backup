@@ -2,6 +2,7 @@ package com.utec.pdtasur.main;
 
 import com.utec.pdtasur.models.*;
 import com.utec.pdtasur.services.EspacioService;
+import com.utec.pdtasur.services.PagoService;
 import com.utec.pdtasur.services.TipoActividadService;
 import com.utec.pdtasur.services.UsuarioService;
 
@@ -12,8 +13,18 @@ import java.util.Scanner;
 public class main {
     private static Scanner sc = new Scanner(System.in);
     private static Usuario usuarioActual;
+    private static PagoService pagoService;
+
+    static {
+        try {
+            pagoService = new PagoService();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private static TipoActividadService tipoActividadService;
+
 
     static {
         try {
@@ -118,7 +129,7 @@ public class main {
                             tipoActividadService.gestionTipoActividadMenu();
                             continue;
                         case 4:
-                            System.out.println("Menu de Pagos"); // TODO
+                            pagoService.gestionPagoMenu();
                             continue;
                         case 5:
                             System.out.println("Saliendo...");
