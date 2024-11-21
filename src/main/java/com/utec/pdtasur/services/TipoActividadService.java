@@ -72,13 +72,13 @@ public class TipoActividadService {
 
     }
 
-    public static void main(String[] args) throws Exception {
-        TipoActividadService tipoActividadService = new TipoActividadService();
-        tipoActividadService.gestionTipoActividadMenu();
-    }
 
     private void activarTipoActividad() {
         List<TipoActividad> tiposActividad = listarTiposActividadInActivos();
+        if (tiposActividad.isEmpty()){
+            System.out.println("No hay Tipos de Actividad Activos");
+            return;
+        }
         TipoActividad tipoActividadActivar = null;
         if (tiposActividad.isEmpty()){
             System.out.println("No hay Tipos de Actividad Activos");
@@ -156,6 +156,10 @@ public class TipoActividadService {
 
     private void darDeBajaTipoActividad() {
         List<TipoActividad> tiposActividad = listarTiposActividadActivos();
+        if (tiposActividad.isEmpty()){
+            System.out.println("No hay Tipos de Actividad Activos");
+            return;
+        }
         TipoActividad tipoActividadBaja = null;
         if (tiposActividad.isEmpty()){
             System.out.println("No hay Tipos de Actividad Activos");
@@ -241,6 +245,10 @@ public class TipoActividadService {
 
     private void modificarTipoActividad() {
         List<TipoActividad> tiposActividad = tipoActividadDAO.listarTiposActividad();
+        if (tiposActividad.isEmpty()){
+            System.out.println("No hay Tipos de Actividad Activos");
+            return;
+        }
         TipoActividad tipoActividadModificar = null;
         do {
             System.out.println("Seleccione el Tipo de Actividad que desea modificar ingreando su id");
