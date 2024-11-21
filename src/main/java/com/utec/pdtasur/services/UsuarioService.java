@@ -1159,10 +1159,10 @@ public class UsuarioService {
                     mostrarUsuariosListados(usuarios);
                     System.out.println("Quiere filtrar otra vez? (S/N)");
                     String opcionFiltro = sc.nextLine();
-                    if (opcionFiltro.equals("S")) {
+                    if (opcionFiltro.equalsIgnoreCase("S")) {
                         continue;
                     }
-                    if (opcionFiltro.equals("N")) {
+                    if (opcionFiltro.equalsIgnoreCase("N")) {
                         menuModificarDatos(usuarios);
                     }
                     continue;
@@ -1179,10 +1179,10 @@ public class UsuarioService {
                     mostrarUsuariosListados(usuarios);
                     System.out.println("Quiere filtrar otra vez? (S/N)");
                     opcionFiltro = sc.nextLine();
-                    if (opcionFiltro.equals("S")) {
+                    if (opcionFiltro.equalsIgnoreCase("S")) {
                         continue;
                     }
-                    if (opcionFiltro.equals("N")) {
+                    if (opcionFiltro.equalsIgnoreCase("N")) {
                         menuModificarDatos(usuarios);
                     }
                     continue;
@@ -1193,10 +1193,10 @@ public class UsuarioService {
                     mostrarUsuariosListados(filtrarPorDocumento(usuarios, documento));
                     System.out.println("Quiere filtrar otra vez? (S/N)");
                     opcionFiltro = sc.nextLine();
-                    if (opcionFiltro.equals("S")) {
+                    if (opcionFiltro.equalsIgnoreCase("S")) {
                         continue;
                     }
-                    if (opcionFiltro.equals("N")) {
+                    if (opcionFiltro.equalsIgnoreCase("N")) {
                         menuModificarDatos(usuarios);
                     }
 
@@ -1252,10 +1252,10 @@ public class UsuarioService {
                     mostrarUsuariosListados(usuarios);
                     System.out.println("Quiere filtrar otra vez? (S/N)");
                     opcionFiltro = sc.nextLine();
-                    if (opcionFiltro.equals("S")) {
+                    if (opcionFiltro.equalsIgnoreCase("S")) {
                         continue;
                     }
-                    if (opcionFiltro.equals("N")) {
+                    if (opcionFiltro.equalsIgnoreCase("N")) {
                         menuModificarDatos(usuarios);
                     }
                     continue;
@@ -1287,10 +1287,10 @@ public class UsuarioService {
                     mostrarUsuariosListados(usuarios);
                     System.out.println("Quiere filtrar otra vez? (S/N)");
                     opcionFiltro = sc.nextLine();
-                    if (opcionFiltro.equals("S")) {
+                    if (opcionFiltro.equalsIgnoreCase("S")) {
                         continue;
                     }
-                    if (opcionFiltro.equals("N")) {
+                    if (opcionFiltro.equalsIgnoreCase("N")) {
                         menuModificarDatos(usuarios);
                     }
                     continue;
@@ -1300,10 +1300,10 @@ public class UsuarioService {
                     mostrarUsuariosListados(usuarios);
                     System.out.println("Quiere filtrar otra vez? (S/N)");
                     opcionFiltro = sc.nextLine();
-                    if (opcionFiltro.equals("S")) {
+                    if (opcionFiltro.equalsIgnoreCase("S")) {
                         continue;
                     }
-                    if (opcionFiltro.equals("N")) {
+                    if (opcionFiltro.equalsIgnoreCase("N")) {
                         menuModificarDatos(usuarios);
                     }
                     continue;
