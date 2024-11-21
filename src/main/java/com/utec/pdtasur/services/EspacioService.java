@@ -982,7 +982,7 @@ public class EspacioService {
             List<Espacio> espaciosDisponibles = espacioDAO.espaciosDisponibles(reserva.getCantidadPersonas(), reserva.getFechaActividad().toLocalDate());
             if (espaciosDisponibles.isEmpty()){
                 System.out.println("No hay espacios disponibles para la fecha seleccionada");
-                break;
+                return;
             }
             System.out.println("Espacios disponibles:");
             for (Espacio espacioDisponible : espaciosDisponibles){

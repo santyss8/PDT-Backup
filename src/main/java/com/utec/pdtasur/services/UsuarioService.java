@@ -1490,6 +1490,10 @@ public class UsuarioService {
     public void listarUsuariosActivar(){
         List<Usuario> usuarios = usuarioDAO.listarUsuarios();
         usuarios = filtrarPorEstado(usuarios, false);
+        if (usuarios.isEmpty()){
+            System.out.println("No hay usuarios pendientes de activar");
+            return;
+        }
         System.out.println("Usuarios pendientes para activar:");
         mostrarUsuariosListados(usuarios);
         do {
@@ -1521,6 +1525,10 @@ public class UsuarioService {
     private void bajaUsuario(){
         List<Usuario> usuarios = usuarioDAO.listarUsuarios();
         usuarios = filtrarPorEstado(usuarios, true);
+        if (usuarios.isEmpty()){
+            System.out.println("No hay usuarios pendientes de bajar");
+            return;
+        }
         System.out.println("Usuarios Activos:");
         mostrarUsuariosListados(usuarios);
         do {
