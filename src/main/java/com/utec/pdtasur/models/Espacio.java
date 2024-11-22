@@ -119,5 +119,6 @@ public class Espacio {
     public String toString() {
         return "Listado de espacios: Id - Nombre - Espacio" + "\n" +
                 id + " - " + nombre + " - " + activo;
+
     }
 }
