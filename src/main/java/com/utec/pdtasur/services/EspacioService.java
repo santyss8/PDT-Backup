@@ -487,6 +487,9 @@ public class EspacioService {
                         continue;
                     }
                 }
+                else if (opcion == 3){
+                    break;
+                }
                 else {
                     System.out.println("Opcion invalida");
                     continue;
