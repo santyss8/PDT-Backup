@@ -102,16 +102,8 @@ public class TipoActividad {
 
     @Override
     public String toString() {
-        return "TipoActividad{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", descripcion='" + descripcion + '\'' +
-                ", estado=" + estado +
-                ", fechaCreacion=" + fechaCreacion +
-                ", fechaBaja=" + fechaBaja +
-                ", razonBaja='" + razonBaja + '\'' +
-                ", comentariosBaja='" + comentariosBaja + '\'' +
-                ", documentoUsuarioBaja='" + documentoUsuarioBaja + '\'' +
-                '}';
+        return "Listado de actividades: Id - Nombre - Estado - Fecha Creación - Fecha Baja" + "\n" +
+                id + " - " + nombre + " - " + estado + " - " + fechaCreacion + " - " + (fechaBaja != null ? fechaBaja : "Activo");
+
     }
 }
