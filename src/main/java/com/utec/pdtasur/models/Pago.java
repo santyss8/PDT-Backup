@@ -84,14 +84,13 @@ public class Pago {
 
     @Override
     public String toString() {
-        return "Pago{" +
-                "id=" + id +
-                ", usuario=" + usuario.getNombre() +
-                ", esCuota=" + esCuota +
-                ", espacio=" + espacio +
-                ", monto=" + monto +
-                ", fechaCobro=" + fechaCobro +
-                ", formaCobro='" + formaCobro + '\'' +
-                '}';
+        return "Pago: " + "\n" +
+                "Id: " + id +
+                " - Usuario: " + usuario.getNombre() +
+                " - Es Cuota: " + esCuota +
+                " - Espacio: " + espacio +
+                " - Monto: " + monto +
+                " - Fecha de cobro: " + fechaCobro +
+                " - Forma de cobro: " + formaCobro + '\n';
     }
 }
