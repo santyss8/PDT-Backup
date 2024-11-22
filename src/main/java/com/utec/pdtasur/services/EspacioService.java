@@ -463,6 +463,10 @@ public class EspacioService {
                     System.out.println("Ingrese el nombre del espacio a filtrar");
                     String nombre = sc.nextLine();
                     espacios = filtrarPorNombre(espacios, nombre);
+                    if (espacios.isEmpty()){
+                        System.out.println("No hay espacios con ese nombre");
+                        continue;
+                    }
                 } else if (opcion == 2) {
                     System.out.print("""
                         Ingrese el estado del espacio a filtrar
@@ -475,8 +479,16 @@ public class EspacioService {
                         sc.nextLine();
                         if (opcionEstado == 1) {
                             espacios = filtrarPorEstado(espacios, true);
+                            if (espacios.isEmpty()){
+                                System.out.println("No hay espacios activos");
+                                continue;
+                            }
                         } else if (opcionEstado == 2) {
                             espacios = filtrarPorEstado(espacios, false);
+                            if (espacios.isEmpty()){
+                                System.out.println("No hay espacios inactivos");
+                                continue;
+                            }
                         } else {
                             System.out.println("Opcion invalida");
                             continue;

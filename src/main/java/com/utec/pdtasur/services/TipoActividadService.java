@@ -76,14 +76,10 @@ public class TipoActividadService {
     private void activarTipoActividad() {
         List<TipoActividad> tiposActividad = listarTiposActividadInActivos();
         if (tiposActividad.isEmpty()){
-            System.out.println("No hay Tipos de Actividad Activos");
+            System.out.println("No hay Tipos de Actividad Inactivos");
             return;
         }
         TipoActividad tipoActividadActivar = null;
-        if (tiposActividad.isEmpty()){
-            System.out.println("No hay Tipos de Actividad Activos");
-            return;
-        }
         do {
             System.out.println("----- Lista de Tipos de Actividad Activos -----");
             for (TipoActividad tipoActividad : tiposActividad){
