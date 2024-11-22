@@ -117,16 +117,7 @@ public class Espacio {
 
     @Override
     public String toString() {
-        return "Espacio{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", capacidadMaxima=" + capacidadMaxima +
-                ", precioReservaSocio=" + precioReservaSocio +
-                ", precioReservaNoSocio=" + precioReservaNoSocio +
-                ", fechaVigenciaPrecio=" + fechaVigenciaPrecio +
-                ", observaciones='" + observaciones + '\'' +
-                ", activo=" + activo +
-                ", fechaCreacion=" + fechaCreacion +
-                '}';
+        return "Listado de espacios: Id - Nombre - Espacio" + "\n" +
+                id + " - " + nombre + " - " + activo;
     }
 }
