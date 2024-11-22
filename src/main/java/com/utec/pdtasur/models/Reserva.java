@@ -178,22 +178,7 @@ public class Reserva {
 
     @Override
     public String toString() {
-        return "Reserva{" +
-                "id=" + id +
-                ", usuario=" + usuario.getNombre() + " " + usuario.getApellido() +
-                ", espacio=" + espacio +
-                ", fechaActividad=" + fechaActividad +
-                ", duracion=" + duracion +
-                ", cantidadPersonas=" + cantidadPersonas +
-                ", importeAbonar=" + importeAbonar +
-                ", fechaVencimientoSena=" + fechaVencimientoSena +
-                ", importePagoSena=" + importePagoSena +
-                ", fechaPagoSena=" + fechaPagoSena +
-                ", importeSenaPagado=" + importeSenaPagado +
-                ", saldoPendiente=" + saldoPendiente +
-                ", estado=" + estado +
-                ", fechaConfirmacion=" + fechaConfirmacion +
-                ", fechaCreacion=" + fechaCreacion +
-                '}';
+        return "Reserva: Id - Nombre - Estado" + "\n" +
+                id + " - " + espacio.getNombre() + " - " + estado;
     }
 }
