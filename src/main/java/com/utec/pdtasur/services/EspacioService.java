@@ -487,6 +487,9 @@ public class EspacioService {
                         continue;
                     }
                 }
+                else if (opcion == 3){
+                    break;
+                }
                 else {
                     System.out.println("Opcion invalida");
                     continue;
@@ -857,6 +860,10 @@ public class EspacioService {
 
     private void cancelarReserva(Usuario usuarioActual) throws SQLException {
         List<Reserva> reservas = reservaDAO.listarReservas();
+        if (reservas.isEmpty()){
+            System.out.println("No hay reservas pendientes para cancelar");
+            return;
+        }
         Reserva reserva = null;
         if (!usuarioActual.getTipoUsuario().equals(TipoUsuario.AUXILIARADMINISTRATIVO)){
             for (Reserva res : reservas){
@@ -907,6 +914,10 @@ public class EspacioService {
 
     private void confirmarReserva() {
         List<Reserva> reservas = reservaDAO.listarReservasPendientes();
+        if (reservas.isEmpty()){
+            System.out.println("No hay reservas pendientes para confirmar");
+            return;
+        }
         Reserva reserva = null;
         for (Reserva res : reservas){
             System.out.println(res);
