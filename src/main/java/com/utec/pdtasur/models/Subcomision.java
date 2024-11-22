@@ -50,10 +50,9 @@ public class Subcomision {
 
     @Override
     public String toString() {
-        return "Subcomision{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", descripcion='" + descripcion + '\'' +
-                '}';
+        return "Subcomision: " + "\n" +
+                "Id: " + id +
+                " - Nombre: " + nombre +
+                " - Descripcion: " + descripcion;
     }
 }
