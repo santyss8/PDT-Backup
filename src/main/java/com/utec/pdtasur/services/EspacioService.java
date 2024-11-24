@@ -1003,6 +1003,7 @@ public class EspacioService {
 
         while (true){
             List<Espacio> espaciosDisponibles = espacioDAO.espaciosDisponibles(reserva.getCantidadPersonas(), reserva.getFechaActividad().toLocalDate());
+            espaciosDisponibles = filtrarPorEstado(espaciosDisponibles, true);
             if (espaciosDisponibles.isEmpty()){
                 System.out.println("No hay espacios disponibles para la fecha seleccionada");
                 return;

@@ -178,7 +178,7 @@ public class Reserva {
 
     @Override
     public String toString() {
-        return "Reserva: Id - Nombre - Estado" + "\n" +
-                id + " - " + espacio.getNombre() + " - " + estado;
+        return "Reserva: Id - Nombre - Estado" + " - Fecha \n" +
+                id + " - " + espacio.getNombre() + " - " + estado + " - " + fechaActividad;
     }
 }
