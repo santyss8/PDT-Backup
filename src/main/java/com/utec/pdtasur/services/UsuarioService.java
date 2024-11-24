@@ -255,9 +255,9 @@ public class UsuarioService {
         do {
             System.out.println("Tiene dificultad auditiva S/N");
             String dificultadAuditiva = sc.nextLine();
-            if (dificultadAuditiva.equals("S")) {
+            if (dificultadAuditiva.equalsIgnoreCase("S")) {
                 usuario.setDificultadAuditiva(true);
-            } else if (dificultadAuditiva.equals("N")) {
+            } else if (dificultadAuditiva.equalsIgnoreCase("N")) {
                 usuario.setDificultadAuditiva(false);
             } else {
                 System.out.println("Opcion invalida");
@@ -268,9 +268,9 @@ public class UsuarioService {
         do {
             System.out.println("Tiene lenguaje señas S/N");
             String lenguajeSeñas = sc.nextLine();
-            if (lenguajeSeñas.equals("S")) {
+            if (lenguajeSeñas.equalsIgnoreCase("S")) {
                 usuario.setLenguajeSeñas(true);
-            } else if (lenguajeSeñas.equals("N")) {
+            } else if (lenguajeSeñas.equalsIgnoreCase("N")) {
                 usuario.setLenguajeSeñas(false);
             } else {
                 System.out.println("Opcion invalida");
@@ -281,9 +281,9 @@ public class UsuarioService {
         do {
             System.out.println("Participa en subcomision S/N");
             String participaSubcomision = sc.nextLine();
-            if (participaSubcomision.equals("S")) {
+            if (participaSubcomision.equalsIgnoreCase("S")) {
                 usuario.setParticipaSubcomision(true);
-            } else if (participaSubcomision.equals("N")) {
+            } else if (participaSubcomision.equalsIgnoreCase("N")) {
                 usuario.setParticipaSubcomision(false);
             } else {
                 System.out.println("Opcion invalida");
@@ -465,7 +465,7 @@ public class UsuarioService {
                 }
                 System.out.println("Quiere agregar otro telefono? (S/N)");
                 String opcion = sc.nextLine();
-                if (opcion.equals("S")) {
+                if (opcion.equalsIgnoreCase("S")) {
                     continue;
                 } else {
                     telefonosContinuar = false;
@@ -657,7 +657,7 @@ public class UsuarioService {
                 }
                 System.out.println("Quiere agregar otro telefono? (S/N)");
                 String opcion = sc.nextLine();
-                if (opcion.equals("S")) {
+                if (opcion.equalsIgnoreCase("S")) {
                     continue;
                 } else {
                     telefonosContinuar = false;
@@ -853,10 +853,10 @@ public class UsuarioService {
                     mostrarUsuariosListados(usuarios);
                     System.out.println("Quiere filtrar otra vez? (S/N)");
                     String opcionFiltro = sc.nextLine();
-                    if (opcionFiltro.equals("S")) {
+                    if (opcionFiltro.equalsIgnoreCase("S")) {
                         continue;
                     }
-                    if (opcionFiltro.equals("N")) {
+                    if (opcionFiltro.equalsIgnoreCase("N")) {
                         bandera = false;
                     }
                     continue;
@@ -873,10 +873,10 @@ public class UsuarioService {
                     mostrarUsuariosListados(usuarios);
                     System.out.println("Quiere filtrar otra vez? (S/N)");
                     opcionFiltro = sc.nextLine();
-                    if (opcionFiltro.equals("S")) {
+                    if (opcionFiltro.equalsIgnoreCase("S")) {
                         continue;
                     }
-                    if (opcionFiltro.equals("N")) {
+                    if (opcionFiltro.equalsIgnoreCase("N")) {
                         bandera = false;
                     }
                     continue;
@@ -887,10 +887,10 @@ public class UsuarioService {
                     mostrarUsuariosListados(filtrarPorDocumento(usuarios, documento));
                     System.out.println("Quiere filtrar otra vez? (S/N)");
                     opcionFiltro = sc.nextLine();
-                    if (opcionFiltro.equals("S")) {
+                    if (opcionFiltro.equalsIgnoreCase("S")) {
                         continue;
                     }
-                    if (opcionFiltro.equals("N")) {
+                    if (opcionFiltro.equalsIgnoreCase("N")) {
                         bandera = false;
                     }
 
@@ -946,10 +946,10 @@ public class UsuarioService {
                     mostrarUsuariosListados(usuarios);
                     System.out.println("Quiere filtrar otra vez? (S/N)");
                     opcionFiltro = sc.nextLine();
-                    if (opcionFiltro.equals("S")) {
+                    if (opcionFiltro.equalsIgnoreCase("S")) {
                         continue;
                     }
-                    if (opcionFiltro.equals("N")) {
+                    if (opcionFiltro.equalsIgnoreCase("N")) {
                         bandera = false;
                     }
                     continue;
@@ -981,10 +981,10 @@ public class UsuarioService {
                     mostrarUsuariosListados(usuarios);
                     System.out.println("Quiere filtrar otra vez? (S/N)");
                     opcionFiltro = sc.nextLine();
-                    if (opcionFiltro.equals("S")) {
+                    if (opcionFiltro.equalsIgnoreCase("S")) {
                         continue;
                     }
-                    if (opcionFiltro.equals("N")) {
+                    if (opcionFiltro.equalsIgnoreCase("N")) {
                         bandera = false;
                     }
                     continue;
@@ -994,10 +994,10 @@ public class UsuarioService {
                     mostrarUsuariosListados(usuarios);
                     System.out.println("Quiere filtrar otra vez? (S/N)");
                     opcionFiltro = sc.nextLine();
-                    if (opcionFiltro.equals("S")) {
+                    if (opcionFiltro.equalsIgnoreCase("S")) {
                         continue;
                     }
-                    if (opcionFiltro.equals("N")) {
+                    if (opcionFiltro.equalsIgnoreCase("N")) {
                         bandera = false;
                     }
                     continue;
@@ -1378,9 +1378,9 @@ public class UsuarioService {
                         do {
                             System.out.println("Tiene dificultad auditiva S/N");
                             String dificultadAuditiva = sc.nextLine();
-                            if (dificultadAuditiva.equals("S")) {
+                            if (dificultadAuditiva.equalsIgnoreCase("S")) {
                                 usuario.setDificultadAuditiva(true);
-                            } else if (dificultadAuditiva.equals("N")) {
+                            } else if (dificultadAuditiva.equalsIgnoreCase("N")) {
                                 usuario.setDificultadAuditiva(false);
                             } else {
                                 System.out.println("Opcion invalida");
@@ -1391,9 +1391,9 @@ public class UsuarioService {
                         do {
                             System.out.println("Tiene lenguaje señas S/N");
                             String lenguajeSeñas = sc.nextLine();
-                            if (lenguajeSeñas.equals("S")) {
+                            if (lenguajeSeñas.equalsIgnoreCase("S")) {
                                 usuario.setLenguajeSeñas(true);
-                            } else if (lenguajeSeñas.equals("N")) {
+                            } else if (lenguajeSeñas.equalsIgnoreCase("N")) {
                                 usuario.setLenguajeSeñas(false);
                             } else {
                                 System.out.println("Opcion invalida");
@@ -1404,9 +1404,9 @@ public class UsuarioService {
                         do {
                             System.out.println("Participa en subcomision S/N");
                             String participaSubcomision = sc.nextLine();
-                            if (participaSubcomision.equals("S")) {
+                            if (participaSubcomision.equalsIgnoreCase("S")) {
                                 usuario.setParticipaSubcomision(true);
-                            } else if (participaSubcomision.equals("N")) {
+                            } else if (participaSubcomision.equalsIgnoreCase("N")) {
                                 usuario.setParticipaSubcomision(false);
                             } else {
                                 System.out.println("Opcion invalida");
@@ -1512,7 +1512,7 @@ public class UsuarioService {
             System.out.println("El usuario seleccionado es: " + usuario.getNombre() + " " + usuario.getApellido() + " - " + usuario.getTipoUsuario().toString().toLowerCase());
             System.out.println("¿Quiere activar este Usuario? S/N");
             String opcion = sc.nextLine();
-            if (opcion.toLowerCase().equals("s")){
+            if (opcion.toLowerCase().equalsIgnoreCase("s")){
                 usuario.setActivo(true);
                 usuarioDAO.activar(usuario);
             }
@@ -1690,7 +1690,7 @@ public class UsuarioService {
                     int opcion = sc.nextInt();
                     sc.nextLine();
                     if (opcion == 1){
-                        System.out.println("Ingrese su nueva dificultad auditiva");
+                        System.out.println("Tiene Dificultad Auditiva? (S/N)");
                         String dificultadAuditiva = sc.nextLine();
                         if (dificultadAuditiva.equalsIgnoreCase("S")){
                             usuarioActual.setDificultadAuditiva(true);
@@ -1713,7 +1713,7 @@ public class UsuarioService {
                     int opcion = sc.nextInt();
                     sc.nextLine();
                     if (opcion == 1){
-                        System.out.println("Ingrese su nueva lenguaje señas");
+                        System.out.println("Sabe Lenguaje de Señas? (S/N)");
                         String lenguajeSeñas = sc.nextLine();
                         if (lenguajeSeñas.equalsIgnoreCase("S")){
                             usuarioActual.setLenguajeSeñas(true);
