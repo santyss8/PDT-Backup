@@ -3,12 +3,6 @@ package com.utec.pdtasur.models;
 
 import java.time.LocalDate;
 import java.util.List;
-import com.utec.pdtasur.models.Departamento;
-import com.utec.pdtasur.models.Localidad;
-import com.utec.pdtasur.models.TipoDocumento;
-import com.utec.pdtasur.models.TipoUsuario;
-
-
 
 public class Usuario {
     private int id;
