@@ -479,11 +479,11 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         return false;
     }
 
-    public boolean seleccionarTelefono(String numero) {
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.selectTelefono");
+    public boolean seleccionarTelefono(String numero, String documento) {
+        String sql = "SELECT * FROM telefonos WHERE numero = ? AND documento_usuario = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, numero);
+            ps.setString(2, documento);
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
                 return true;
@@ -492,6 +492,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             e.printStackTrace();
         }
         return false;
+
     }
 
     public boolean seleccionarTelefonoEliminar(String documento) {
@@ -589,6 +590,47 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             }
         }catch (Exception e){
             System.out.println("Error al obtener Usuario");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Departamento> listarDepartamentos(){
+        String sql = "SELECT * FROM departamentos ORDER BY id ASC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ResultSet rs = ps.executeQuery();
+            List<Departamento> departamentos = new ArrayList<>();
+            while (rs.next()){
+                Departamento departamento = new Departamento();
+                departamento.setId(rs.getInt("id"));
+                departamento.setDepartamento(rs.getString("departamento"));
+                departamentos.add(departamento);
+            }
+            return departamentos;
+        }catch (Exception e){
+            System.out.println("Error al obtener Departamentos");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Localidad> listarLocalidades(Departamento departamento){
+        String sql = "SELECT * FROM localidades WHERE departamento = ? ORDER BY id ASC";
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, departamento.getDepartamento());
+            ResultSet rs = ps.executeQuery();
+            List<Localidad> localidades = new ArrayList<>();
+            while (rs.next()){
+                Localidad localidad = new Localidad();
+                localidad.setId(rs.getInt("id"));
+                localidad.setDepartamento(departamento);
+                localidad.setLocalidad(rs.getString("localidad"));
+                localidades.add(localidad);
+            }
+            return localidades;
+        }catch (Exception e){
+            System.out.println("Error al obtener Localidades");
             e.printStackTrace();
         }
         return null;
