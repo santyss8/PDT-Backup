@@ -23,20 +23,23 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     }
     // Registrar No Socio
     public void registrarNoSocio(Usuario usuario) {
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.insertUsuario");
+        String sql = "INSERT INTO usuarios(nombre, apellido, tipo_documento, documento, email, \"contraseña\", tipo_usuario, fecha_nacimiento, calle, numeroPuerta, apartamento, id_departamento, id_localidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, usuario.getNombre());
             ps.setString(2, usuario.getApellido());
             ps.setString(3, usuario.getTipoDocumento().toString());
             ps.setString(4, usuario.getDocumento());
-            ps.setString(5, usuario.getDomicilio());
-            ps.setString(6, usuario.getEmail());
-            ps.setString(7, usuario.getContraseña());
-            ps.setString(8, usuario.getTipoUsuario().toString());
-            ps.setDate(9, Date.valueOf(usuario.getFechaNacimiento()));
+            ps.setString(5, usuario.getEmail());
+            ps.setString(6, usuario.getContraseña());
+            ps.setString(7, usuario.getTipoUsuario().toString());
+            ps.setDate(8, Date.valueOf(usuario.getFechaNacimiento()));
+            ps.setString(8, usuario.getCalle());
+            ps.setString(10, usuario.getNumeroPuerta());
+            ps.setString(11, usuario.getApartamento());
+            ps.setInt(12, usuario.getDepartamento().getId());
+            ps.setInt(13, usuario.getLocalidad().getId());
             ps.executeUpdate();
             System.out.println("Usuario Registrado con Exito");
             System.out.println("Podra ingresar al sistema una vez sea activado por un administrador");
@@ -44,14 +47,15 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             System.out.println("Error al registrar Usuario");
         }
 
-        sql = properties.getProperty("sql.insertTelefonos");
-        for (String numero : usuario.getTelefonos()){
-            try (PreparedStatement ps = connection.prepareStatement(sql)){
-                ps.setString(1, usuario.getDocumento());
-                ps.setString(2, numero);
+        sql = "INSERT INTO telefonos(documento_usuario, numero, tipo) VALUES (?, ?, ?);";
+        for (Telefono telefono : usuario.getTelefonos()){
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, telefono.getUsuario().getDocumento());
+                ps.setString(2, telefono.getNumero());
+                ps.setString(3, telefono.getTipo());
                 ps.executeUpdate();
-            }catch (Exception e){
-                System.out.println("Error al registrar Usuario");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
         EmailSenderService emailSenderService = new EmailSenderService();
@@ -60,37 +64,42 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
     @Override
     public void registrarAdmin(Usuario usuario) {
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.insertUsuarioAdmin");
+        String sql = "INSERT INTO usuarios(nombre, apellido, tipo_documento, documento, email, contraseña, tipo_usuario, fecha_nacimiento, activo, calle, numeroPuerta, apartamento, id_departamento, id_localidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, usuario.getNombre());
             ps.setString(2, usuario.getApellido());
             ps.setString(3, usuario.getTipoDocumento().toString());
             ps.setString(4, usuario.getDocumento());
-            ps.setString(5, usuario.getDomicilio());
-            ps.setString(6, usuario.getEmail());
-            ps.setString(7, usuario.getContraseña());
-            ps.setString(8, usuario.getTipoUsuario().toString());
-            ps.setDate(9, Date.valueOf(usuario.getFechaNacimiento()));
-            ps.setBoolean(10, true);
+            ps.setString(5, usuario.getEmail());
+            ps.setString(6, usuario.getContraseña());
+            ps.setString(7, usuario.getTipoUsuario().toString());
+            ps.setDate(8, Date.valueOf(usuario.getFechaNacimiento()));
+            ps.setBoolean(9, true);
+            ps.setString(10, usuario.getCalle());
+            ps.setString(11, usuario.getNumeroPuerta());
+            ps.setString(12, usuario.getApartamento());
+            ps.setInt(13, usuario.getDepartamento().getId());
+            ps.setInt(14, usuario.getLocalidad().getId());
             ps.executeUpdate();
             System.out.println("Usuario Registrado con Exito");
         }catch (Exception e){
             System.out.println("Error al registrar Usuario");
         }
 
-        sql = properties.getProperty("sql.insertTelefonos");
-        for (String numero : usuario.getTelefonos()){
-            try (PreparedStatement ps = connection.prepareStatement(sql)){
-                ps.setString(1, usuario.getDocumento());
-                ps.setString(2, numero);
+        sql = "INSERT INTO telefonos(documento_usuario, numero, tipo) VALUES (?, ?, ?);";
+        for (Telefono telefono : usuario.getTelefonos()){
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, telefono.getUsuario().getDocumento());
+                ps.setString(2, telefono.getNumero());
+                ps.setString(3, telefono.getTipo());
                 ps.executeUpdate();
-            }catch (Exception e){
-                System.out.println("Error al registrar Usuario");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
+
         EmailSenderService emailSenderService = new EmailSenderService();
         emailSenderService.sendEmailRegistroNoSocio(usuario.getEmail(), usuario.getNombre());
 
@@ -98,9 +107,8 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
     @Override
     public void registrarSocio(Usuario usuario) {
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.insertUsuarioSocio");
+        String sql = "INSERT INTO usuarios (nombre, apellido, tipo_documento, documento, fecha_nacimiento, email, contraseña, tipo_usuario, categoria_socio, dif_auditiva, leng_señas, participa_subcomision, subcomision, calle, nro_puerta, apartamento, id_departamento, id_localidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, usuario.getNombre());
@@ -108,7 +116,6 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             ps.setString(3, usuario.getTipoDocumento().toString());
             ps.setString(4, usuario.getDocumento());
             ps.setDate(5, Date.valueOf(usuario.getFechaNacimiento()));
-            ps.setString(6, usuario.getDomicilio());
             ps.setString(7, usuario.getEmail());
             ps.setString(8, usuario.getContraseña());
             ps.setString(9, usuario.getTipoUsuario().toString());
@@ -121,6 +128,11 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             }else {
                 ps.setInt(14, usuario.getSubcomision().getId());
             }
+            ps.setString(15, usuario.getCalle());
+            ps.setString(16, usuario.getNumeroPuerta());
+            ps.setString(17, usuario.getApartamento());
+            ps.setInt(18, usuario.getDepartamento().getId());
+            ps.setInt(19, usuario.getLocalidad().getId());
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
                 usuario.setNumeroSocio(rs.getInt("numero_socio"));
@@ -132,15 +144,15 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             e.printStackTrace();
         }
 
-        sql = properties.getProperty("sql.insertTelefonos");
-        for (String numero : usuario.getTelefonos()){
-            try (PreparedStatement ps = connection.prepareStatement(sql)){
-                ps.setString(1, usuario.getDocumento());
-                ps.setString(2, numero);
+        sql = "INSERT INTO telefonos(documento_usuario, numero, tipo) VALUES (?, ?, ?);";
+        for (Telefono telefono : usuario.getTelefonos()){
+            try (PreparedStatement ps = connection.prepareStatement(sql)) {
+                ps.setString(1, telefono.getUsuario().getDocumento());
+                ps.setString(2, telefono.getNumero());
+                ps.setString(3, telefono.getTipo());
                 ps.executeUpdate();
-            }catch (Exception e){
-                System.out.println("Error al registrar Usuario");
-                e.printStackTrace();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
         }
         EmailSenderService emailSenderService = new EmailSenderService();
@@ -197,13 +209,17 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
                 Usuario usuario = new Usuario();
-                List<String> telefonos = new ArrayList<>();
+                List<Telefono> telefonos = new ArrayList<>();
                 String sqlTelefonos = properties.getProperty("sql.selectTelefonos");
                 try (PreparedStatement psTelefonos = connection.prepareStatement(sqlTelefonos)){
                     psTelefonos.setString(1, rs.getString("documento"));
                     ResultSet rsTelefonos = psTelefonos.executeQuery();
                     while (rsTelefonos.next()){
-                        telefonos.add(rsTelefonos.getString("numero"));
+                        Telefono telefono = new Telefono();
+                        telefono.setNumero(rsTelefonos.getString("numero"));
+                        telefono.setTipo(rsTelefonos.getString("tipo"));
+                        telefono.setUsuario(usuario);
+                        telefonos.add(telefono);
                     }
                 }catch (Exception e){
                     System.out.println("Error al Listar Telefonos");
@@ -214,7 +230,11 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 usuario.setApellido(rs.getString("apellido"));
                 usuario.setTipoDocumento(TipoDocumento.valueOf(rs.getString("tipo_documento")));
                 usuario.setDocumento(rs.getString("documento"));
-                usuario.setDomicilio(rs.getString("domicilio"));
+                usuario.setCalle(rs.getString("calle"));
+                usuario.setNumeroPuerta(rs.getString("numero_puerta"));
+                usuario.setApartamento(rs.getString("apartamento"));
+                usuario.setDepartamento(obtenerDepartamento(rs.getInt("id_departamento")));
+                usuario.setLocalidad(obtenerLocalidad(rs.getInt("id_localidad")));
                 usuario.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
                 usuario.setTelefonos(telefonos);
                 usuario.setEmail(rs.getString("email"));
@@ -232,11 +252,48 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                         usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("id_subcomision")));
                     }
                 }
-                usuario.setActivo(rs.getBoolean("activo"));
+                usuario.setActivo(rs.getBoolean("estado"));
                 return usuario;
             }
         }catch (Exception e){
             System.out.println("Error al Login");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Departamento obtenerDepartamento(int id){
+        String sql = "SELECT * FROM departamentos WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                Departamento departamento = new Departamento();
+                departamento.setId(rs.getInt("id"));
+                departamento.setDepartamento(rs.getString("departamento"));
+                return departamento;
+            }
+        }catch (Exception e){
+            System.out.println("Error al obtener Departamento");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public Localidad obtenerLocalidad(int id){
+        String sql = "SELECT * FROM localidades WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                Localidad localidad = new Localidad();
+                localidad.setId(rs.getInt("id"));
+                localidad.setDepartamento(obtenerDepartamento(rs.getInt("id_departamento")));
+                localidad.setLocalidad(rs.getString("localidad"));
+                return localidad;
+            }
+        }catch (Exception e){
+            System.out.println("Error al obtener Localidad");
             e.printStackTrace();
         }
         return null;
@@ -297,7 +354,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     public void modificarDatosPropios(Usuario usuario) {
         Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.updateUsuarioSolo");
+        String sql = "UPDATE usuarios SET  nombre=?, apellido=?, contraseña=?, dificultad_auditiva=?, lenguaje_señas=?, fecha_nacimiento=?, calle=?, numero_puerta=?, apartamento=?, id_departamento=?, id_localidad=? WHERE documento = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, usuario.getNombre());
@@ -311,8 +368,12 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 ps.setNull(5, Types.BOOLEAN);
             }
             ps.setDate(6, Date.valueOf(usuario.getFechaNacimiento()));
-            ps.setString(7, usuario.getDomicilio());
-            ps.setString(8, usuario.getDocumento());
+            ps.setString(7, usuario.getCalle());
+            ps.setString(8, usuario.getNumeroPuerta());
+            ps.setString(9, usuario.getApartamento());
+            ps.setInt(10, usuario.getDepartamento().getId());
+            ps.setInt(11, usuario.getLocalidad().getId());
+            ps.setString(12, usuario.getDocumento());
             ps.executeUpdate();
             System.out.println("Usuario Modificado con Exito");
         }catch (Exception e){
@@ -331,13 +392,17 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 Usuario usuario = new Usuario();
-                List<String> telefonos = new ArrayList<>();
+                List<Telefono> telefonos = new ArrayList<>();
                 String sqlTelefonos = properties.getProperty("sql.selectTelefonos");
                 try (PreparedStatement psTelefonos = connection.prepareStatement(sqlTelefonos)){
                     psTelefonos.setString(1, rs.getString("documento"));
                     ResultSet rsTelefonos = psTelefonos.executeQuery();
                     while (rsTelefonos.next()){
-                        telefonos.add(rsTelefonos.getString("numero"));
+                        Telefono telefono = new Telefono();
+                        telefono.setNumero(rsTelefonos.getString("numero"));
+                        telefono.setTipo(rsTelefonos.getString("tipo"));
+                        telefono.setUsuario(usuario);
+                        telefonos.add(telefono);
                     }
                 }catch (Exception e){
                     System.out.println("Error al Listar Telefonos");
@@ -348,7 +413,11 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 usuario.setApellido(rs.getString("apellido"));
                 usuario.setTipoDocumento(TipoDocumento.valueOf(rs.getString("tipo_documento")));
                 usuario.setDocumento(rs.getString("documento"));
-                usuario.setDomicilio(rs.getString("domicilio"));
+                usuario.setCalle(rs.getString("calle"));
+                usuario.setNumeroPuerta(rs.getString("numero_puerta"));
+                usuario.setApartamento(rs.getString("apartamento"));
+                usuario.setDepartamento(obtenerDepartamento(rs.getInt("id_departamento")));
+                usuario.setLocalidad(obtenerLocalidad(rs.getInt("id_localidad")));
                 usuario.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
                 usuario.setTelefonos(telefonos);
                 usuario.setEmail(rs.getString("email"));
@@ -366,7 +435,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                         usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("id_subcomision")));
                     }
                 }
-                usuario.setActivo(rs.getBoolean("activo"));
+                usuario.setActivo(rs.getBoolean("estado"));
                 usuarios.add(usuario);
 
             }
@@ -481,7 +550,11 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 usuario.setApellido(rs.getString("apellido"));
                 usuario.setTipoDocumento(TipoDocumento.valueOf(rs.getString("tipo_documento")));
                 usuario.setDocumento(rs.getString("documento"));
-                usuario.setDomicilio(rs.getString("domicilio"));
+                usuario.setCalle(rs.getString("calle"));
+                usuario.setNumeroPuerta(rs.getString("numero_puerta"));
+                usuario.setApartamento(rs.getString("apartamento"));
+                usuario.setDepartamento(obtenerDepartamento(rs.getInt("id_departamento")));
+                usuario.setLocalidad(obtenerLocalidad(rs.getInt("id_localidad")));
                 usuario.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
                 usuario.setTelefonos(new ArrayList<>());
                 String sqlTelefonos = properties.getProperty("sql.selectTelefonos");
@@ -489,7 +562,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                     psTelefonos.setString(1, rs.getString("documento"));
                     ResultSet rsTelefonos = psTelefonos.executeQuery();
                     while (rsTelefonos.next()){
-                        usuario.getTelefonos().add(rsTelefonos.getString("numero"));
+                        usuario.getTelefonos().add(new Telefono(rsTelefonos.getInt("id"), rsTelefonos.getString("numero"), rsTelefonos.getString("tipo"), usuario));
                     }
                 }catch (Exception e){
                     System.out.println("Error al Listar Telefonos");
@@ -511,7 +584,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                         usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("id_subcomision")));
                     }
                 }
-                usuario.setActivo(rs.getBoolean("activo"));
+                usuario.setActivo(rs.getBoolean("estado"));
                 return usuario;
             }
         }catch (Exception e){
@@ -520,12 +593,6 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         }
         return null;
     }
-
-
-
-
-
-
 
 
     // metodo para recuperar propiedades y para generar clase conexion
