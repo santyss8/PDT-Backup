@@ -21,7 +21,7 @@ public interface UsuarioDAO {
     boolean seleccionarEmail(String email);
     boolean seleccionarDocumento(String documento);
     boolean seleccionarTelefono(String numero, String documento);
-    void insertarTelefono(String documento, String numero);
+    void insertarTelefono(String documento, String numero, String tipo);
     void eliminarTelefono(String documento, String numero);
     boolean seleccionarTelefonoEliminar(String documento);
 

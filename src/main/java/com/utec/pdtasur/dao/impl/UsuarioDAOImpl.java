@@ -24,7 +24,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     // Registrar No Socio
     public void registrarNoSocio(Usuario usuario) {
 
-        String sql = "INSERT INTO usuarios(nombre, apellido, tipo_documento, documento, email, \"contraseña\", tipo_usuario, fecha_nacimiento, calle, numeroPuerta, apartamento, id_departamento, id_localidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO usuarios(nombre, apellido, tipo_documento, documento, correo, \"contraseña\", tipo_usuario, fecha_nacimiento, calle, nro_puerta, apartamento, id_departamento, id_localidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, usuario.getNombre());
@@ -35,7 +35,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             ps.setString(6, usuario.getContraseña());
             ps.setString(7, usuario.getTipoUsuario().toString());
             ps.setDate(8, Date.valueOf(usuario.getFechaNacimiento()));
-            ps.setString(8, usuario.getCalle());
+            ps.setString(9, usuario.getCalle());
             ps.setString(10, usuario.getNumeroPuerta());
             ps.setString(11, usuario.getApartamento());
             ps.setInt(12, usuario.getDepartamento().getId());
@@ -44,7 +44,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             System.out.println("Usuario Registrado con Exito");
             System.out.println("Podra ingresar al sistema una vez sea activado por un administrador");
         }catch (Exception e){
-            System.out.println("Error al registrar Usuario");
+            System.out.println(e.getMessage());
         }
 
         sql = "INSERT INTO telefonos(documento_usuario, numero, tipo) VALUES (?, ?, ?);";
@@ -65,7 +65,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     @Override
     public void registrarAdmin(Usuario usuario) {
 
-        String sql = "INSERT INTO usuarios(nombre, apellido, tipo_documento, documento, email, contraseña, tipo_usuario, fecha_nacimiento, activo, calle, numeroPuerta, apartamento, id_departamento, id_localidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO usuarios(nombre, apellido, tipo_documento, documento, correo, contraseña, tipo_usuario, fecha_nacimiento, activo, calle, nro_puerta, apartamento, id_departamento, id_localidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, usuario.getNombre());
@@ -108,7 +108,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     @Override
     public void registrarSocio(Usuario usuario) {
 
-        String sql = "INSERT INTO usuarios (nombre, apellido, tipo_documento, documento, fecha_nacimiento, email, contraseña, tipo_usuario, categoria_socio, dif_auditiva, leng_señas, participa_subcomision, subcomision, calle, nro_puerta, apartamento, id_departamento, id_localidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO usuarios (nombre, apellido, tipo_documento, documento, fecha_nacimiento, correo, contraseña, tipo_usuario, categoria_socio, dif_auditiva, leng_señas, participa_subcomision, subcomision, calle, nro_puerta, apartamento, id_departamento, id_localidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING nro_socio;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, usuario.getNombre());
@@ -116,32 +116,31 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             ps.setString(3, usuario.getTipoDocumento().toString());
             ps.setString(4, usuario.getDocumento());
             ps.setDate(5, Date.valueOf(usuario.getFechaNacimiento()));
-            ps.setString(7, usuario.getEmail());
-            ps.setString(8, usuario.getContraseña());
-            ps.setString(9, usuario.getTipoUsuario().toString());
-            ps.setInt(10, usuario.getCategoriaSocio().getId());
-            ps.setBoolean(11, usuario.isDificultadAuditiva());
-            ps.setBoolean(12, usuario.isLenguajeSeñas());
-            ps.setBoolean(13, usuario.isParticipaSubcomision());
+            ps.setString(6, usuario.getEmail());
+            ps.setString(7, usuario.getContraseña());
+            ps.setString(8, usuario.getTipoUsuario().toString());
+            ps.setInt(9, usuario.getCategoriaSocio().getId());
+            ps.setBoolean(10, usuario.isDificultadAuditiva());
+            ps.setBoolean(11, usuario.isLenguajeSeñas());
+            ps.setBoolean(12, usuario.isParticipaSubcomision());
             if (!usuario.isParticipaSubcomision()){
-                ps.setNull(14, Types.INTEGER);
+                ps.setNull(13, Types.INTEGER);
             }else {
-                ps.setInt(14, usuario.getSubcomision().getId());
+                ps.setInt(13, usuario.getSubcomision().getId());
             }
-            ps.setString(15, usuario.getCalle());
-            ps.setString(16, usuario.getNumeroPuerta());
-            ps.setString(17, usuario.getApartamento());
-            ps.setInt(18, usuario.getDepartamento().getId());
-            ps.setInt(19, usuario.getLocalidad().getId());
+            ps.setString(14, usuario.getCalle());
+            ps.setString(15, usuario.getNumeroPuerta());
+            ps.setString(16, usuario.getApartamento());
+            ps.setInt(17, usuario.getDepartamento().getId());
+            ps.setInt(18, usuario.getLocalidad().getId());
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
-                usuario.setNumeroSocio(rs.getInt("numero_socio"));
+                usuario.setNumeroSocio(rs.getInt("nro_socio"));
             }
             System.out.println("Usuario Registrado con Exito");
             System.out.println("Podra ingresar al sistema una vez sea activado por un administrador");
         }catch (Exception e){
-            System.out.println("Error al registrar Usuario");
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
 
         sql = "INSERT INTO telefonos(documento_usuario, numero, tipo) VALUES (?, ?, ?);";
@@ -237,7 +236,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 usuario.setLocalidad(obtenerLocalidad(rs.getInt("id_localidad")));
                 usuario.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
                 usuario.setTelefonos(telefonos);
-                usuario.setEmail(rs.getString("email"));
+                usuario.setEmail(rs.getString("correo"));
                 usuario.setContraseña(rs.getString("contraseña"));
                 usuario.setTipoUsuario(TipoUsuario.valueOf(rs.getString("tipo_usuario")));
                 if (rs.getString("tipo_usuario").equals("SOCIO")){
@@ -420,7 +419,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 usuario.setLocalidad(obtenerLocalidad(rs.getInt("id_localidad")));
                 usuario.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
                 usuario.setTelefonos(telefonos);
-                usuario.setEmail(rs.getString("email"));
+                usuario.setEmail(rs.getString("correo"));
                 usuario.setContraseña(rs.getString("contraseña"));
                 usuario.setTipoUsuario(TipoUsuario.valueOf(rs.getString("tipo_usuario")));
                 if (rs.getString("tipo_usuario").equals("SOCIO")){
@@ -511,17 +510,18 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     }
 
     @Override
-    public void insertarTelefono(String documento, String numero) {
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.insertTelefonos");
+    public void insertarTelefono(String documento, String numero, String tipo) {
+        String sql = "INSERT INTO telefonos(documento_usuario, numero, tipo) VALUES (?, ?, ?);";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, documento);
             ps.setString(2, numero);
+            ps.setString(3, tipo);
             ps.executeUpdate();
             System.out.println("Telefono agregado");
         }catch (Exception e){
             System.out.println("Error al agregar telefono");
         }
+
     }
 
     @Override
@@ -569,7 +569,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                     System.out.println("Error al Listar Telefonos");
                     e.printStackTrace();
                 }
-                usuario.setEmail(rs.getString("email"));
+                usuario.setEmail(rs.getString("correo"));
                 usuario.setContraseña(rs.getString("contraseña"));
                 usuario.setTipoUsuario(TipoUsuario.valueOf(rs.getString("tipo_usuario")));
                 if (rs.getString("tipo_usuario").equals("SOCIO")){
