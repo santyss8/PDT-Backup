@@ -183,11 +183,11 @@ public class UsuarioService {
             break;
         } while (true);
         do {
-            System.out.println("Ingrese su apartamento");
+            System.out.println("Ingrese su apartamento (si no tiene presione enter)");
             String apartamento = sc.nextLine();
-            if (!apartamento.matches("^[a-zA-Z0-9]+$")) {
-                System.out.println("El apartamento ingresado no es válido");
-                continue;
+            if (apartamento.isEmpty() || apartamento.trim().isEmpty()) {
+                usuario.setApartamento(null);
+                break;
             }
             usuario.setApartamento(apartamento);
             break;
@@ -548,11 +548,11 @@ public class UsuarioService {
             break;
         } while (true);
         do {
-            System.out.println("Ingrese su apartamento");
+            System.out.println("Ingrese su apartamento (si no tiene presione enter)");
             String apartamento = sc.nextLine();
-            if (!apartamento.matches("^[a-zA-Z0-9]+$")) {
-                System.out.println("El apartamento ingresado no es válido");
-                continue;
+            if (apartamento.isEmpty() || apartamento.trim().isEmpty()) {
+                usuario.setApartamento(null);
+                break;
             }
             usuario.setApartamento(apartamento);
             break;
@@ -824,7 +824,7 @@ public class UsuarioService {
             System.out.println("Domicilio:");
             System.out.println("Ingrese su calle");
             String calle = sc.nextLine();
-            if (!calle.matches("^[a-zA-Z]+$")) {
+            if (!calle.matches("^[a-zA-Z0-9]+$")) {
                 System.out.println("La calle ingresada no es válida");
                 continue;
             }
@@ -842,11 +842,11 @@ public class UsuarioService {
             break;
         } while (true);
         do {
-            System.out.println("Ingrese su apartamento");
+            System.out.println("Ingrese su apartamento (si no tiene presione enter)");
             String apartamento = sc.nextLine();
-            if (!apartamento.matches("^[a-zA-Z0-9]+$")) {
-                System.out.println("El apartamento ingresado no es válido");
-                continue;
+            if (apartamento.isEmpty() || apartamento.trim().isEmpty()) {
+                usuario.setApartamento(null);
+                break;
             }
             usuario.setApartamento(apartamento);
             break;
@@ -2064,8 +2064,12 @@ public class UsuarioService {
                         break;
                     }while (true);
                     do {
-                        System.out.println("Ingrese su nueva apartamento");
+                        System.out.println("Ingrese su nueva apartamento (si no tiene presione enter)");
                         String apartamento = sc.nextLine();
+                        if (apartamento.isEmpty() || apartamento.trim().isEmpty()) {
+                            usuarioActual.setApartamento(null);
+                            break;
+                        }
                         if (!apartamento.matches("^[a-zA-Z0-9]+$")) {
                             System.out.println("El apartamento ingresado no es válido");
                             continue;
