@@ -447,8 +447,9 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                     CategoriaSocioDAO categoriaSocioDAO = new CategoriaSocioDAOImpl();
                     CategoriaSocio categoriaSocio = categoriaSocioDAO.getCategoria(rs.getInt("categoria_socio"));
                     usuario.setCategoriaSocio(categoriaSocio);
-                    usuario.setDificultadAuditiva(rs.getBoolean("dificultad_auditiva"));
-                    usuario.setLenguajeSeñas(rs.getBoolean("lenguaje_señas"));
+                    usuario.setNumeroSocio(rs.getInt("nro_socio"));
+                    usuario.setDificultadAuditiva(rs.getBoolean("dif_auditiva"));
+                    usuario.setLenguajeSeñas(rs.getBoolean("leng_señas"));
                     usuario.setParticipaSubcomision(rs.getBoolean("participa_subcomision"));
                     if (rs.getBoolean("participa_subcomision")){
                         SubcomisionDAO subcomisionDAO = new SubcomisionDAOImpl();
@@ -597,8 +598,8 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                     CategoriaSocioDAO categoriaSocioDAO = new CategoriaSocioDAOImpl();
                     CategoriaSocio categoriaSocio = categoriaSocioDAO.getCategoria(rs.getInt("categoria_socio"));
                     usuario.setCategoriaSocio(categoriaSocio);
-                    usuario.setDificultadAuditiva(rs.getBoolean("dificultad_auditiva"));
-                    usuario.setLenguajeSeñas(rs.getBoolean("lenguaje_señas"));
+                    usuario.setDificultadAuditiva(rs.getBoolean("dif_auditiva"));
+                    usuario.setLenguajeSeñas(rs.getBoolean("leng_señas"));
                     usuario.setParticipaSubcomision(rs.getBoolean("participa_subcomision"));
                     usuario.setNumeroSocio(rs.getInt("nro_socio"));
                     if (rs.getBoolean("participa_subcomision")){
