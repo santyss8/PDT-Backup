@@ -45,7 +45,7 @@ public class EspacioDAOImpl {
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Espacio espacio = new Espacio(rs.getInt("id"), rs.getString("nombre"), rs.getInt("capacidad_maxima"), rs.getDouble("precio_reserva_socio"), rs.getDouble("precio_reserva_no_socio"), rs.getDate("fecha_vigencia_precios").toLocalDate(), rs.getString("observaciones"), rs.getBoolean("estado"), rs.getDate("fecha_creacion").toLocalDate());
+                Espacio espacio = new Espacio(rs.getInt("id"), rs.getString("nombre"), rs.getInt("capacidad_max"), rs.getDouble("precio_reserva_socio"), rs.getDouble("precio_reserva_no_socio"), rs.getDate("fecha_vig_precio").toLocalDate(), rs.getString("observaciones"), rs.getBoolean("estado"), rs.getDate("fecha_creacion").toLocalDate());
                 espacios.add(espacio);
             }
             return espacios;
@@ -102,10 +102,10 @@ public class EspacioDAOImpl {
                 Espacio espacio = new Espacio();
                 espacio.setId(rs.getInt("id"));
                 espacio.setNombre(rs.getString("nombre"));
-                espacio.setCapacidadMaxima(rs.getInt("capacidad_maxima"));
+                espacio.setCapacidadMaxima(rs.getInt("capacidad_max"));
                 espacio.setPrecioReservaSocio(rs.getDouble("precio_reserva_socio"));
                 espacio.setPrecioReservaNoSocio(rs.getDouble("precio_reserva_no_socio"));
-                espacio.setFechaVigenciaPrecio(rs.getDate("fecha_vigencia_precios").toLocalDate());
+                espacio.setFechaVigenciaPrecio(rs.getDate("fecha_vig_precio").toLocalDate());
                 espacio.setObservaciones(rs.getString("observaciones"));
                 espacio.setActivo(rs.getBoolean("estado"));
                 espacio.setFechaCreacion(rs.getDate("fecha_creacion").toLocalDate());
@@ -131,10 +131,10 @@ public class EspacioDAOImpl {
                 Espacio espacio = new Espacio();
                 espacio.setId(rs.getInt("id"));
                 espacio.setNombre(rs.getString("nombre"));
-                espacio.setCapacidadMaxima(rs.getInt("capacidad_maxima"));
+                espacio.setCapacidadMaxima(rs.getInt("capacidad_max"));
                 espacio.setPrecioReservaSocio(rs.getDouble("precio_reserva_socio"));
                 espacio.setPrecioReservaNoSocio(rs.getDouble("precio_reserva_no_socio"));
-                espacio.setFechaVigenciaPrecio(rs.getDate("fecha_vigencia_precios").toLocalDate());
+                espacio.setFechaVigenciaPrecio(rs.getDate("fecha_vig_precio").toLocalDate());
                 espacio.setObservaciones(rs.getString("observaciones"));
                 espacio.setActivo(rs.getBoolean("estado"));
                 espacio.setFechaCreacion(rs.getDate("fecha_creacion").toLocalDate());
