@@ -230,7 +230,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 usuario.setTipoDocumento(TipoDocumento.valueOf(rs.getString("tipo_documento")));
                 usuario.setDocumento(rs.getString("documento"));
                 usuario.setCalle(rs.getString("calle"));
-                usuario.setNumeroPuerta(rs.getString("numero_puerta"));
+                usuario.setNumeroPuerta(rs.getString("nro_puerta"));
                 usuario.setApartamento(rs.getString("apartamento"));
                 usuario.setDepartamento(obtenerDepartamento(rs.getInt("id_departamento")));
                 usuario.setLocalidad(obtenerLocalidad(rs.getInt("id_localidad")));
@@ -241,14 +241,14 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 usuario.setTipoUsuario(TipoUsuario.valueOf(rs.getString("tipo_usuario")));
                 if (rs.getString("tipo_usuario").equals("SOCIO")){
                     CategoriaSocioDAO categoriaSocioDAO = new CategoriaSocioDAOImpl();
-                    CategoriaSocio categoriaSocio = categoriaSocioDAO.getCategoria(rs.getInt("id_categoria_socio"));
+                    CategoriaSocio categoriaSocio = categoriaSocioDAO.getCategoria(rs.getInt("categoria_socio"));
                     usuario.setCategoriaSocio(categoriaSocio);
                     usuario.setDificultadAuditiva(rs.getBoolean("dificultad_auditiva"));
                     usuario.setLenguajeSeñas(rs.getBoolean("lenguaje_señas"));
                     usuario.setParticipaSubcomision(rs.getBoolean("participa_subcomision"));
                     if (rs.getBoolean("participa_subcomision")){
                         SubcomisionDAO subcomisionDAO = new SubcomisionDAOImpl();
-                        usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("id_subcomision")));
+                        usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("subcomision")));
                     }
                 }
                 usuario.setActivo(rs.getBoolean("estado"));
@@ -279,6 +279,24 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         return null;
     }
 
+    public Departamento obtenerDepartamento(String departamento){
+        String sql = "SELECT * FROM departamentos WHERE departamento = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)){
+            ps.setString(1, departamento);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()){
+                Departamento dep = new Departamento();
+                dep.setId(rs.getInt("id"));
+                dep.setDepartamento(rs.getString("departamento"));
+                return dep;
+            }
+        }catch (Exception e){
+            System.out.println("Error al obtener Departamento");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public Localidad obtenerLocalidad(int id){
         String sql = "SELECT * FROM localidades WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
@@ -287,7 +305,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             if (rs.next()){
                 Localidad localidad = new Localidad();
                 localidad.setId(rs.getInt("id"));
-                localidad.setDepartamento(obtenerDepartamento(rs.getInt("id_departamento")));
+                localidad.setDepartamento(obtenerDepartamento(rs.getString("departamento")));
                 localidad.setLocalidad(rs.getString("localidad"));
                 return localidad;
             }
@@ -297,6 +315,9 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         }
         return null;
     }
+
+
+
 
     @Override
     public void modificar(Usuario usuario) {
@@ -318,7 +339,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 ps.setString(7, usuario.getDocumento());
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()){
-                    usuario.setNumeroSocio(rs.getInt("numero_socio"));
+                    usuario.setNumeroSocio(rs.getInt("nro_socio"));
                 }
                 System.out.println("Usuario Modificado con Exito");
                 EmailSenderService emailSenderService = new EmailSenderService();
@@ -353,7 +374,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     public void modificarDatosPropios(Usuario usuario) {
         Properties properties = loadProperties();
 
-        String sql = "UPDATE usuarios SET  nombre=?, apellido=?, contraseña=?, dificultad_auditiva=?, lenguaje_señas=?, fecha_nacimiento=?, calle=?, numero_puerta=?, apartamento=?, id_departamento=?, id_localidad=? WHERE documento = ?;";
+        String sql = "UPDATE usuarios SET  nombre=?, apellido=?, contraseña=?, dificultad_auditiva=?, lenguaje_señas=?, fecha_nacimiento=?, calle=?, nro_puerta=?, apartamento=?, id_departamento=?, id_localidad=? WHERE documento = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, usuario.getNombre());
@@ -413,7 +434,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 usuario.setTipoDocumento(TipoDocumento.valueOf(rs.getString("tipo_documento")));
                 usuario.setDocumento(rs.getString("documento"));
                 usuario.setCalle(rs.getString("calle"));
-                usuario.setNumeroPuerta(rs.getString("numero_puerta"));
+                usuario.setNumeroPuerta(rs.getString("nro_puerta"));
                 usuario.setApartamento(rs.getString("apartamento"));
                 usuario.setDepartamento(obtenerDepartamento(rs.getInt("id_departamento")));
                 usuario.setLocalidad(obtenerLocalidad(rs.getInt("id_localidad")));
@@ -424,14 +445,14 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 usuario.setTipoUsuario(TipoUsuario.valueOf(rs.getString("tipo_usuario")));
                 if (rs.getString("tipo_usuario").equals("SOCIO")){
                     CategoriaSocioDAO categoriaSocioDAO = new CategoriaSocioDAOImpl();
-                    CategoriaSocio categoriaSocio = categoriaSocioDAO.getCategoria(rs.getInt("id_categoria_socio"));
+                    CategoriaSocio categoriaSocio = categoriaSocioDAO.getCategoria(rs.getInt("categoria_socio"));
                     usuario.setCategoriaSocio(categoriaSocio);
                     usuario.setDificultadAuditiva(rs.getBoolean("dificultad_auditiva"));
                     usuario.setLenguajeSeñas(rs.getBoolean("lenguaje_señas"));
                     usuario.setParticipaSubcomision(rs.getBoolean("participa_subcomision"));
                     if (rs.getBoolean("participa_subcomision")){
                         SubcomisionDAO subcomisionDAO = new SubcomisionDAOImpl();
-                        usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("id_subcomision")));
+                        usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("subcomision")));
                     }
                 }
                 usuario.setActivo(rs.getBoolean("estado"));
@@ -552,7 +573,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 usuario.setTipoDocumento(TipoDocumento.valueOf(rs.getString("tipo_documento")));
                 usuario.setDocumento(rs.getString("documento"));
                 usuario.setCalle(rs.getString("calle"));
-                usuario.setNumeroPuerta(rs.getString("numero_puerta"));
+                usuario.setNumeroPuerta(rs.getString("nro_puerta"));
                 usuario.setApartamento(rs.getString("apartamento"));
                 usuario.setDepartamento(obtenerDepartamento(rs.getInt("id_departamento")));
                 usuario.setLocalidad(obtenerLocalidad(rs.getInt("id_localidad")));
@@ -574,15 +595,15 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 usuario.setTipoUsuario(TipoUsuario.valueOf(rs.getString("tipo_usuario")));
                 if (rs.getString("tipo_usuario").equals("SOCIO")){
                     CategoriaSocioDAO categoriaSocioDAO = new CategoriaSocioDAOImpl();
-                    CategoriaSocio categoriaSocio = categoriaSocioDAO.getCategoria(rs.getInt("id_categoria_socio"));
+                    CategoriaSocio categoriaSocio = categoriaSocioDAO.getCategoria(rs.getInt("categoria_socio"));
                     usuario.setCategoriaSocio(categoriaSocio);
                     usuario.setDificultadAuditiva(rs.getBoolean("dificultad_auditiva"));
                     usuario.setLenguajeSeñas(rs.getBoolean("lenguaje_señas"));
                     usuario.setParticipaSubcomision(rs.getBoolean("participa_subcomision"));
-                    usuario.setNumeroSocio(rs.getInt("numero_socio"));
+                    usuario.setNumeroSocio(rs.getInt("nro_socio"));
                     if (rs.getBoolean("participa_subcomision")){
                         SubcomisionDAO subcomisionDAO = new SubcomisionDAOImpl();
-                        usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("id_subcomision")));
+                        usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("subcomision")));
                     }
                 }
                 usuario.setActivo(rs.getBoolean("estado"));
