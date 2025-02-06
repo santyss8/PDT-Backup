@@ -162,15 +162,76 @@ public class UsuarioService {
             break;
         } while (true);
         do {
-            System.out.println("Ingrese su domicilio");
-            String domicilio = sc.nextLine();
-            if (!validarDomicilio(domicilio)) {
-                System.out.println("El domicilio ingresado no es válido");
+            System.out.println("Domicilio:");
+            System.out.println("Ingrese su calle");
+            String calle = sc.nextLine();
+            if (!calle.matches("^[a-zA-Z]+$")) {
+                System.out.println("La calle ingresada no es válida");
                 continue;
             }
-            usuario.setDomicilio(domicilio);
+            usuario.setCalle(calle);
             break;
         } while (true);
+        do {
+            System.out.println("Ingrese su numero puerta");
+            String numeroPuerta = sc.nextLine();
+            if (!numeroPuerta.matches("^[a-zA-Z0-9]+$")) {
+                System.out.println("El numero puerta ingresado no es válido");
+                continue;
+            }
+            usuario.setNumeroPuerta(numeroPuerta);
+            break;
+        } while (true);
+        do {
+            System.out.println("Ingrese su apartamento (si no tiene presione enter)");
+            String apartamento = sc.nextLine();
+            if (apartamento.isEmpty() || apartamento.trim().isEmpty()) {
+                usuario.setApartamento(null);
+                break;
+            }
+            usuario.setApartamento(apartamento);
+            break;
+        } while (true);
+        do {
+            System.out.println("Seleccione su departamento");
+            List<Departamento> departamentos = usuarioDAO.listarDepartamentos();
+            for (Departamento departamento : departamentos) {
+                System.out.println(departamento);
+            }
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > departamentos.size()) {
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+                usuario.setDepartamento(departamentos.get(opcion - 1));
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("la opcion tiene que ser un numero");
+                sc.nextLine();
+            }
+        }while (true);
+        do {
+            System.out.println("Seleccione su localidad");
+            List<Localidad> localidades = usuarioDAO.listarLocalidades(usuario.getDepartamento());
+            for (Localidad localidad : localidades) {
+                System.out.println(localidad);
+            }
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > localidades.size()) {
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+                usuario.setLocalidad(localidades.get(opcion - 1));
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("la opcion tiene que ser un numero");
+                sc.nextLine();
+            }
+        }while (true);
         do {
             System.out.println("Ingrese su fecha de nacimiento (aaaa-mm-dd)");
             try {
@@ -188,18 +249,58 @@ public class UsuarioService {
 
         } while (true);
         do {
-            List<String> telefonos = new ArrayList<>();
+            List<String> telefonosAgregados = new ArrayList<>();
+            List<Telefono> telefonos = new ArrayList<>();
             boolean telefonosContinuar = true;
             System.out.println("Ingrese sus telefonos");
             while (telefonosContinuar) {
-                String telefono = sc.nextLine();
-                if (validarTelefono(telefono)) {
-                    telefonos.add(telefono);
-                    System.out.println("Telefono agregado");
-                } else {
-                    System.out.println("El telefono ingresado no es válido");
+                Telefono telefono = new Telefono();
+                telefono.setUsuario(usuario);
+                System.out.print("""
+                        Seleccione el tipo de telefono que desea agregar
+                        1. Celular
+                        2. Fijo
+                        3. Otro
+                        """);
+                try {
+                    int opcion = sc.nextInt();
+                    sc.nextLine();
+                    if (opcion < 1 || opcion > 3) {
+                        System.out.println("Opcion invalida");
+                        continue;
+                    }
+                    switch (opcion) {
+                        case 1:
+                            telefono.setTipo("Celular");
+                            break;
+                        case 2:
+                            telefono.setTipo("Fijo");
+                            break;
+                        case 3:
+                            telefono.setTipo("Otro");
+                            break;
+                        default:
+                            System.out.println("Opcion invalida");
+                            continue;
+                    }
+                }catch (InputMismatchException e){
+                    System.out.println("Tienes que ingresar un numero");
+                    sc.nextLine();
                     continue;
                 }
+                System.out.println("Ingrese su numero");
+                String numero = sc.nextLine();
+                if (!validarTelefono(numero, telefono.getUsuario().getDocumento())) {
+                    System.out.println("El numero ingresado no es válido");
+                    continue;
+                }
+                if(telefonosAgregados.contains(numero)){
+                    System.out.println("El numero ya esta agregado");
+                    continue;
+                }
+                telefonosAgregados.add(numero);
+                telefono.setNumero(numero);
+                telefonos.add(telefono);
                 System.out.println("Quiere agregar otro telefono? (S/N)");
                 String opcion = sc.nextLine();
                 if (opcion.equalsIgnoreCase("S")) {
@@ -209,6 +310,7 @@ public class UsuarioService {
                 }
             }
             usuario.setTelefonos(telefonos);
+
             break;
         } while (true);
         do {
@@ -425,15 +527,76 @@ public class UsuarioService {
             break;
         } while (true);
         do {
-            System.out.println("Ingrese su domicilio");
-            String domicilio = sc.nextLine();
-            if (!validarDomicilio(domicilio)) {
-                System.out.println("El domicilio ingresado no es válido");
+            System.out.println("Domicilio:");
+            System.out.println("Ingrese su calle");
+            String calle = sc.nextLine();
+            if (!calle.matches("^[a-zA-Z]+$")) {
+                System.out.println("La calle ingresada no es válida");
                 continue;
             }
-            usuario.setDomicilio(domicilio);
+            usuario.setCalle(calle);
             break;
         } while (true);
+        do {
+            System.out.println("Ingrese su numero puerta");
+            String numeroPuerta = sc.nextLine();
+            if (!numeroPuerta.matches("^[a-zA-Z0-9]+$")) {
+                System.out.println("El numero puerta ingresado no es válido");
+                continue;
+            }
+            usuario.setNumeroPuerta(numeroPuerta);
+            break;
+        } while (true);
+        do {
+            System.out.println("Ingrese su apartamento (si no tiene presione enter)");
+            String apartamento = sc.nextLine();
+            if (apartamento.isEmpty() || apartamento.trim().isEmpty()) {
+                usuario.setApartamento(null);
+                break;
+            }
+            usuario.setApartamento(apartamento);
+            break;
+        } while (true);
+        do {
+            System.out.println("Seleccione su departamento");
+            List<Departamento> departamentos = usuarioDAO.listarDepartamentos();
+            for (Departamento departamento : departamentos) {
+                System.out.println(departamento);
+            }
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > departamentos.size()) {
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+                usuario.setDepartamento(departamentos.get(opcion - 1));
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("la opcion tiene que ser un numero");
+                sc.nextLine();
+            }
+        }while (true);
+        do {
+            System.out.println("Seleccione su localidad");
+            List<Localidad> localidades = usuarioDAO.listarLocalidades(usuario.getDepartamento());
+            for (Localidad localidad : localidades) {
+                System.out.println(localidad);
+            }
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > localidades.size()) {
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+                usuario.setLocalidad(localidades.get(opcion - 1));
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("la opcion tiene que ser un numero");
+                sc.nextLine();
+            }
+        }while (true);
         do {
             System.out.println("Ingrese su fecha de nacimiento (aaaa-mm-dd)");
             try {
@@ -451,18 +614,58 @@ public class UsuarioService {
 
         } while (true);
         do {
-            List<String> telefonos = new ArrayList<>();
+            List<String> telefonosAgregados = new ArrayList<>();
+            List<Telefono> telefonos = new ArrayList<>();
             boolean telefonosContinuar = true;
             System.out.println("Ingrese sus telefonos");
             while (telefonosContinuar) {
-                String telefono = sc.nextLine();
-                if (validarTelefono(telefono)) {
-                    telefonos.add(telefono);
-                    System.out.println("Telefono agregado");
-                } else {
-                    System.out.println("El telefono ingresado no es válido");
+                Telefono telefono = new Telefono();
+                telefono.setUsuario(usuario);
+                System.out.print("""
+                        Seleccione el tipo de telefono que desea agregar
+                        1. Celular
+                        2. Fijo
+                        3. Otro
+                        """);
+                try {
+                    int opcion = sc.nextInt();
+                    sc.nextLine();
+                    if (opcion < 1 || opcion > 3) {
+                        System.out.println("Opcion invalida");
+                        continue;
+                    }
+                    switch (opcion) {
+                        case 1:
+                            telefono.setTipo("Celular");
+                            break;
+                        case 2:
+                            telefono.setTipo("Fijo");
+                            break;
+                        case 3:
+                            telefono.setTipo("Otro");
+                            break;
+                        default:
+                            System.out.println("Opcion invalida");
+                            continue;
+                    }
+                }catch (InputMismatchException e){
+                    System.out.println("Tienes que ingresar un numero");
+                    sc.nextLine();
                     continue;
                 }
+                System.out.println("Ingrese su numero");
+                String numero = sc.nextLine();
+                if (!validarTelefono(numero, telefono.getUsuario().getDocumento())) {
+                    System.out.println("El numero ingresado no es válido");
+                    continue;
+                }
+                if(telefonosAgregados.contains(numero)){
+                    System.out.println("El numero ya esta agregado");
+                    continue;
+                }
+                telefonosAgregados.add(numero);
+                telefono.setNumero(numero);
+                telefonos.add(telefono);
                 System.out.println("Quiere agregar otro telefono? (S/N)");
                 String opcion = sc.nextLine();
                 if (opcion.equalsIgnoreCase("S")) {
@@ -472,6 +675,7 @@ public class UsuarioService {
                 }
             }
             usuario.setTelefonos(telefonos);
+
             break;
         } while (true);
         do {
@@ -617,15 +821,76 @@ public class UsuarioService {
             break;
         } while (true);
         do {
-            System.out.println("Ingrese su domicilio");
-            String domicilio = sc.nextLine();
-            if (!validarDomicilio(domicilio)) {
-                System.out.println("El domicilio ingresado no es válido");
+            System.out.println("Domicilio:");
+            System.out.println("Ingrese su calle");
+            String calle = sc.nextLine();
+            if (!calle.matches("^[a-zA-Z0-9]+$")) {
+                System.out.println("La calle ingresada no es válida");
                 continue;
             }
-            usuario.setDomicilio(domicilio);
+            usuario.setCalle(calle);
             break;
         } while (true);
+        do {
+            System.out.println("Ingrese su numero puerta");
+            String numeroPuerta = sc.nextLine();
+            if (!numeroPuerta.matches("^[a-zA-Z0-9]+$")) {
+                System.out.println("El numero puerta ingresado no es válido");
+                continue;
+            }
+            usuario.setNumeroPuerta(numeroPuerta);
+            break;
+        } while (true);
+        do {
+            System.out.println("Ingrese su apartamento (si no tiene presione enter)");
+            String apartamento = sc.nextLine();
+            if (apartamento.isEmpty() || apartamento.trim().isEmpty()) {
+                usuario.setApartamento(null);
+                break;
+            }
+            usuario.setApartamento(apartamento);
+            break;
+        } while (true);
+        do {
+            System.out.println("Seleccione su departamento");
+            List<Departamento> departamentos = usuarioDAO.listarDepartamentos();
+            for (Departamento departamento : departamentos) {
+                System.out.println(departamento);
+            }
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > departamentos.size()) {
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+                usuario.setDepartamento(departamentos.get(opcion - 1));
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("la opcion tiene que ser un numero");
+                sc.nextLine();
+            }
+        }while (true);
+        do {
+            System.out.println("Seleccione su localidad");
+            List<Localidad> localidades = usuarioDAO.listarLocalidades(usuario.getDepartamento());
+            for (Localidad localidad : localidades) {
+                System.out.println(localidad);
+            }
+            try {
+                int opcion = sc.nextInt();
+                sc.nextLine();
+                if (opcion < 1 || opcion > localidades.size()) {
+                    System.out.println("Opcion invalida");
+                    continue;
+                }
+                usuario.setLocalidad(localidades.get(opcion - 1));
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("la opcion tiene que ser un numero");
+                sc.nextLine();
+            }
+        }while (true);
         do {
             System.out.println("Ingrese su fecha de nacimiento (aaaa-mm-dd)");
             try {
@@ -643,18 +908,58 @@ public class UsuarioService {
 
         } while (true);
         do {
-            List<String> telefonos = new ArrayList<>();
+            List<String> telefonosAgregados = new ArrayList<>();
+            List<Telefono> telefonos = new ArrayList<>();
             boolean telefonosContinuar = true;
             System.out.println("Ingrese sus telefonos");
             while (telefonosContinuar) {
-                String telefono = sc.nextLine();
-                if (validarTelefono(telefono)) {
-                    telefonos.add(telefono);
-                    System.out.println("Telefono agregado");
-                } else {
-                    System.out.println("El telefono ingresado no es válido");
+                Telefono telefono = new Telefono();
+                telefono.setUsuario(usuario);
+                System.out.print("""
+                        Seleccione el tipo de telefono que desea agregar
+                        1. Celular
+                        2. Fijo
+                        3. Otro
+                        """);
+                try {
+                    int opcion = sc.nextInt();
+                    sc.nextLine();
+                    if (opcion < 1 || opcion > 3) {
+                        System.out.println("Opcion invalida");
+                        continue;
+                    }
+                    switch (opcion) {
+                        case 1:
+                            telefono.setTipo("Celular");
+                            break;
+                        case 2:
+                            telefono.setTipo("Fijo");
+                            break;
+                        case 3:
+                            telefono.setTipo("Otro");
+                            break;
+                        default:
+                            System.out.println("Opcion invalida");
+                            continue;
+                    }
+                }catch (InputMismatchException e){
+                    System.out.println("Tienes que ingresar un numero");
+                    sc.nextLine();
                     continue;
                 }
+                System.out.println("Ingrese su numero");
+                String numero = sc.nextLine();
+                if (!validarTelefono(numero, telefono.getUsuario().getDocumento())) {
+                    System.out.println("El numero ingresado no es válido");
+                    continue;
+                }
+                if(telefonosAgregados.contains(numero)){
+                    System.out.println("El numero ya esta agregado");
+                    continue;
+                }
+                telefonosAgregados.add(numero);
+                telefono.setNumero(numero);
+                telefonos.add(telefono);
                 System.out.println("Quiere agregar otro telefono? (S/N)");
                 String opcion = sc.nextLine();
                 if (opcion.equalsIgnoreCase("S")) {
@@ -664,6 +969,7 @@ public class UsuarioService {
                 }
             }
             usuario.setTelefonos(telefonos);
+
             break;
         } while (true);
         do {
@@ -1737,13 +2043,80 @@ public class UsuarioService {
                 int opcion = sc.nextInt();
                 sc.nextLine();
                 if (opcion == 1){
-                    System.out.println("Ingrese su nuevo domicilio");
-                    String domicilio = sc.nextLine();
-                    if (!validarDomicilio(domicilio)){
-                        System.out.println("El domicilio ingresado no es válido");
-                        continue;
-                    }
-                    usuarioActual.setDomicilio(domicilio);
+                    do {
+                        System.out.println("Ingrese su nueva calle");
+                        String calle = sc.nextLine();
+                        if (!calle.matches("^[a-zA-Z]+$")) {
+                            System.out.println("La calle ingresada no es válida");
+                            continue;
+                        }
+                        usuarioActual.setCalle(calle);
+                        break;
+                    }while (true);
+                    do {
+                        System.out.println("Ingrese su nueva numero puerta");
+                        String numeroPuerta = sc.nextLine();
+                        if (!numeroPuerta.matches("^[a-zA-Z0-9]+$")) {
+                            System.out.println("El numero puerta ingresado no es válido");
+                            continue;
+                        }
+                        usuarioActual.setNumeroPuerta(numeroPuerta);
+                        break;
+                    }while (true);
+                    do {
+                        System.out.println("Ingrese su nueva apartamento (si no tiene presione enter)");
+                        String apartamento = sc.nextLine();
+                        if (apartamento.isEmpty() || apartamento.trim().isEmpty()) {
+                            usuarioActual.setApartamento(null);
+                            break;
+                        }
+                        if (!apartamento.matches("^[a-zA-Z0-9]+$")) {
+                            System.out.println("El apartamento ingresado no es válido");
+                            continue;
+                        }
+                        usuarioActual.setApartamento(apartamento);
+                        break;
+                    }while (true);
+                    do {
+                        System.out.println("Seleccione su departamento");
+                        List<Departamento> departamentos = usuarioDAO.listarDepartamentos();
+                        for (Departamento departamento : departamentos) {
+                            System.out.println(departamento);
+                        }
+                        try {
+                            opcion = sc.nextInt();
+                            sc.nextLine();
+                            if (opcion < 1 || opcion > departamentos.size()) {
+                                System.out.println("Opcion invalida");
+                                continue;
+                            }
+                            usuarioActual.setDepartamento(departamentos.get(opcion - 1));
+                            break;
+                        } catch (InputMismatchException e) {
+                            System.out.println("la opcion tiene que ser un numero");
+                            sc.nextLine();
+                        }
+                    }while (true);
+                    do {
+                        System.out.println("Seleccione su localidad");
+                        List<Localidad> localidades = usuarioDAO.listarLocalidades(usuarioActual.getDepartamento());
+                        for (Localidad localidad : localidades) {
+                            System.out.println(localidad);
+                        }
+                        try {
+                            opcion = sc.nextInt();
+                            sc.nextLine();
+                            if (opcion < 1 || opcion > localidades.size()) {
+                                System.out.println("Opcion invalida");
+                                continue;
+                            }
+                            usuarioActual.setLocalidad(localidades.get(opcion - 1));
+                            break;
+                        } catch (InputMismatchException e) {
+                            System.out.println("la opcion tiene que ser un numero");
+                            sc.nextLine();
+                        }
+                    }while (true);
                 }
             }catch (InputMismatchException e){
                 System.out.println("La opcion debe ser un numero");
@@ -1792,37 +2165,64 @@ public class UsuarioService {
                 }
                 switch (opcion){
                     case 1:
-                        System.out.println("Ingrese el telofono que desea agregar");
-                        String numero = sc.nextLine();
-                        if (!validarTelefono(numero)){
-                            System.out.println("El numero ingresado no es válido");
-                            continue;
-                        }
-                        usuarioDAO.insertarTelefono(usuarioActual.getDocumento(), numero);
-                        usuarioActual.agregarTelefono(numero);
-                        break;
+                       Telefono telefono = new Telefono();
+                       telefono.setUsuario(usuarioActual);
+                       System.out.print("""
+                               ----- Agregar Telefono -----
+                               1. Celular
+                               2. Fijo
+                               3. Otro
+                               """);
+                       try {
+                           opcion = sc.nextInt();
+                           sc.nextLine();
+                           if (opcion < 1 || opcion > 3){
+                               System.out.println("Opcion invalida");
+                               continue;
+                           }
+                           switch (opcion){
+                               case 1:
+                                   telefono.setTipo("Celular");
+                                   break;
+                               case 2:
+                                   telefono.setTipo("Fijo");
+                                   break;
+                               case 3:
+                                   telefono.setTipo("Otro");
+                                   break;
+                               default:
+                                   System.out.println("Opcion invalida");
+                                   continue;
+                           }
+                       }catch (InputMismatchException e){
+                           System.out.println("Tienes que ingresar un numero");
+                           sc.nextLine();
+                           continue;
+                       }
+                       System.out.println("Ingrese su numero");
+                       String numero = sc.nextLine();
+                       if (!validarTelefono(numero, telefono.getUsuario().getDocumento())) {
+                           System.out.println("El numero ingresado no es válido");
+                           continue;
+                       }
+                       usuarioDAO.insertarTelefono(usuarioActual.getDocumento(), numero, telefono.getTipo());
+                       break;
                     case 2:
-                        System.out.println("Seleccione el numero que desea eliminar");
-                        for (String numeroTelefono : usuarioActual.getTelefonos()){
-                            System.out.println(numeroTelefono);
+                        System.out.println("Seleccione el telefono que desea eliminar");
+                        List<Telefono> telefonos = usuarioActual.getTelefonos();
+                        for (int i = 0; i < telefonos.size(); i++){
+                            System.out.println(i + ". " + telefonos.get(i));
                         }
-                        try {
-                            numero = sc.nextLine();
-                            if (!validarTelefonoEliminar(numero, usuarioActual.getDocumento())){
-                                System.out.println("El numero ingresado no es válido");
-                                continue;
-                            }
-                            if (!usuarioActual.getTelefonos().contains(numero)){
-                                System.out.println("El numero no existe");
-                                continue;
-                            }
-                            usuarioDAO.eliminarTelefono(usuarioActual.getDocumento(), numero);
-                            usuarioActual.getTelefonos().remove(numero);
-                        }catch (InputMismatchException e){
-                            System.out.println("El numero ingresado no es válido");
+                        System.out.println("Seleccione el telefono que desea eliminar");
+                        int opcionTelefono = sc.nextInt();
+                        sc.nextLine();
+                        if (opcionTelefono < 1 || opcionTelefono > telefonos.size()){
+                            System.out.println("Opcion invalida");
                             continue;
                         }
-                        break;
+                        String numeroEliminar = telefonos.get(opcionTelefono - 1).getNumero();
+                        usuarioDAO.eliminarTelefono(usuarioActual.getDocumento(), numeroEliminar);
+                        telefonos.remove(opcionTelefono - 1);
                     case 3:
                         System.out.println("saliendo");
                         break;

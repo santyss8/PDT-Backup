@@ -80,11 +80,11 @@ public class ValidarService {
         }
     }
 
-    public static boolean validarTelefono(String telefono) {
+    public static boolean validarTelefono(String telefono, String documento) {
         if (telefono == null || telefono.trim().isEmpty()) {
             return false;
         }
-        if (usuarioDAO.seleccionarTelefono(telefono)){
+        if (usuarioDAO.seleccionarTelefono(telefono, documento)){
             System.out.println("El telefono ya esta registrado");
             return false;
         }

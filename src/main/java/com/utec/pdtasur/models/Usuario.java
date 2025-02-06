@@ -8,20 +8,24 @@ public class Usuario {
     private int id;
     private String nombre;
     private String apellido;
+    private LocalDate fechaNacimiento;
+    private TipoUsuario tipoUsuario;
+    private String contraseña;
     private TipoDocumento tipoDocumento;
     private String documento;
-    private LocalDate fechaNacimiento;
-    private String domicilio;
-    private List<String> telefonos;
     private String email;
-    private String contraseña;
-    private TipoUsuario tipoUsuario;
-    private CategoriaSocio categoriaSocio;
+    private List<Telefono> telefonos;
+    private String calle;
+    private String numeroPuerta;
+    private String apartamento;
+    private Departamento departamento;
+    private Localidad localidad;
+    private int numeroSocio;
     private boolean dificultadAuditiva;
     private boolean lenguajeSeñas;
     private boolean participaSubcomision;
     private Subcomision subcomision;
-    private int numeroSocio;
+    private CategoriaSocio categoriaSocio;
     private boolean activo;
 
     public Usuario(){
@@ -40,12 +44,16 @@ public class Usuario {
     }
 
     // Constructor para No Socios | Administradores (Insertar)
-    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<String> telefonos, String email, String contraseña, TipoUsuario tipoUsuario) {
+    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String calle, String numeroPuerta, String apartamento, Departamento departamento, Localidad localidad, LocalDate fechaNacimiento, List<Telefono> telefonos, String email, String contraseña, TipoUsuario tipoUsuario) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.tipoDocumento = tipoDocumento;
         this.documento = documento;
-        this.domicilio = domicilio;
+        this.calle = calle;
+        this.numeroPuerta = numeroPuerta;
+        this.apartamento = apartamento;
+        this.departamento = departamento;
+        this.localidad = localidad;
         this.fechaNacimiento = fechaNacimiento;
         this.telefonos = telefonos;
         this.email = email;
@@ -54,12 +62,16 @@ public class Usuario {
     }
 
     //Constructor para Socio (Insertar) (particpa en subcomision)
-    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, List<String> telefonos, LocalDate fechaNacimiento, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, Subcomision subcomision) {
+    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String calle, String numeroPuerta, String apartamento, Departamento departamento, Localidad localidad, List<Telefono> telefonos, LocalDate fechaNacimiento, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, Subcomision subcomision) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.tipoDocumento = tipoDocumento;
         this.documento = documento;
-        this.domicilio = domicilio;
+        this.calle = calle;
+        this.numeroPuerta = numeroPuerta;
+        this.apartamento = apartamento;
+        this.departamento = departamento;
+        this.localidad = localidad;
         this.fechaNacimiento = fechaNacimiento;
         this.telefonos = telefonos;
         this.email = email;
@@ -73,12 +85,16 @@ public class Usuario {
     }
 
     // no participa en subcomision
-    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<String> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, int numeroSocio) {
+    public Usuario(String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String calle, String numeroPuerta, String apartamento, Departamento departamento, Localidad localidad, LocalDate fechaNacimiento, List<Telefono> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, int numeroSocio) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.tipoDocumento = tipoDocumento;
         this.documento = documento;
-        this.domicilio = domicilio;
+        this.calle = calle;
+        this.numeroPuerta = numeroPuerta;
+        this.apartamento = apartamento;
+        this.departamento = departamento;
+        this.localidad = localidad;
         this.fechaNacimiento = fechaNacimiento;
         this.telefonos = telefonos;
         this.email = email;
@@ -92,13 +108,17 @@ public class Usuario {
     }
 
     // Constructor para recibir No Socio | Admin de Base de Datos
-    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<String> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, boolean activo) {
+    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String calle, String numeroPuerta, String apartamento, Departamento departamento, Localidad localidad, LocalDate fechaNacimiento, List<Telefono> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, boolean activo) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.tipoDocumento = tipoDocumento;
         this.documento = documento;
-        this.domicilio = domicilio;
+        this.calle = calle;
+        this.numeroPuerta = numeroPuerta;
+        this.apartamento = apartamento;
+        this.departamento = departamento;
+        this.localidad = localidad;
         this.fechaNacimiento = fechaNacimiento;
         this.telefonos = telefonos;
         this.email = email;
@@ -108,13 +128,17 @@ public class Usuario {
     }
 
     // Constructor para Recibir Socios de Base de Datos (participa en subcomision)
-    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<String> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, Subcomision subcomision, int numeroSocio, boolean activo) {
+    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String calle, String numeroPuerta, String apartamento, Departamento departamento, Localidad localidad, LocalDate fechaNacimiento, List<Telefono> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, Subcomision subcomision, int numeroSocio, boolean activo) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.tipoDocumento = tipoDocumento;
         this.documento = documento;
-        this.domicilio = domicilio;
+        this.calle = calle;
+        this.numeroPuerta = numeroPuerta;
+        this.apartamento = apartamento;
+        this.departamento = departamento;
+        this.localidad = localidad;
         this.fechaNacimiento = fechaNacimiento;
         this.telefonos = telefonos;
         this.email = email;
@@ -131,13 +155,17 @@ public class Usuario {
 
     //no participa en subcomision
 
-    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String domicilio, LocalDate fechaNacimiento, List<String> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, int numeroSocio, boolean activo) {
+    public Usuario(int id, String nombre, String apellido, TipoDocumento tipoDocumento, String documento, String calle, String numeroPuerta, String apartamento, Departamento departamento, Localidad localidad, LocalDate fechaNacimiento, List<Telefono> telefonos, String email, String contraseña, TipoUsuario tipoUsuario, CategoriaSocio categoriaSocio, boolean dificultadAuditiva, boolean lenguajeSeñas, boolean participaSubcomision, int numeroSocio, boolean activo) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.tipoDocumento = tipoDocumento;
         this.documento = documento;
-        this.domicilio = domicilio;
+        this.calle = calle;
+        this.numeroPuerta = numeroPuerta;
+        this.apartamento = apartamento;
+        this.departamento = departamento;
+        this.localidad = localidad;
         this.fechaNacimiento = fechaNacimiento;
         this.telefonos = telefonos;
         this.email = email;
@@ -191,14 +219,6 @@ public class Usuario {
         this.documento = documento;
     }
 
-    public String getDomicilio() {
-        return domicilio;
-    }
-
-    public void setDomicilio(String domicilio) {
-        this.domicilio = domicilio;
-    }
-
     public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
@@ -207,16 +227,12 @@ public class Usuario {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public List<String> getTelefonos() {
+    public List<Telefono> getTelefonos() {
         return telefonos;
     }
 
-    public void setTelefonos(List<String> telefonos) {
+    public void setTelefonos(List<Telefono> telefonos) {
         this.telefonos = telefonos;
-    }
-
-    public void agregarTelefono(String numero){
-        this.telefonos.add(numero);
     }
 
     public String getEmail() {
@@ -299,28 +315,72 @@ public class Usuario {
         this.activo = activo;
     }
 
+    public String getCalle() {
+        return calle;
+    }
+
+    public void setCalle(String calle) {
+        this.calle = calle;
+    }
+
+    public String getNumeroPuerta() {
+        return numeroPuerta;
+    }
+
+    public void setNumeroPuerta(String numeroPuerta) {
+        this.numeroPuerta = numeroPuerta;
+    }
+
+    public String getApartamento() {
+        return apartamento;
+    }
+
+    public void setApartamento(String apartamento) {
+        this.apartamento = apartamento;
+    }
+
+    public Departamento getDepartamento() {
+        return departamento;
+    }
+
+    public void setDepartamento(Departamento departamento) {
+        this.departamento = departamento;
+    }
+
+    public Localidad getLocalidad() {
+        return localidad;
+    }
+
+    public void setLocalidad(Localidad localidad) {
+        this.localidad = localidad;
+    }
+
     @Override
     public String toString() {
-        return "Usuario { \n" +
-                "  id = " + id + ", \n" +
-                "  nombre = '" + nombre + "', \n" +
-                "  apellido = '" + apellido + "', \n" +
-                "  tipoDocumento = " + tipoDocumento + ", \n" +
-                "  documento = '" + documento + "', \n" +
-                "  fechaNacimiento = " + fechaNacimiento + ", \n" +
-                "  domicilio = '" + domicilio + "', \n" +
-                "  telefonos = " + telefonos + ", \n" +
-                "  email = '" + email + "', \n" +
-                "  contraseña = '" + contraseña + "', \n" +
-                "  tipoUsuario = " + tipoUsuario + ", \n" +
-                "  categoriaSocio = " + categoriaSocio + ", \n" +
-                "  dificultadAuditiva = " + dificultadAuditiva + ", \n" +
-                "  lenguajeSeñas = " + lenguajeSeñas + ", \n" +
-                "  participaSubcomision = " + participaSubcomision + ", \n" +
-                "  subcomision = " + subcomision + ", \n" +
-                "  numeroSocio = " + numeroSocio + ", \n" +
-                "  activo = " + activo + "\n" +
-                "}";
+        return "Usuario{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", fechaNacimiento=" + fechaNacimiento +
+                ", tipoUsuario=" + tipoUsuario +
+                ", contraseña='" + contraseña + '\'' +
+                ", tipoDocumento=" + tipoDocumento +
+                ", documento='" + documento + '\'' +
+                ", email='" + email + '\'' +
+                ", telefonos=" + telefonos +
+                ", calle='" + calle + '\'' +
+                ", numeroPuerta='" + numeroPuerta + '\'' +
+                ", apartamento='" + apartamento + '\'' +
+                ", departamento=" + departamento +
+                ", localidad=" + localidad +
+                ", numeroSocio=" + numeroSocio +
+                ", dificultadAuditiva=" + dificultadAuditiva +
+                ", lenguajeSeñas=" + lenguajeSeñas +
+                ", participaSubcomision=" + participaSubcomision +
+                ", subcomision=" + subcomision +
+                ", categoriaSocio=" + categoriaSocio +
+                ", activo=" + activo +
+                '}';
     }
 
     public String confirmacionSocio(){
@@ -332,7 +392,11 @@ public class Usuario {
                 "Tipo de documento: " + tipoDocumento.toString().toLowerCase() + "\n" +
                 "Documento: " + documento + "\n" +
                 "Fecha de nacimiento: " + fechaNacimiento + "\n" +
-                "Domicilio: " + domicilio + "\n" +
+                "Calle: " + calle + "\n" +
+                "Numero puerta: " + numeroPuerta + "\n" +
+                "Apartamento: " + apartamento + "\n" +
+                "Departamento: " + departamento + "\n" +
+                "Localidad: " + localidad + "\n" +
                 "Telefonos: " + telefonos + "\n" +
                 "Email: " + email + "\n" +
                 "Tipo de usuario: " + tipoUsuario.toString().toLowerCase() + "\n" +
@@ -349,7 +413,11 @@ public class Usuario {
                 "Tipo de documento: " + tipoDocumento.toString().toLowerCase() + "\n" +
                 "Documento: " + documento + "\n" +
                 "Fecha de nacimiento: " + fechaNacimiento + "\n" +
-                "Domicilio: " + domicilio + "\n" +
+                "Calle: " + calle + "\n" +
+                "Numero puerta: " + numeroPuerta + "\n" +
+                "Apartamento: " + apartamento + "\n" +
+                "Departamento: " + departamento + "\n" +
+                "Localidad: " + localidad + "\n" +
                 "Telefonos: " + telefonos + "\n" +
                 "Email: " + email + "\n" +
                 "Tipo de usuario: " + tipoUsuario.toString().toLowerCase() + "\n";
