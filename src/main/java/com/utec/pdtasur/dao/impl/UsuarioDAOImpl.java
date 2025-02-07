@@ -24,7 +24,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     // Registrar No Socio
     public void registrarNoSocio(Usuario usuario) {
 
-        String sql = "INSERT INTO usuarios(nombre, apellido, tipo_documento, documento, correo, \"contraseña\", tipo_usuario, fecha_nacimiento, calle, nro_puerta, apartamento, id_departamento, id_localidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO usuarios(nombre, apellido, tipo_documento, documento, correo, contraseña, tipo_usuario, fecha_nacimiento, calle, nro_puerta, apartamento, id_departamento, id_localidad) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, usuario.getNombre());
@@ -243,13 +243,14 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                     CategoriaSocioDAO categoriaSocioDAO = new CategoriaSocioDAOImpl();
                     CategoriaSocio categoriaSocio = categoriaSocioDAO.getCategoria(rs.getInt("categoria_socio"));
                     usuario.setCategoriaSocio(categoriaSocio);
-                    usuario.setDificultadAuditiva(rs.getBoolean("dificultad_auditiva"));
-                    usuario.setLenguajeSeñas(rs.getBoolean("lenguaje_señas"));
+                    usuario.setDificultadAuditiva(rs.getBoolean("dif_auditiva"));
+                    usuario.setLenguajeSeñas(rs.getBoolean("leng_señas"));
                     usuario.setParticipaSubcomision(rs.getBoolean("participa_subcomision"));
                     if (rs.getBoolean("participa_subcomision")){
                         SubcomisionDAO subcomisionDAO = new SubcomisionDAOImpl();
                         usuario.setSubcomision(subcomisionDAO.getSubcomision(rs.getInt("subcomision")));
                     }
+                    usuario.setNumeroSocio(rs.getInt("nro_socio"));
                 }
                 usuario.setActivo(rs.getBoolean("estado"));
                 return usuario;
@@ -374,7 +375,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     public void modificarDatosPropios(Usuario usuario) {
         Properties properties = loadProperties();
 
-        String sql = "UPDATE usuarios SET  nombre=?, apellido=?, contraseña=?, dificultad_auditiva=?, lenguaje_señas=?, fecha_nacimiento=?, calle=?, nro_puerta=?, apartamento=?, id_departamento=?, id_localidad=? WHERE documento = ?;";
+        String sql = "UPDATE usuarios SET  nombre=?, apellido=?, contraseña=?, dif_auditiva=?, leng_señas=?, fecha_nacimiento=?, calle=?, nro_puerta=?, apartamento=?, id_departamento=?, id_localidad=? WHERE documento = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, usuario.getNombre());

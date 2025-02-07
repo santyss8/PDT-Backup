@@ -2205,13 +2205,19 @@ public class UsuarioService {
                            System.out.println("El numero ingresado no es válido");
                            continue;
                        }
+                       telefono.setNumero(numero);
                        usuarioDAO.insertarTelefono(usuarioActual.getDocumento(), numero, telefono.getTipo());
+                       usuarioActual.getTelefonos().add(telefono);
                        break;
                     case 2:
-                        System.out.println("Seleccione el telefono que desea eliminar");
                         List<Telefono> telefonos = usuarioActual.getTelefonos();
+                        System.out.println("Seleccione el telefono que desea eliminar");
+                        if (telefonos.isEmpty()){
+                            System.out.println("No hay telefonos");
+                            continue;
+                        }
                         for (int i = 0; i < telefonos.size(); i++){
-                            System.out.println(i + ". " + telefonos.get(i));
+                            System.out.println(i+1 + ". " + telefonos.get(i));
                         }
                         System.out.println("Seleccione el telefono que desea eliminar");
                         int opcionTelefono = sc.nextInt();
