@@ -22,9 +22,8 @@ public class SubcomisionDAOImpl implements SubcomisionDAO {
     }
     @Override
     public void crearSubcomision(Subcomision subcomision) {
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.insertSubcomision");
+        String sql = "INSERT INTO subcomisiones (nombre, descripcion) VALUES (?, ?);";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, subcomision.getNombre());
@@ -40,10 +39,8 @@ public class SubcomisionDAOImpl implements SubcomisionDAO {
 
     @Override
     public Subcomision getSubcomision(int id) {
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.selectSubcomisionId");
-
+        String sql = "SELECT * FROM subcomisiones where id = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setInt(1, id);
@@ -65,11 +62,10 @@ public class SubcomisionDAOImpl implements SubcomisionDAO {
 
     @Override
     public List<Subcomision> listarSubcomisiones() {
-        Properties properties = loadProperties();
 
         List<Subcomision> subcomisiones = new ArrayList<>();
 
-        String sql = properties.getProperty("sql.selectSubcomision");
+        String sql = "SELECT * FROM subcomisiones ORDER BY id;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ResultSet rs = ps.executeQuery();
@@ -92,9 +88,8 @@ public class SubcomisionDAOImpl implements SubcomisionDAO {
 
     @Override
     public void eliminarSubcomision(int id) {
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.deleteComision");
+        String sql = "DELETE FROM subcomisiones WHERE id = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setInt(1, id);
@@ -108,20 +103,6 @@ public class SubcomisionDAOImpl implements SubcomisionDAO {
     }
 
 
-    private Properties loadProperties() {
-        Properties properties = new Properties();
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("app.properties")) {
-            if (input == null) {
-                System.out.println("No se pudo encontrar el archivo properties");
-                return properties;
-            }
-            properties.load(input);
-        } catch (Exception e) {
-            System.out.println("Error al cargar configuraciones");
-            e.printStackTrace(); // Para depuración, puedes quitarlo si no lo necesitas
-        }
-        return properties;
-    }
 
     private Connection getConnection() throws SQLException {
         return DatabaseConnection.getInstance().getConnection();
