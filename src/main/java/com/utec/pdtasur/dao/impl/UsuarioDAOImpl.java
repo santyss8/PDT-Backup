@@ -163,8 +163,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
     @Override
     public void eliminar(Usuario usuario) {
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.deleteUsuario");
+        String sql = "UPDATE usuarios SET estado=? WHERE documento =?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setBoolean(1, usuario.isActivo());
             ps.setString(2, usuario.getDocumento());
@@ -182,8 +181,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
     @Override
     public void activar(Usuario usuario) {
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.deleteUsuario");
+        String sql = "UPDATE usuarios SET estado=? WHERE documento =?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setBoolean(1, usuario.isActivo());
             ps.setString(2, usuario.getDocumento());
@@ -201,15 +199,14 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
     @Override
     public Usuario login(String email, String contraseña) {
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.login");
+        String sql = "SELECT * FROM usuarios WHERE correo=?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
                 Usuario usuario = new Usuario();
                 List<Telefono> telefonos = new ArrayList<>();
-                String sqlTelefonos = properties.getProperty("sql.selectTelefonos");
+                String sqlTelefonos = "SELECT * FROM telefonos WHERE documento_usuario = ?;";
                 try (PreparedStatement psTelefonos = connection.prepareStatement(sqlTelefonos)){
                     psTelefonos.setString(1, rs.getString("documento"));
                     ResultSet rsTelefonos = psTelefonos.executeQuery();
@@ -322,10 +319,9 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
     @Override
     public void modificar(Usuario usuario) {
-        Properties properties = loadProperties();
 
         if (usuario.getTipoUsuario().equals(TipoUsuario.SOCIO)){
-            String sql = properties.getProperty("sql.updateUsuarioSocio");
+            String sql = "UPDATE usuarios SET tipo_usuario=?, categoria_socio=?, dif_auditiva=?, \"leng_señas\"=?, participa_subcomision=?, subcomision=? WHERE documento = ? RETURNING nro_socio;";
             try (PreparedStatement ps = connection.prepareStatement(sql)){
                 ps.setString(1, usuario.getTipoUsuario().toString());
                 ps.setInt(2, usuario.getCategoriaSocio().getId());
@@ -351,7 +347,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
             }
         }
         else {
-            String sql = properties.getProperty("sql.updateUsuario");
+            String sql = "UPDATE usuarios SET tipo_usuario=?, categoria_socio=?, dif_auditiva=?, \"leng_señas\"=?, participa_subcomision=?, subcomision=? WHERE documento = ?;";
             try (PreparedStatement ps = connection.prepareStatement(sql)){
                 ps.setString(1, usuario.getTipoUsuario().toString());
                 ps.setNull(2, Types.INTEGER);
@@ -373,8 +369,6 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
     @Override
     public void modificarDatosPropios(Usuario usuario) {
-        Properties properties = loadProperties();
-
         String sql = "UPDATE usuarios SET  nombre=?, apellido=?, contraseña=?, dif_auditiva=?, leng_señas=?, fecha_nacimiento=?, calle=?, nro_puerta=?, apartamento=?, id_departamento=?, id_localidad=? WHERE documento = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
@@ -406,15 +400,14 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
     @Override
     public List<Usuario> listarUsuarios() {
-        Properties properties = loadProperties();
         List<Usuario> usuarios = new ArrayList<>();
-        String sql = properties.getProperty("sql.selectUsuarios");
+        String sql = "SELECT * FROM usuarios ORDER BY id;";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 Usuario usuario = new Usuario();
                 List<Telefono> telefonos = new ArrayList<>();
-                String sqlTelefonos = properties.getProperty("sql.selectTelefonos");
+                String sqlTelefonos = "SELECT * FROM telefonos WHERE documento_usuario = ?;";
                 try (PreparedStatement psTelefonos = connection.prepareStatement(sqlTelefonos)){
                     psTelefonos.setString(1, rs.getString("documento"));
                     ResultSet rsTelefonos = psTelefonos.executeQuery();
@@ -471,8 +464,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
     @Override
     public boolean seleccionarEmail(String email) {
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.selectEmail");
+        String sql = "SELECT correo FROM usuarios WHERE correo = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
@@ -487,8 +479,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
     @Override
     public boolean seleccionarDocumento(String documento) {
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.selectDocumento");
+        String sql = "SELECT documento FROM usuarios WHERE documento = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, documento);
             ResultSet rs = ps.executeQuery();
@@ -518,8 +509,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     }
 
     public boolean seleccionarTelefonoEliminar(String documento) {
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.selectTelefonos");
+        String sql = "SELECT * FROM telefonos WHERE documento_usuario = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, documento);
             ResultSet rs = ps.executeQuery();
@@ -549,8 +539,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
 
     @Override
     public void eliminarTelefono(String documento, String numero) {
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.deleteTelefonos");
+        String sql = "DELETE FROM telefonos WHERE documento_usuario = ? AND numero = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, documento);
             ps.setString(2, numero);
@@ -562,8 +551,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     }
 
     public Usuario obtenerUsuario(String documento){
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.selectUsuarioId");
+        String sql = "SELECT * FROM usuarios WHERE documento = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, documento);
             ResultSet rs = ps.executeQuery();
@@ -581,7 +569,7 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
                 usuario.setLocalidad(obtenerLocalidad(rs.getInt("id_localidad")));
                 usuario.setFechaNacimiento(rs.getDate("fecha_nacimiento").toLocalDate());
                 usuario.setTelefonos(new ArrayList<>());
-                String sqlTelefonos = properties.getProperty("sql.selectTelefonos");
+                String sqlTelefonos = "SELECT * FROM telefonos WHERE documento_usuario = ?;";
                 try (PreparedStatement psTelefonos = connection.prepareStatement(sqlTelefonos)){
                     psTelefonos.setString(1, rs.getString("documento"));
                     ResultSet rsTelefonos = psTelefonos.executeQuery();
@@ -659,22 +647,6 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
         return null;
     }
 
-
-    // metodo para recuperar propiedades y para generar clase conexion
-    private Properties loadProperties() {
-        Properties properties = new Properties();
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("app.properties")) {
-            if (input == null) {
-                System.out.println("No se pudo encontrar el archivo properties");
-                return properties;
-            }
-            properties.load(input);
-        } catch (Exception e) {
-            System.out.println("Error al cargar configuraciones");
-            e.printStackTrace(); // Para depuración, puedes quitarlo si no lo necesitas
-        }
-        return properties;
-    }
 
     private Connection getConnection() throws SQLException {
         return DatabaseConnection.getInstance().getConnection();
