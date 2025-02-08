@@ -20,9 +20,8 @@ public class TipoActividadDAOImpl {
     }
 
     public void insertarTipoActividad(TipoActividad tipoActividad){
-        Properties propiedades = loadProperties();
 
-        String sql = propiedades.getProperty("sql.insertarTipoActividad");
+        String sql = "INSERT INTO tipo_actividad(nombre, descripcion) VALUES (?, ?);";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, tipoActividad.getNombre());
@@ -37,9 +36,8 @@ public class TipoActividadDAOImpl {
     }
 
     public void actualizarTipoActividad(TipoActividad tipoActividad){
-        Properties propiedades = loadProperties();
 
-        String sql = propiedades.getProperty("sql.actualizarTipoActividad");
+        String sql = "UPDATE tipo_actividad SET descripcion=? WHERE id = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, tipoActividad.getDescripcion());
@@ -53,9 +51,8 @@ public class TipoActividadDAOImpl {
     }
 
     public void activarTipoActividad(TipoActividad tipoActividad){
-        Properties propiedades = loadProperties();
 
-        String sql = propiedades.getProperty("sql.activarTipoActividad");
+        String sql = "UPDATE tipo_actividad SET estado = true WHERE id = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setInt(1, tipoActividad.getId());
@@ -68,9 +65,8 @@ public class TipoActividadDAOImpl {
     }
 
     public void eliminarTipoActividad(TipoActividad tipoActividad){
-        Properties propiedades = loadProperties();
 
-        String sql = propiedades.getProperty("sql.eliminarTipoActividad");
+        String sql = "UPDATE tipo_actividad SET estado = false, fecha_baja = CURRENT_TIMESTAMP, razon=?, comentarios=?, documento_usuario_baja=? WHERE id = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, tipoActividad.getRazonBaja());
@@ -86,8 +82,7 @@ public class TipoActividadDAOImpl {
     }
 
     public List<TipoActividad> listarTiposActividad(){
-        Properties propiedades = loadProperties();
-        String sql = propiedades.getProperty("sql.seleccionarTipoActividad");
+        String sql = "SELECT * FROM tipo_actividad ORDER BY id;";
         List<TipoActividad> tiposActividad = new ArrayList<>();
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
@@ -124,8 +119,7 @@ public class TipoActividadDAOImpl {
 
 
     private TipoActividad obtenerTipoActividad(int id){
-        Properties propiedades = loadProperties();
-        String sql = propiedades.getProperty("sql.seleccionarTipoActividadId");
+        String sql = "SELECT * FROM tipo_actividad WHERE id = ?;";
         TipoActividad tipoActividad = new TipoActividad();
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setInt(1, id);
@@ -159,24 +153,6 @@ public class TipoActividadDAOImpl {
         return null;
     }
 
-
-
-
-
-    private Properties loadProperties() {
-        Properties properties = new Properties();
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("app.properties")) {
-            if (input == null) {
-                System.out.println("No se pudo encontrar el archivo properties");
-                return properties;
-            }
-            properties.load(input);
-        } catch (Exception e) {
-            System.out.println("Error al cargar configuraciones");
-            e.printStackTrace(); // Para depuración, puedes quitarlo si no lo necesitas
-        }
-        return properties;
-    }
 
     private Connection getConnection() throws SQLException {
         return DatabaseConnection.getInstance().getConnection();
