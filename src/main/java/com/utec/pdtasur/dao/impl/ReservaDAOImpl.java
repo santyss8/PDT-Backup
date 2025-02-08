@@ -30,9 +30,7 @@ public class ReservaDAOImpl {
     }
 
     public void reservarEspacio(Reserva reserva){
-        Properties properties = loadProperties();
-
-        String sql = properties.getProperty("sql.insertarReserva");
+        String sql = "INSERT INTO reservas (documento_usuario, espacio_id, fecha_actividad, duracion, cantidad_personas, importe_abonar, fecha_vto_sena, importe_sena) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, reserva.getUsuario().getDocumento());
@@ -51,8 +49,7 @@ public class ReservaDAOImpl {
     }
 
     public void cancelarReserva(Reserva reserva){
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.eliminarReserva");
+        String sql = "UPDATE reservas SET estado = 'Cancelada' WHERE id = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setInt(1, reserva.getId());
             ps.executeUpdate();
@@ -62,8 +59,7 @@ public class ReservaDAOImpl {
     }
 
     public void aprobarReserva(Reserva reserva){
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.activarReserva");
+        String sql = "UPDATE reservas SET estado = 'Confirmada', fecha_confirmacion = ? WHERE id = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setDate(1, Date.valueOf(LocalDate.now()));
             ps.setInt(2, reserva.getId());
@@ -74,8 +70,7 @@ public class ReservaDAOImpl {
     }
 
     public void pagoSena(Reserva reserva){
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.pagoSena");
+        String sql = "UPDATE reservas SET fecha_pago_sena = ?, importe_sena_pagado = ? WHERE id = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setDate(1, Date.valueOf(LocalDate.now()));
             ps.setDouble(2, reserva.getImporteSenaPagado());
@@ -87,9 +82,8 @@ public class ReservaDAOImpl {
     }
 
     public List<Reserva> listarReservasConfirmadas() throws SQLException {
-        Properties properties = loadProperties();
         List<Reserva> reservas = new ArrayList<>();
-        String sql = properties.getProperty("sql.selectReservasConfirmadas");
+        String sql = "SELECT * FROM reservas WHERE estado = 'Confirmada' ORDER BY id;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()){
@@ -177,9 +171,8 @@ public class ReservaDAOImpl {
     }
 
     public List<Reserva> listarReservasPendientes(){
-        Properties properties = loadProperties();
         List<Reserva> reservas = new ArrayList<>();
-        String sql = properties.getProperty("sql.selectReservas");
+        String sql = "SELECT * FROM reservas WHERE estado = 'Pendiente' ORDER BY id;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()){
@@ -212,9 +205,8 @@ public class ReservaDAOImpl {
     }
 
     public List<Reserva> listarReservas() throws SQLException {
-        Properties properties = loadProperties();
         List<Reserva> reservas = new ArrayList<>();
-        String sql = properties.getProperty("sql.selectAllReservas");
+        String sql = "SELECT * FROM reservas ORDER BY id;";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()){
@@ -247,26 +239,10 @@ public class ReservaDAOImpl {
     }
 
 
-
-
     private Connection getConnection() throws SQLException {
         return DatabaseConnection.getInstance().getConnection();
     }
 
-    private Properties loadProperties() {
-        Properties properties = new Properties();
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("app.properties")) {
-            if (input == null) {
-                System.out.println("No se pudo encontrar el archivo properties");
-                return properties;
-            }
-            properties.load(input);
-        } catch (Exception e) {
-            System.out.println("Error al cargar configuraciones");
-            e.printStackTrace(); // Para depuración, puedes quitarlo si no lo necesitas
-        }
-        return properties;
-    }
 
 
 }
