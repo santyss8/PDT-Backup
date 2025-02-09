@@ -1,11 +1,7 @@
 package com.utec.pdtasur.services;
 
-import com.utec.pdtasur.dao.impl.CategoriaSocioDAOImpl;
-import com.utec.pdtasur.dao.impl.SubcomisionDAOImpl;
-import com.utec.pdtasur.dao.impl.UsuarioDAOImpl;
-import com.utec.pdtasur.dao.interfaces.CategoriaSocioDAO;
-import com.utec.pdtasur.dao.interfaces.SubcomisionDAO;
-import com.utec.pdtasur.dao.interfaces.UsuarioDAO;
+import com.utec.pdtasur.dao.impl.*;
+import com.utec.pdtasur.dao.interfaces.*;
 import com.utec.pdtasur.models.*;
 import com.utec.pdtasur.utils.HashContraseña;
 
@@ -27,6 +23,8 @@ public class UsuarioService {
     SubcomisionDAO subcomisionDAO;
     Scanner sc;
     ValidarService validarService;
+    private DepartamentoDAO departamentoDAO = new DepartamentoDAOimpl();
+    private LocalidadDAO localidadDAO = new LocalidadDAOimpl();
 
     public UsuarioService() throws SQLException {
         this.usuarioDAO = new UsuarioDAOImpl();
@@ -194,7 +192,7 @@ public class UsuarioService {
         } while (true);
         do {
             System.out.println("Seleccione su departamento");
-            List<Departamento> departamentos = usuarioDAO.listarDepartamentos();
+            List<Departamento> departamentos = departamentoDAO.listarDepartamentos();
             for (Departamento departamento : departamentos) {
                 System.out.println(departamento);
             }
@@ -214,7 +212,7 @@ public class UsuarioService {
         }while (true);
         do {
             System.out.println("Seleccione su localidad");
-            List<Localidad> localidades = usuarioDAO.listarLocalidades(usuario.getDepartamento());
+            List<Localidad> localidades = localidadDAO.listarLocalidades(usuario.getDepartamento());
             for (Localidad localidad : localidades) {
                 System.out.println(localidad);
             }
@@ -559,7 +557,7 @@ public class UsuarioService {
         } while (true);
         do {
             System.out.println("Seleccione su departamento");
-            List<Departamento> departamentos = usuarioDAO.listarDepartamentos();
+            List<Departamento> departamentos = departamentoDAO.listarDepartamentos();
             for (Departamento departamento : departamentos) {
                 System.out.println(departamento);
             }
@@ -579,7 +577,7 @@ public class UsuarioService {
         }while (true);
         do {
             System.out.println("Seleccione su localidad");
-            List<Localidad> localidades = usuarioDAO.listarLocalidades(usuario.getDepartamento());
+            List<Localidad> localidades = localidadDAO.listarLocalidades(usuario.getDepartamento());
             for (Localidad localidad : localidades) {
                 System.out.println(localidad);
             }
@@ -853,7 +851,7 @@ public class UsuarioService {
         } while (true);
         do {
             System.out.println("Seleccione su departamento");
-            List<Departamento> departamentos = usuarioDAO.listarDepartamentos();
+            List<Departamento> departamentos = departamentoDAO.listarDepartamentos();
             for (Departamento departamento : departamentos) {
                 System.out.println(departamento);
             }
@@ -873,7 +871,7 @@ public class UsuarioService {
         }while (true);
         do {
             System.out.println("Seleccione su localidad");
-            List<Localidad> localidades = usuarioDAO.listarLocalidades(usuario.getDepartamento());
+            List<Localidad> localidades = localidadDAO.listarLocalidades(usuario.getDepartamento());
             for (Localidad localidad : localidades) {
                 System.out.println(localidad);
             }
@@ -2079,7 +2077,7 @@ public class UsuarioService {
                     }while (true);
                     do {
                         System.out.println("Seleccione su departamento");
-                        List<Departamento> departamentos = usuarioDAO.listarDepartamentos();
+                        List<Departamento> departamentos = departamentoDAO.listarDepartamentos();
                         for (Departamento departamento : departamentos) {
                             System.out.println(departamento);
                         }
@@ -2099,7 +2097,7 @@ public class UsuarioService {
                     }while (true);
                     do {
                         System.out.println("Seleccione su localidad");
-                        List<Localidad> localidades = usuarioDAO.listarLocalidades(usuarioActual.getDepartamento());
+                        List<Localidad> localidades = localidadDAO.listarLocalidades(usuarioActual.getDepartamento());
                         for (Localidad localidad : localidades) {
                             System.out.println(localidad);
                         }
