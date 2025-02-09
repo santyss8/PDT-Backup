@@ -1,5 +1,6 @@
 package com.utec.pdtasur.dao.impl;
 
+import com.utec.pdtasur.dao.interfaces.EspacioDAO;
 import com.utec.pdtasur.models.Espacio;
 import com.utec.pdtasur.utils.DatabaseConnection;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class EspacioDAOImpl {
+public class EspacioDAOImpl implements EspacioDAO {
     private Connection connection;
     // Metodo para conectar a la base de datos
     public EspacioDAOImpl() throws SQLException {
@@ -113,7 +114,6 @@ public class EspacioDAOImpl {
         return espaciosDisponibles;
 
     }
-
 
     public Espacio seleccionarEspacio(int id){
         String sql = "SELECT * FROM espacios WHERE id = ?;";

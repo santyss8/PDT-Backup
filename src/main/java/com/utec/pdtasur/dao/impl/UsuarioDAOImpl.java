@@ -315,8 +315,6 @@ public class UsuarioDAOImpl implements com.utec.pdtasur.dao.interfaces.UsuarioDA
     }
 
 
-
-
     @Override
     public void modificar(Usuario usuario) {
 

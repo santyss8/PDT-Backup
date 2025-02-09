@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
+import com.utec.pdtasur.dao.interfaces.ReservaDAO;
 import com.utec.pdtasur.dao.interfaces.UsuarioDAO;
 import com.utec.pdtasur.models.Reserva;
 import com.utec.pdtasur.models.Usuario;
@@ -16,7 +17,7 @@ import com.utec.pdtasur.utils.DatabaseConnection;
 import javax.xml.transform.Result;
 
 
-public class ReservaDAOImpl {
+public class ReservaDAOImpl implements ReservaDAO {
 
     private Connection connection;
     private UsuarioDAO usuarioDAO;
