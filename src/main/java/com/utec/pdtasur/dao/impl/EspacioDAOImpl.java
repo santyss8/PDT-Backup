@@ -1,5 +1,6 @@
 package com.utec.pdtasur.dao.impl;
 
+import com.utec.pdtasur.dao.interfaces.EspacioDAO;
 import com.utec.pdtasur.models.Espacio;
 import com.utec.pdtasur.utils.DatabaseConnection;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class EspacioDAOImpl {
+public class EspacioDAOImpl implements EspacioDAO {
     private Connection connection;
     // Metodo para conectar a la base de datos
     public EspacioDAOImpl() throws SQLException {
@@ -19,9 +20,8 @@ public class EspacioDAOImpl {
 
     // Metodo para crear un espacio
     public void insertarEspacio(Espacio espacio) throws SQLException {
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.insertarEspacio");
+        String sql = "INSERT INTO espacios (nombre, capacidad_max, precio_reserva_socio, precio_reserva_no_socio, fecha_vig_precio, observaciones) VALUES (?, ?, ?, ?, ?, ?);";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, espacio.getNombre());
             ps.setInt(2, espacio.getCapacidadMaxima());
@@ -38,9 +38,8 @@ public class EspacioDAOImpl {
 
     // Metodo para listar todos los espacios
     public List<Espacio> listarEspacios() throws SQLException {
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.selectEspacio");
+        String sql = "SELECT * FROM espacios ORDER BY id;";
         List<Espacio> espacios = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -56,9 +55,8 @@ public class EspacioDAOImpl {
     }
 
     public void modificarEspacio(Espacio espacio){
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.modificarEspacio");
+        String sql = "UPDATE espacios SET nombre=?, capacidad_max=?, precio_reserva_socio=?, precio_reserva_no_socio=?, fecha_vig_precio=?, observaciones=? WHERE id = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, espacio.getNombre());
             ps.setInt(2, espacio.getCapacidadMaxima());
@@ -75,9 +73,7 @@ public class EspacioDAOImpl {
     }
 
     public void activarEspacio(Espacio espacio){
-        Properties properties = loadProperties();
-
-        String sql = properties.getProperty("sql.activarEspacio");
+        String sql = "UPDATE espacios SET estado = true WHERE id = ?;";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, espacio.getId());
@@ -90,9 +86,8 @@ public class EspacioDAOImpl {
     }
 
     public List<Espacio> espaciosDisponibles(int capacidadMaxima, LocalDate fecha){
-        Properties properties = loadProperties();
         List<Espacio> espaciosDisponibles = new ArrayList<>();
-        String sql = properties.getProperty("sql.seleccionarEspaciosDisponibles");
+        String sql = "SELECT * FROM espacios e WHERE e.capacidad_max >= ? AND NOT EXISTS (SELECT 1 FROM reservas r WHERE r.espacio_id = e.id AND DATE(r.fecha_actividad) = ? ) ORDER BY e.id;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, capacidadMaxima);
@@ -120,10 +115,8 @@ public class EspacioDAOImpl {
 
     }
 
-
     public Espacio seleccionarEspacio(int id){
-        Properties properties = loadProperties();
-        String sql = properties.getProperty("sql.selectEspacioId");
+        String sql = "SELECT * FROM espacios WHERE id = ?;";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -148,9 +141,8 @@ public class EspacioDAOImpl {
     }
 
     public void eliminarEspacio(Espacio espacio){
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.eliminarEspacio");
+        String sql = "UPDATE espacios SET estado = false WHERE id = ?;";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, espacio.getId());
@@ -166,21 +158,6 @@ public class EspacioDAOImpl {
 
     private Connection getConnection() throws SQLException {
         return DatabaseConnection.getInstance().getConnection();
-    }
-
-    private Properties loadProperties() {
-        Properties properties = new Properties();
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("app.properties")) {
-            if (input == null) {
-                System.out.println("No se pudo encontrar el archivo properties");
-                return properties;
-            }
-            properties.load(input);
-        } catch (Exception e) {
-            System.out.println("Error al cargar configuraciones");
-            e.printStackTrace(); // Para depuración, puedes quitarlo si no lo necesitas
-        }
-        return properties;
     }
 
 

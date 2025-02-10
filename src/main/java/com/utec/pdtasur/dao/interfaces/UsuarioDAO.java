@@ -24,9 +24,4 @@ public interface UsuarioDAO {
     void insertarTelefono(String documento, String numero, String tipo);
     void eliminarTelefono(String documento, String numero);
     boolean seleccionarTelefonoEliminar(String documento);
-
-    List<Departamento> listarDepartamentos();
-    List<Localidad> listarLocalidades(Departamento departamento);
-    Departamento obtenerDepartamento(int id);
-    Localidad obtenerLocalidad(int id);
 }

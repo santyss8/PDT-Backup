@@ -23,9 +23,8 @@ public class CategoriaSocioDAOImpl implements CategoriaSocioDAO {
 
     @Override
     public void crearCategoria(CategoriaSocio categoriaSocio) {
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.insertCategoria");
+        String sql = "INSERT INTO categorias (nombre, descripcion) VALUES (?, ?);";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setString(1, categoriaSocio.getNombre());
@@ -41,9 +40,8 @@ public class CategoriaSocioDAOImpl implements CategoriaSocioDAO {
 
     @Override
     public CategoriaSocio getCategoria(int id) {
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.selectCategoriaId");
+        String sql = "SELECT * FROM categorias WHERE id = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setInt(1, id);
@@ -64,9 +62,8 @@ public class CategoriaSocioDAOImpl implements CategoriaSocioDAO {
 
     @Override
     public List<CategoriaSocio> listarCategorias() {
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.selectCategoria");
+        String sql = "SELECT * FROM categorias ORDER BY id;";
 
         List<CategoriaSocio> categorias = new ArrayList<>();
 
@@ -89,9 +86,8 @@ public class CategoriaSocioDAOImpl implements CategoriaSocioDAO {
 
     @Override
     public void eliminarCategoria(int id) {
-        Properties properties = loadProperties();
 
-        String sql = properties.getProperty("sql.deleteCategoria");
+        String sql = "DELETE FROM categorias WHERE id = ?;";
 
         try (PreparedStatement ps = connection.prepareStatement(sql)){
             ps.setInt(1, id);
@@ -105,20 +101,6 @@ public class CategoriaSocioDAOImpl implements CategoriaSocioDAO {
     }
 
 
-    private Properties loadProperties() {
-        Properties properties = new Properties();
-        try (InputStream input = getClass().getClassLoader().getResourceAsStream("app.properties")) {
-            if (input == null) {
-                System.out.println("No se pudo encontrar el archivo properties");
-                return properties;
-            }
-            properties.load(input);
-        } catch (Exception e) {
-            System.out.println("Error al cargar configuraciones");
-            e.printStackTrace(); // Para depuración, puedes quitarlo si no lo necesitas
-        }
-        return properties;
-    }
 
     private Connection getConnection() throws SQLException {
         return DatabaseConnection.getInstance().getConnection();
